@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "SinaWeibo.h"
+#import "FayeClient.h"
 #define DING 1
 #define ADDFAV  2
 #define UN_ADDFAV 5
@@ -27,6 +28,7 @@
     UISegmentedControl *segmentedControl_;
     NSString *wechatImgStr_;
     int playNum_;
+    BOOL isTVReady;
 }
 @property (nonatomic, strong) SinaWeibo *mySinaWeibo;
 @property (nonatomic, strong) NSDictionary *infoDic;

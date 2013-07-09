@@ -85,6 +85,9 @@
  [super viewDidUnload];
  
 }
+-(void)viewWillDisappear:(BOOL)animated{
+    [BundingTVManager shareInstance].sendClient.delegate = (id)[BundingTVManager shareInstance];
+}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -333,6 +336,7 @@
     UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"分享到：" delegate:self cancelButtonTitle:@"取消"
                                          destructiveButtonTitle:nil
                                               otherButtonTitles:@"新浪微博",@"微信好友",@"微信朋友圈", nil];
+    sheet.tag = 10000001;
      [sheet showFromTabBar:self.tabBarController.tabBar];
 
     
@@ -344,26 +348,36 @@
         [UIUtility showNetWorkError:self.view];
         return;
     }
-
-    if (buttonIndex == 0) {
-        [self sinaShare];
-    }
-    else{
-        if ([WXApi isWXAppInstalled]) {
-            if (buttonIndex == 1){
-                [self wechatShare:WXSceneSession];
-                [MobClick event:@"ue_wechat_friend_share"];
+    if (actionSheet.tag == 10000001) {
+        if (buttonIndex == 0) {
+            [self sinaShare];
+        }
+        else if(buttonIndex == 1 || buttonIndex == 2){
+            if ([WXApi isWXAppInstalled]) {
+                if (buttonIndex == 1){
+                    [self wechatShare:WXSceneSession];
+                    [MobClick event:@"ue_wechat_friend_share"];
+                }
+                else if(buttonIndex == 2){
+                    [self wechatShare:WXSceneTimeline];
+                    [MobClick event:@"ue_wechat_social_share"];
+                }
             }
-            else if(buttonIndex == 2){
-                [self wechatShare:WXSceneTimeline];
-                [MobClick event:@"ue_wechat_social_share"];
+            else{
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"亲，你还没有安装微信，请安装后再试。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+                [alert show];
             }
         }
-        else{
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"亲，你还没有安装微信，请安装后再试。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
-            [alert show];
+    }
+    else if (actionSheet.tag == 10000002){
+        if (buttonIndex == 0) {
+            [self beginPlayVideo:playNum_];
+        }
+        else if (buttonIndex == 1){  //play with tv;
+        
         }
     }
+    
 }
 
 -(void)sinaShare{
@@ -585,7 +599,29 @@
         [alert show];
         return;
     }
+    
     [self beginPlayVideo:num];
+    
+//    NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:@"kUserId"];
+//    NSDictionary * data = (NSDictionary *)[[ContainerUtility sharedInstance] attributeForKey:[NSString stringWithFormat:@"%@_isBunding",userId]];
+//    NSNumber * isbunding = [data objectForKey:KEY_IS_BUNDING];
+//    isbunding = [NSNumber numberWithInt:1];
+//    if ([isbunding boolValue]){
+//        if (![BundingTVManager shareInstance].isConnected)
+//        {
+//            NSString * sendChannel = [NSString stringWithFormat:@"/screencast/CHANNEL_TV_%@",[data objectForKey:KEY_MACADDRESS]];
+//            [[BundingTVManager shareInstance] connecteServerWithChannel:sendChannel];
+//        }
+//        [BundingTVManager shareInstance].sendClient.delegate = (id <FayeClientDelegate>)self;
+//        
+//        UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"使用哪种方式打开：" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"直接打开",@"使用悦视频TV版播放", nil];
+//        sheet.tag = 10000002;
+//        [sheet showInView:self.tabBarController.tabBar];
+//    }
+//    else{
+//      [self beginPlayVideo:num];
+//    }
+    
    
 }
 
@@ -703,6 +739,73 @@
             }
         }
     }
+}
+
+#pragma mark -
+#pragma mark FayeObjc delegate
+- (void) messageReceived:(NSDictionary *)messageDict
+{
+    if ([[messageDict objectForKey:@"push_type"] isEqualToString:@"31"])
+    {
+        
+    }
+    else if ([[messageDict objectForKey:@"push_type"] isEqualToString:@"32"])
+    {
+        
+    }
+    else if ([[messageDict objectForKey:@"push_type"] isEqualToString:@"42"])
+    {
+        isTVReady = YES;
+    }
+}
+
+- (void)connectedToServer
+{
+    
+}
+
+- (void)disconnectedFromServer
+{
+    [[BundingTVManager shareInstance] reconnectToServer];
+    [BundingTVManager shareInstance].sendClient.delegate = (id<FayeClientDelegate>)self;
+}
+
+- (void)socketDidSendMessage:(ZTWebSocket *)aWebSocket
+{
+    
+}
+
+- (void)subscriptionFailedWithError:(NSString *)error
+{
+    
+}
+- (void)subscribedToChannel:(NSString *)channel
+{
+    
+}
+
+#pragma mark -
+#pragma mark - 控制投放TV接口(private)
+- (void)controlCloundTV:(NSInteger)controlType
+{
+    NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:@"kUserId"];
+    NSDictionary * data = (NSDictionary *)[[ContainerUtility sharedInstance] attributeForKey:[NSString stringWithFormat:@"%@_isBunding",userId]];
+    NSString * sendChannel = [NSString stringWithFormat:@"CHANNEL_TV_%@",[data objectForKey:KEY_MACADDRESS]];
+//    double curTime = mScrubber.value * CMTimeGetSeconds([self playerItemDuration]);
+    NSNumber * type = [NSNumber numberWithInt:type_];
+    NSString * cType = @"403";
+//    NSDictionary *reqData = [NSDictionary dictionaryWithObjectsAndKeys:
+//                             cType, @"push_type",
+//                             userId, @"user_id",
+//                             sendChannel, @"tv_channel",
+//                             [NSNumber numberWithFloat:curTime],@"prod_time",
+//                             workingUrl_,@"prod_url",
+//                             prodId_,@"prod_id",
+//                             nameStr_,@"prod_name",
+//                             type,@"prod_type",
+//                             nil];
+//    
+//    [[BundingTVManager shareInstance] sendMsg:reqData];
 }
 
 
