@@ -135,11 +135,11 @@
     
     self.playLabel.frame = CGRectMake(270, 225, 50, 15);
     self.playLabel.textColor = CMConstants.grayColor;
-    self.playTimeLabel.frame = CGRectMake(315, 225, 100, 15);
+    self.playTimeLabel.frame = CGRectMake(315, 225, 170, 15);
     self.playTimeLabel.textColor = CMConstants.grayColor;
     self.regionLabel.frame = CGRectMake(270, 255, 50, 15);
     self.regionLabel.textColor = CMConstants.grayColor;
-    self.regionNameLabel.frame = CGRectMake(315, 255, 100, 15);
+    self.regionNameLabel.frame = CGRectMake(315, 255, 170, 15);
     self.regionNameLabel.textColor = CMConstants.grayColor;
     
     self.playBtn.frame = CGRectMake(265, 280, 100, 50);
