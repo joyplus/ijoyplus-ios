@@ -2236,7 +2236,7 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
         case UIGestureRecognizerStateChanged:
             if (fabs(offset.x)>=fabs(offset.y)) {//左右拖动
                 float nowValue = mScrubber.value;
-                nowValue = nowValue + 0.05*offset.x/kFullWindowHeight;
+                nowValue = nowValue + 0.01*offset.x/kFullWindowHeight;
                 if (nowValue > 1) {
                     nowValue = 1;
                 }
@@ -2248,7 +2248,7 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
             }
             else{//上下拖动
                 float nowValue = [MPMusicPlayerController applicationMusicPlayer].volume;
-                nowValue = nowValue - 0.05*offset.y/320;
+                nowValue = nowValue - 0.02*offset.y/320;
                 if (nowValue > 1) {
                     nowValue = 1;
                 }
