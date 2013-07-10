@@ -158,6 +158,7 @@
             UIProgressView *progressView = [progressViewDic_ objectForKey:[NSString stringWithFormat:@"%d",num]];
             [progressView setProgress:value];
             int progressValue = (int)(100*value);
+            subDownloadItem.duration = item.duration;
             subDownloadItem.percentage = progressValue;
             subDownloadItem.m3u8DownloadInfo = item.m3u8DownloadInfo;
             UILabel *label = [progressLabelDic_ objectForKey:[NSString stringWithFormat:@"%d",num]];

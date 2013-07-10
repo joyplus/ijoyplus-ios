@@ -329,7 +329,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 - (CMTime)playerItemDuration
 {
     
-    if (islocalFile_ && isM3u8_) {
+    if (islocalFile_ && isM3u8_ && self.playDuration > 0) {
         return  CMTimeMakeWithSeconds(self.playDuration, NSEC_PER_SEC);
     }
     
@@ -2931,7 +2931,7 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
         {
             [self.view addSubview:myHUD];
         }
-        //myHUD.frame = CGRectMake(kFullWindowHeight/2 - 100,186, 200, 80);
+        myHUD.frame = CGRectMake(kFullWindowHeight/2 - 150,186, 300, 80);
         [self.view bringSubviewToFront:myHUD];
         
         myHUD.hidden = NO;
