@@ -29,6 +29,8 @@
     NSString *wechatImgStr_;
     int playNum_;
     BOOL isTVReady;
+    NSMutableArray *sortEpisodesArr_;
+    int sendCount_;
 }
 @property (nonatomic, strong) SinaWeibo *mySinaWeibo;
 @property (nonatomic, strong) NSDictionary *infoDic;

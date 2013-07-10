@@ -27,6 +27,8 @@
     UISegmentedControl *segmentedControl_;
     NSString *wechatImgStr_;
     int playNum_;
+    NSMutableArray *sortEpisodesArr_;
+    int sendCount_;
 }
 @property (nonatomic, strong) SinaWeibo *mySinaWeibo;
 @property (nonatomic, strong) NSDictionary *infoDic;
