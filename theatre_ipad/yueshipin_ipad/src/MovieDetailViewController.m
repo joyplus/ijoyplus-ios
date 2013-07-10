@@ -116,7 +116,7 @@
     self.titleLabel.font = [UIFont boldSystemFontOfSize:20];
     self.titleLabel.numberOfLines = 2;
     self.titleLabel.textColor = CMConstants.textColor;
-
+    
     self.scoreLable.frame = CGRectMake(270, 135, 50, 20);
     self.scoreLable.textColor = CMConstants.grayColor;
     self.scoreLabel.frame = CGRectMake(315, 135, 50, 20);
@@ -157,7 +157,7 @@
     [self.expectbtn setTitleEdgeInsets:UIEdgeInsetsMake(4, 10, 0, 5)];
     self.expectbtn.titleLabel.font = [UIFont systemFontOfSize:12];
     [self.expectbtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-    [self.expectbtn setTitleColor:CMConstants.yellowColor forState:UIControlStateNormal];
+    [self.expectbtn setTitleColor:[UIColor colorWithRed:1 green:119.0f/255.0f blue:0 alpha:1] forState:UIControlStateNormal];
     [self.expectbtn addTarget:self action:@selector(expectVideo) forControlEvents:UIControlEventTouchUpInside];
     [self.bgScrollView addSubview:self.expectbtn];
     self.expectbtn.hidden = YES;
@@ -180,14 +180,14 @@
     self.collectionBtn.frame = CGRectMake(260 + 120, 340, 44, 44);
     [self.collectionBtn setBackgroundImage:[UIImage imageNamed:@"collection"] forState:UIControlStateNormal];
     [self.collectionBtn setBackgroundImage:[UIImage imageNamed:@"collection_pressed"] forState:UIControlStateHighlighted];
-    [self.collectionBtn setBackgroundImage:[UIImage imageNamed:@"collection_pressed"] forState:UIControlStateSelected]; 
+    [self.collectionBtn setBackgroundImage:[UIImage imageNamed:@"collection_pressed"] forState:UIControlStateSelected];
     [self.collectionBtn addTarget:self action:@selector(collectionBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
     self.shareBtn.frame = CGRectMake(260 + 180, 340, 44, 44);
     [self.shareBtn setBackgroundImage:[UIImage imageNamed:@"share"] forState:UIControlStateNormal];
     [self.shareBtn setBackgroundImage:[UIImage imageNamed:@"share_pressed"] forState:UIControlStateHighlighted];
     [self.shareBtn addTarget:self action:@selector(shareBtnClicked) forControlEvents:UIControlEventTouchUpInside];
-
+    
     self.reportLabel.frame = CGRectMake(260, 365, 40, 20);
     self.reportLabel.center = CGPointMake(self.addListBtn.center.x, self.reportLabel.center.y);
     self.reportLabel.textColor = CMConstants.grayColor;
@@ -206,11 +206,11 @@
     
     self.introImage.frame = CGRectMake(LEFT_WIDTH, 410, 42, 18);
     self.introImage.image = [UIImage imageNamed:@"brief_title"];
-
+    
     self.introContentTextView.frame = CGRectMake(LEFT_WIDTH, 440, 430, 100);
     self.introContentTextView.textColor = CMConstants.grayColor;
     self.introContentTextView.layer.borderWidth = 0.5;
-    self.introContentTextView.layer.borderColor = [UIColor colorWithRed:203/255.0 green:203/255.0 blue:203/255.0 alpha:1].CGColor;;
+    self.introContentTextView.layer.borderColor = [UIColor colorWithRed:203/255.0 green:203/255.0 blue:203/255.0 alpha:1].CGColor;
     tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(introBtnClicked)];
     tapGesture.numberOfTapsRequired = 1;
     tapGesture.numberOfTouchesRequired = 1;
@@ -235,7 +235,8 @@
     if(video == nil){
         [self retrieveData];
     }
-    [self isFavority]; 
+    [self isFavority];
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -320,7 +321,6 @@
     }];
     
 }
-
 - (void)calculateIntroContentHeight
 {
     self.introContentTextView.text = [video objectForKey:@"summary"];
@@ -338,7 +338,7 @@
     self.titleLabel.text = [video objectForKey:@"name"];
     
     self.scoreLabel.text = [NSString stringWithFormat:@"%@ 分", [video objectForKey:@"score"]];
-    self.scoreLabel.textColor = CMConstants.yellowColor;//[UIColor colorWithRed:1 green:167.0/255.0 blue:41.0/255.0 alpha:1];
+    self.scoreLabel.textColor = [UIColor colorWithRed:1 green:167.0/255.0 blue:41.0/255.0 alpha:1];
     self.directorNameLabel.text = [video objectForKey:@"directors"];
     
     NSString *stars = [video objectForKey:@"stars"];
@@ -381,7 +381,7 @@
         self.playBtn.hidden = NO;
         self.expectbtn.hidden = YES;
         self.addListBtn.enabled = YES;
-        if(self.mp4DownloadUrls.count > 0 || self.m3u8DownloadUrls.count > 0){
+        if(self.downloadUrls.count > 0){
             // do nothing
             //        NSLog(@"mp4 count: %i", self.mp4DownloadUrls.count);
             //        NSLog(@"m3u8 count: %i", self.m3u8DownloadUrls.count);
@@ -394,9 +394,9 @@
         self.playBtn.hidden = YES;
         self.expectbtn.hidden = NO;
         self.addListBtn.enabled = NO;
-//        [self.playBtn setEnabled:NO];
-//        [self.downloadBtn setEnabled:NO];
-//        [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"no_download"] forState:UIControlStateDisabled];
+        //        [self.playBtn setEnabled:NO];
+        //        [self.downloadBtn setEnabled:NO];
+        //        [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"no_download"] forState:UIControlStateDisabled];
     }
     
     if (![self isDownloadURLExit])
@@ -505,8 +505,8 @@
         [UIUtility showNetWorkError:self.view];
         return;
     }
-    
-//    [self SubscribingToChannels];
+    //电影不需要注册消息推送
+    //    [self SubscribingToChannels];
     
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.prodId, @"prod_id", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
@@ -538,7 +538,7 @@
 
 - (void)dingBtnClicked:(id)sender
 {
-    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    // Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         [UIUtility showNetWorkError:self.view];
         return;
@@ -548,7 +548,7 @@
         NSString *responseCode = [result objectForKey:@"res_code"];
         if([responseCode isEqualToString:kSuccessResCode]){
             [[NSNotificationCenter defaultCenter] postNotificationName:SEARCH_LIST_VIEW_REFRESH object:nil];
-//            [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
+            //            [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
             [[AppDelegate instance].rootViewController showSuccessModalView:1.5];
             int dingNum = [[video objectForKey:@"support_num"] intValue] + 1;
             if (dingNum >= 1000) {
@@ -571,15 +571,17 @@
         [UIUtility showNetWorkError:self.view];
         return;
     }
+    //电影不需要注册消息推送
+    //    [self SubscribingToChannels];
+    if (isFavority_) {
+        [self unFavority];
+    }
+    else{
+        [self addtoFavority];
+    }
     
-//    [self SubscribingToChannels];
-       if (isFavority_) {
-          [self unFavority];
-        }
-        else{
-          [self addtoFavority];
-        }
 }
+
 -(void)addtoFavority{
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.prodId, @"prod_id", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
@@ -597,9 +599,10 @@
                 self.collectionNumberLabel.text = [NSString stringWithFormat:@"收藏(%i)", collectioNum];
             }
             [self changeCollectionBtnState];
-        } else {
-            [[AppDelegate instance].rootViewController showModalView:[UIImage imageNamed:@"collected"] closeTime:1.5];
         }
+        //else {
+        //            [[AppDelegate instance].rootViewController showModalView:[UIImage imageNamed:@"collected"] closeTime:1.5];
+        //       }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [UIUtility showDetailError:self.view error:error];
     }];
@@ -635,7 +638,6 @@
         self.collectionBtn.selected = NO;
     }
 }
-
 - (void)introBtnClicked
 {
     introExpand = !introExpand;
@@ -671,14 +673,14 @@
 
 - (void)downloadBtnClicked
 {
-    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    // Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         [UIUtility showNetWorkError:self.view];
         return;
     }
     [self.downloadBtn setEnabled:NO];
     [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"download_pressed"] forState:UIControlStateDisabled];
-
+    
     NSString *query = [NSString stringWithFormat:@"WHERE itemId = '%@'", self.prodId];
     DownloadItem *item = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:query];
     if (item != nil) {
@@ -695,30 +697,31 @@
     item.percentage = 0;
     item.type = 1;
     item.downloadStatus = @"waiting";
-    if (self.mp4DownloadUrls.count > 0) {
-        item.downloadType = @"mp4";
-        item.fileName = [NSString stringWithFormat:@"%@%@", self.prodId, @".mp4"];
-    } else if(self.m3u8DownloadUrls.count > 0){
-        item.downloadType = @"m3u8";
-    }
-    
+    //    if (self.mp4DownloadUrls.count > 0) {
+    //        item.downloadType = @"mp4";
+    //        item.fileName = [NSString stringWithFormat:@"%@%@", self.prodId, @".mp4"];
+    //    } else if(self.m3u8DownloadUrls.count > 0){
+    //        item.downloadType = @"m3u8";
+    //    }
+    item.fileName = [NSString stringWithFormat:@"%@%@", self.prodId, @".mp4"];
     if ([self.downloadSource isEqualToString:@"baidu_wangpan"])
     {
-        self.mp4DownloadUrls = [self tureWangpanDownloadURL:self.mp4DownloadUrls];
+        self.downloadUrls = [self tureWangpanDownloadURL:self.downloadUrls];
     }
     
     NSMutableArray *tempArray = [[NSMutableArray alloc]initWithCapacity:5];
-    [tempArray addObjectsFromArray:self.mp4DownloadUrls];
-    [tempArray addObjectsFromArray:self.m3u8DownloadUrls];
+    [tempArray addObjectsFromArray:self.downloadUrls];
+    //    [tempArray addObjectsFromArray:self.mp4DownloadUrls];
+    //    [tempArray addObjectsFromArray:self.m3u8DownloadUrls];
     
     item.urlArray = tempArray;
     item.downloadURLSource = self.downloadSource;
-    item.mp4SourceNum = self.mp4DownloadUrls.count;
+    //item.mp4SourceNum = self.mp4DownloadUrls.count;
     [DatabaseManager save:item];
     
     DownloadUrlFinder *finder = [[DownloadUrlFinder alloc]init];
     finder.item = item;
-    //finder.mp4DownloadUrlNum = self.mp4DownloadUrls.count;
+    //finder.mp4DownloadUrlNum = self.mp4DownloadUrls;
     [finder setupWorkingUrl];
     
     [self updateBadgeIcon];

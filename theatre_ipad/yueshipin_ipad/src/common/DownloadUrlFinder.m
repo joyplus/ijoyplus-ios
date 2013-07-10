@@ -35,11 +35,18 @@
 - (void)setupWorkingUrl
 {
     if (urlIndex >= 0 && urlIndex < item.urlArray.count) {
-        if (urlIndex >= item.mp4SourceNum && [item.downloadType isEqualToString:@"mp4"]) {
-            item.downloadType = @"m3u8";
-            [DatabaseManager update:item];
+        //        if (urlIndex >= item.mp4SourceNum && [item.downloadType isEqualToString:@"mp4"]) {
+        //            item.downloadType = @"m3u8";
+        //            [DatabaseManager update:item];
+        //        }
+        
+        NSString * urlsDic = [item.urlArray objectAtIndex:urlIndex];
+        NSArray * arr = [urlsDic componentsSeparatedByString:SEPARATED_WORD];
+        NSString *tempUrl = nil;
+        if (arr.count == 2)
+        {
+            tempUrl = [arr objectAtIndex:0];
         }
-        NSString *tempUrl = [item.urlArray objectAtIndex:urlIndex];
         NSString *formattedUrl = tempUrl;
         if([tempUrl rangeOfString:@"{now_date}"].location != NSNotFound){
             int nowDate = [[NSDate date] timeIntervalSince1970];
@@ -67,16 +74,41 @@
             if (status_Code >= 200
                 && status_Code <= 299)
             {
-                NSString * source = self.item.downloadURLSource;
-                NSString * fileType = self.item.downloadType;
-                if (([source isEqualToString:@"sohu"] && ([fileType isEqualToString:@"m3u8"] || [fileType isEqualToString:@"m3u"]))
+                NSString * urlsDic = [item.urlArray objectAtIndex:urlIndex];
+                NSString * fileType = nil;
+                NSArray * arr = [urlsDic componentsSeparatedByString:SEPARATED_WORD];
+                if (arr.count == 2)
+                {
+                    fileType = [arr objectAtIndex:1];
+                }
+                
+                if ([fileType isEqualToString:@"mp4"] && contentLength.integerValue <= MIN_MP4_FILE_SIZE)
+                {
+                    fileType = @"m3u8";
+                }
+                else if ([fileType isEqualToString:@"m3u8"] && contentLength.integerValue > MAX_M3U8_FILE_SIZE)
+                {
+                    fileType = @"mp4";
+                }
+                
+                if ([fileType isEqualToString:@"m3u8"])
+                {
+                    item.fileName = @"";
+                }
+                
+                if (([item.downloadURLSource isEqualToString:@"sohu"] && ([fileType isEqualToString:@"m3u8"] || [fileType isEqualToString:@"m3u"]))
                     || (![contentType hasPrefix:@"text/html"]&& contentLength.intValue > 100))
                 {
                     workingUrl = aconnection.originalRequest.URL.absoluteString;
                     NSLog(@"working url = %@", workingUrl);
                     item.url = workingUrl;
+                    item.downloadType = fileType;
                     [DatabaseManager update:item];
-                    [[AppDelegate instance].padDownloadManager startDownloadingThreads];
+                    
+                    if ([AppDelegate instance].curDownloadingTask.count < MAX_DOWNLOADING_THREADS)
+                    {
+                        [[AppDelegate instance].padDownloadManager startDownloadingThreads];
+                    }
                 }
                 else
                 {

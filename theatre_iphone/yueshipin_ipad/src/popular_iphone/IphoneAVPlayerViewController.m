@@ -724,6 +724,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     NSNumber * type = [NSNumber numberWithInt:videoType_];
     NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:@"kUserId"];
     double curTime = CMTimeGetSeconds([self.mPlayer currentTime]);
+    NSString *subname = [subnameArray objectAtIndex:playNum];
     NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
                           pushType, @"push_type",
                           userId, @"user_id",
@@ -734,6 +735,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                           nameStr_,@"prod_name",
                           type,@"prod_type",
                           [NSNumber numberWithInt:0],@"prod_qua",
+                          subname,@"prod_subname",
                           nil];
     
     [[BundingTVManager shareInstance] sendMsg:data];

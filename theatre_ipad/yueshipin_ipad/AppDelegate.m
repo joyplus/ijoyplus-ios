@@ -68,6 +68,7 @@
 @synthesize adViewController;
 @synthesize advUrl, advTargetUrl;
 @synthesize bgTask;
+@synthesize curDownloadingTask;
 
 + (AppDelegate *) instance {
 	return (AppDelegate *) [[UIApplication sharedApplication] delegate];
@@ -164,6 +165,7 @@
 - (void)initDownloadManager
 {
     padDownloadManager = [[NewDownloadManager alloc]init];
+    curDownloadingTask = [[NSMutableArray alloc] init];
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions

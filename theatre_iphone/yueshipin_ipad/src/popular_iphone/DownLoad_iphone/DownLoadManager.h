@@ -12,25 +12,28 @@
 @protocol DownloadManagerDelegate <NSObject>
 
 -(void)downloadBeginwithId:(NSString *)itemId inClass:(NSString *)className;
-- (void)reFreshProgress:(double)progress withId:(NSString *)itemId inClass:(NSString *)className;
+- (void)reFreshProgress:(DownloadItem *)item withId:(NSString *)itemId inClass:(NSString *)className;
 - (void)downloadFailedwithId:(NSString *)itemId inClass:(NSString *)className;
 -(void)downloadFinishwithId:(NSString *)itemId inClass:(NSString *)className;
 -(void)downloadUrlTnvalidWithId:(NSString *)itemId inClass:(NSString *)className;
 -(void)updateFreeSapceWithTotalSpace:(float)total UsedSpace:(float)used;
+-(void)DownLoadManagerUpdateIsDownloadingNumberwithId:(NSString *)itemId number:(int)num inClass:(NSString*)className;
 -(void)reFreshUI;
 @end
 
 
 @protocol M3u8DownLoadManagerDelegate <NSObject>
-- (void)M3u8DownLoadreFreshProgress:(double)progress withId:(NSString *)itemId inClass:(NSString *)className;
+- (void)M3u8DownLoadreFreshProgress:(DownloadItem *)item withId:(NSString *)itemId inClass:(NSString *)className;
 - (void)M3u8DownLoadFailedwithId:(NSString *)itemId inClass:(NSString *)className;
 -(void)M3u8DownLoadFinishwithId:(NSString *)itemId inClass:(NSString *)className;
+-(void)M3u8DownLoadManagerUpdateIsDownloadingNumberwithId:(NSString *)itemId number:(int)num inClass:(NSString*)className;
 @end
 
 
 @class CheckDownloadUrlsManager;
 @interface DownLoadManager : NSObject<M3u8DownLoadManagerDelegate>{
     NSThread *downloadThread_;
+    NSString *downloadId_;
     NSArray *allItems_;
     NSArray *allSubItems_;
     DownloadItem *downloadItem_;
@@ -38,11 +41,12 @@
     int preProgress_;
     int netWorkStatus;
     NSLock *lock_;
-    NSMutableDictionary *retryCountDic_;
+    int retryCount_;
     NSTimer *retryTimer_;
 }
 @property (nonatomic, weak) id<DownloadManagerDelegate>downLoadMGdelegate;
 @property (nonatomic, strong)NSThread *downloadThread;
+@property (nonatomic, strong)NSString *downloadId;
 @property (nonatomic, strong)NSArray *allItems;
 @property (nonatomic, strong)NSArray *allSubItems;
 @property (nonatomic, strong)DownloadItem *downloadItem;
@@ -69,9 +73,8 @@
 
 -(void)appDidEnterForeground;
 
-//-(void)networkChanged:(int)status;
-
 -(void)waringPlus;
+
 -(void)waringReduce;
 @end
 
@@ -85,6 +88,7 @@
     NSMutableArray *segmentUrlArray_;
     int retryCount_;
     NSTimer *retryTimer_;
+    NSMutableArray * operationQueueArray_;
 }
 @property (nonatomic, strong) NSOperationQueue *downloadOperationQueue;
 
@@ -95,6 +99,8 @@
 @property (nonatomic, strong)  NSMutableArray *segmentUrlArray;
 
 @property (nonatomic, strong)  NSTimer *retryTimer;
+
+@property (nonatomic, strong) NSMutableArray * operationQueueArray;
 -(void)stop;
 
 -(void)saveCurrentInfo;
@@ -111,7 +117,7 @@
 
 @interface CheckDownloadUrls : NSObject{
     NSArray *downloadInfoArr_;
-   int sendCount_;
+    int sendCount_;
     NSString *fileType_;
     NSMutableArray *allUrls_;
     NSURLConnection *currentConnection_;

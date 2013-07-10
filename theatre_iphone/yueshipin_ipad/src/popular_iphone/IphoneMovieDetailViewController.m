@@ -1,4 +1,4 @@
-  //
+//
 //  MovieDetailViewController.m
 //  yueshipin
 //
@@ -89,9 +89,8 @@
     [self loadData];
     [self loadComments];
     [self isFavority];
-    
-//    favCount_ = [[self.infoDic objectForKey:@"favority_num" ] intValue];
-//    supportCount_ = [[self.infoDic objectForKey:@"support_num" ] intValue];
+    //    favCount_ = [[self.infoDic objectForKey:@"favority_num" ] intValue];
+    //    supportCount_ = [[self.infoDic objectForKey:@"support_num" ] intValue];
     
     summaryBg_ = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"summryBg.png"] stretchableImageWithLeftCapWidth:50 topCapHeight:50 ]];
     summaryBg_.frame = CGRectMake(14, 35, 292, 90);
@@ -113,32 +112,33 @@
     [moreBtn_ setBackgroundImage:[UIImage imageNamed:@"more"] forState:UIControlStateNormal];
     [moreBtn_ setBackgroundImage:[UIImage imageNamed:@"more_off"] forState:UIControlStateSelected];
     [moreBtn_ addTarget:self action:@selector(more:) forControlEvents:UIControlEventTouchUpInside];
-
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveWXShareRecord) name:@"WXShare" object:nil];
+    
 }
 
 -(void)viewWillAppear:(BOOL)animated{
-  [CommonMotheds showNetworkDisAbledAlert:self.view];
+    [CommonMotheds showNetworkDisAbledAlert:self.view];
 }
 -(void)back:(id)sender{
     if (!isNotification_) {
         [self.navigationController popViewControllerAnimated:YES];
     }
     else{
-    
+        
         [self dismissModalViewControllerAnimated:YES];
     }
-
+    
 }
 
 -(void)loadData{
-     MBProgressHUD *tempHUD;
+    MBProgressHUD *tempHUD;
     NSString *itemId = [self.infoDic objectForKey:@"prod_id"];
     if (itemId == nil) {
         itemId = [self.infoDic objectForKey:@"content_id"];
     }
     if (itemId == nil) {
-         itemId = [self.infoDic objectForKey:@"id"];
+        itemId = [self.infoDic objectForKey:@"id"];
     }
     
     prodId_ = itemId;
@@ -177,7 +177,7 @@
         }
         else{
             self.infoDic = videoInfo_;
-
+            
         }
         episodesArr_ = [videoInfo_ objectForKey:@"episodes"];
         [self checkCanPlayVideo];
@@ -195,8 +195,8 @@
     NSString *reviews_key = [NSString stringWithFormat:@"%@%@reviews", @"movie",itemId ];
     id reviewsCacheResult = [[CacheUtility sharedCache] loadFromCache:reviews_key];
     if (reviewsCacheResult != nil) {
-         arrReviewData_ = [reviewsCacheResult objectForKey:@"reviews"];
-         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
+        arrReviewData_ = [reviewsCacheResult objectForKey:@"reviews"];
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
     }
     NSDictionary * reqData = [NSDictionary dictionaryWithObjectsAndKeys:prodId_, @"prod_id",@"1",@"page_num",@"3",@"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathProgramReviews
@@ -207,7 +207,8 @@
          arrReviewData_ = [result objectForKey:@"reviews"];
          [self.tableView reloadData];
          
-     }failure:^(__unused AFHTTPRequestOperation *operation, NSError *error)
+     }
+                                       failure:^(__unused AFHTTPRequestOperation *operation, NSError *error)
      {
          
      }];
@@ -219,7 +220,7 @@
     [self loadTable];
 }
 -(void)loadComments{
-   
+    
     NSString *itemId = [self.infoDic objectForKey:@"prod_id"];
     if (itemId == nil) {
         itemId = [self.infoDic objectForKey:@"content_id"];
@@ -232,17 +233,17 @@
     [[AFServiceAPIClient sharedClient] getPath:kPathProgramComments parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if(responseCode == nil){
-            NSArray *comments = (NSArray *)[result objectForKey:@"comments"]; 
+            NSArray *comments = (NSArray *)[result objectForKey:@"comments"];
             if(comments != nil && comments.count > 0){
                 [commentArray_ addObjectsFromArray:comments];
                 
             }
         }
-       [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-       [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
     }];
-
+    
 }
 
 -(void)isFavority{
@@ -266,11 +267,12 @@
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
     }];
-
+    
 }
 - (void)loadTable {
     
     [self.tableView reloadData];
+    
 }
 
 - (void)viewDidUnload{
@@ -309,12 +311,12 @@
     }
     else if (section == 1){
         if ([relevantList_ count]>0) {
-             return [relevantList_ count] > 5 ? 5+1:[relevantList_ count]+1;
+            return [relevantList_ count] > 5 ? 5+1:[relevantList_ count]+1;
         }
         else{
             return 0;
         }
-       
+        
     }
     else if (section == 2){
         return 0;
@@ -351,7 +353,7 @@
                 frame.backgroundColor = [UIColor clearColor];
                 [cell addSubview:frame];
                 UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(18, 19, 83, 134)];
-        
+                
                 NSString *imageUrl = [self.infoDic objectForKey:@"prod_pic_url"];
                 if (imageUrl == nil) {
                     imageUrl = [self.infoDic objectForKey:@"content_pic_url"];
@@ -368,7 +370,7 @@
                     titleStr = [self.infoDic objectForKey:@"content_name"];
                 }
                 if (titleStr == nil) {
-                        titleStr = [self.infoDic objectForKey:@"name"];
+                    titleStr = [self.infoDic objectForKey:@"name"];
                 }
                 UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 14, 170, 18)];
                 titleLabel.font = [UIFont systemFontOfSize:15];
@@ -451,11 +453,11 @@
                 [expectbtn setImageEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 30)];
                 expectbtn.titleLabel.textAlignment = UITextAlignmentCenter;
                 [expectbtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
-                [expectbtn setTitleColor:[UIColor colorWithRed:170.0f/255.0f green:170.0f/255.0f blue:161.0f/255.0f alpha:0.6f] forState:UIControlStateNormal];
+                [expectbtn setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
                 [expectbtn setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
                 expectbtn.titleLabel.font = [UIFont boldSystemFontOfSize:9];
                 [expectbtn addTarget:self action:@selector(expectVideo) forControlEvents:UIControlEventTouchUpInside];
-             
+                
                 expectbtn.hidden = YES;
                 
                 UIButton *addFav = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -488,7 +490,7 @@
                 addFav.titleEdgeInsets = UIEdgeInsetsMake(0, -10, 0, 0);
                 addFav.backgroundColor = [UIColor clearColor];
                 [addFav setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
-                [addFav setTitleColor:[UIColor colorWithRed:170.0f/255.0f green:170.0f/255.0f blue:161.0f/255.0f alpha:0.6f] forState:UIControlStateHighlighted];
+                [addFav setTitleColor:[UIColor orangeColor] forState:UIControlStateHighlighted];
                 [addFav addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
                 addFav.titleLabel.font = [UIFont systemFontOfSize:10];
                 [cell addSubview:addFav];
@@ -499,7 +501,7 @@
                 [support setImage:[UIImage imageNamed:@"icon_ding.png"] forState:UIControlStateNormal];
                 [support setImage:[UIImage imageNamed:@"icon_ding_s.png"] forState:UIControlStateHighlighted];
                 [support setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
-                [support setTitleColor:[UIColor colorWithRed:170.0f/255.0f green:170.0f/255.0f blue:161.0f/255.0f alpha:0.6f] forState:UIControlStateHighlighted];
+                [support setTitleColor:[UIColor orangeColor] forState:UIControlStateHighlighted];
                 if (supportCount_ <1000) {
                     [support setTitle:[NSString stringWithFormat:@"(%d)",supportCount_]  forState:UIControlStateNormal];
                 }
@@ -540,17 +542,18 @@
                 } else {
                     play.hidden = YES;
                     expectbtn.hidden = NO;
-                }                
+                }
                 [downLoad setBackgroundImage:[UIImage imageNamed:@"download_video_pressed.png"] forState:UIControlStateSelected];
                 [downLoad addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
                 downLoad.titleLabel.font = [UIFont systemFontOfSize:14];
                 if (isLoaded_) {
                     [cell addSubview:expectbtn];
+                    
                     if ([CommonMotheds getOnlineConfigValue] == 0){
                         [cell addSubview:downLoad];
                     }
                 }
-
+                
                 NSString *itemId = [self.infoDic objectForKey:@"prod_id"];
                 if (itemId == nil) {
                     itemId = [self.infoDic objectForKey:@"content_id"];
@@ -566,7 +569,7 @@
                     downLoad.selected = YES;
                     downLoad.adjustsImageWhenHighlighted = NO;
                 }
-
+                
                 
                 UIButton *report = [UIButton buttonWithType:UIButtonTypeCustom];
                 report.frame = CGRectMake(0, 165, 80, 35);
@@ -604,13 +607,13 @@
                     [cell addSubview:jianjie];
                     [cell addSubview:summaryBg_];
                     [cell addSubview:summaryLabel_];
-
+                    
                 }
                 
                 break;
             }
                 
-                default:
+            default:
                 break;
         }
     }
@@ -625,7 +628,7 @@
             [cell addSubview:view];
         }
         else{
-           
+            
             UIButton *bgBtn = [UIButton buttonWithType:UIButtonTypeCustom];
             bgBtn.tag = indexPath.row -1;
             bgBtn.frame = CGRectMake(14, 0, 292, 26);
@@ -652,18 +655,18 @@
             bgBtn.titleLabel.font = [UIFont systemFontOfSize:13];
             [bgBtn setTitle:[dic objectForKey:@"t_name"] forState:UIControlStateNormal];
             [bgBtn setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
-            [bgBtn setTitleColor:[UIColor colorWithRed:247/255.0 green:122/255.0 blue:151/255.0 alpha:1] forState:UIControlStateHighlighted];
-                        
+            [bgBtn setTitleColor:[UIColor orangeColor] forState:UIControlStateHighlighted];
+            
             UIImageView *push = [[UIImageView alloc] initWithFrame:CGRectMake(288, 8, 6, 10)];
             push.image = [UIImage imageNamed:@"tab2_detailed_common_jian_tou.png"];
             [cell addSubview:push];
             
             if (num != indexPath.row) {
-                 UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"fengexian.png"]];
+                UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"fengexian.png"]];
                 line.frame = CGRectMake(25,25, 270, 1);
                 [cell addSubview:line];
             }
-        
+            
         }
         
     }
@@ -676,7 +679,7 @@
             [cell addSubview:view];
         }
         else{
-        
+            
             NSDictionary *item = [commentArray_ objectAtIndex:indexPath.row-1];
             
             UILabel *user =[[UILabel alloc] initWithFrame:CGRectMake(25, 5, 180, 14)];
@@ -710,7 +713,7 @@
             line.frame = CGRectMake(25,height+22, 270, 1);
             [cell addSubview:line];
         }
-    
+        
     }
     else if (3 == indexPath.section)
     {
@@ -730,8 +733,8 @@
             }
             
             FilmReviewViewCell * reviewCell = [[FilmReviewViewCell alloc] initWithFrame:rect
-                                                                            title:[data objectForKey:@"title"]
-                                                                          content:[data objectForKey:@"comments"]];
+                                                                                  title:[data objectForKey:@"title"]
+                                                                                content:[data objectForKey:@"comments"]];
             reviewCell.tag = REVIEW_VIEW_TAG + i;
             [reviewCell setDelegate:self];
             [cell addSubview:reviewCell];
@@ -744,8 +747,8 @@
                 [moreBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 30, 100)];
                 [moreBtn setTitle:@"更多影评 >" forState:UIControlStateNormal];
                 moreBtn.titleLabel.font = [UIFont systemFontOfSize:12];
-                moreBtn.titleLabel.textColor = [UIColor colorWithRed:247/255.0 green:100/255.0 blue:136/255.0 alpha:1];
-                [moreBtn setTitleColor:[UIColor colorWithRed:247/255.0 green:100/255.0 blue:136/255.0 alpha:1]
+                moreBtn.titleLabel.textColor = [UIColor orangeColor];
+                [moreBtn setTitleColor:[UIColor orangeColor]
                               forState:UIControlStateNormal];
                 [moreBtn addTarget:self
                             action:@selector(moreBtnClicked:)
@@ -778,14 +781,13 @@
                     return 125;
                 }
                 return height+40;
-
             }
             else{
-                 return 125;
+                return 125;
             }
-           
+            
         }
-    
+        
     }
     else if (indexPath.section == 1){
         if ([relevantList_ count]>0) {
@@ -794,15 +796,15 @@
             }
             else{
                 return 26;
-            
+                
             }
             
         }
         else{
             return 0;
         }
-    
-    
+        
+        
     }
     else if (indexPath.section == 2){
         return 0;
@@ -813,7 +815,7 @@
             NSDictionary *item = [commentArray_ objectAtIndex:row -1];
             NSString *content = [item objectForKey:@"content"];
             return [self heightForString:content fontSize:13 andWidth:271]+23;
-        
+            
         }
         
     }
@@ -822,7 +824,7 @@
         CGFloat height = 44.0f + arrReviewData_.count * 133 + (arrReviewData_.count - 1)*20.0f + 50;
         return height;
     }
-        return 0;
+    return 0;
     
 }
 
@@ -838,13 +840,13 @@
     listDetail.topicId = [dic objectForKey:@"t_id"];
     listDetail.Type = 9001;
     [self.navigationController pushViewController:listDetail animated:YES];
-
+    
 }
 
 - (void)expectVideo
 {
     //电影不需要注册消息推送
-//    [self SubscribingToChannels];
+    //    [self SubscribingToChannels];
     [self addVideotoFav:ADDEXPECT];
 }
 
@@ -862,9 +864,9 @@
             [self.tableView reloadData];
             
         }
-//        else {
-//            [self showOpFailureModalView:1.5 with:type];
-//        }
+        //        else {
+        //            [self showOpFailureModalView:1.5 with:type];
+        //        }
         
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [self showOpFailureModalView:1.5 with:type];
@@ -883,12 +885,11 @@
         }
         
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-    
+        
     }];
-
-
+    
+    
 }
-
 -(void)action:(id)sender {
     if (![self checkNetWork]) {
         [UIUtility showNetWorkError:self.view];
@@ -897,6 +898,7 @@
     UIButton *button = (UIButton *)sender;
     switch (button.tag) {
         case 10001:{
+            
             if ([source_ isEqualToString:@"baidu_wangpan"]) {
                 if ([DatabaseManager isWXSharedProdId:prodId_]) {
                     [self playVideo:0];
@@ -911,18 +913,19 @@
             else{
                 [self playVideo:0];
             }
-
+            
             break;
         }
         case 10002:{
             //电影不需要注册消息推送
-//            [self SubscribingToChannels];
+            //            [self SubscribingToChannels];
             if (isFavority_) {
-                 [self Unfavority];
+                [self Unfavority];
             }
             else{
-                 [self addVideotoFav:ADDFAV];
+                [self addVideotoFav:ADDFAV];
             }
+            
             break;
         }
         case 10003:{
@@ -938,7 +941,7 @@
                     [self showOpFailureModalView:1 with:DING];
                 }
             } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-                   [self showOpFailureModalView:1 with:DING];
+                [self showOpFailureModalView:1 with:DING];
             }];
             
             
@@ -954,7 +957,6 @@
             button.adjustsImageWhenHighlighted = NO;
             
             NSString *url = [self getDownloadUrl];
-//            NSString *url = @"http://v.youku.com/player/getM3U8/vid/127814846/type/flv/ts/%7Bnow_date%7D/useKeyframe/0/v.m3u8";
             if (url == nil || [url isEqualToString:@""]) {
                 NSLog(@"Get the download url is failed");
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"暂无下载地址" delegate:self cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
@@ -1010,13 +1012,13 @@
             
             NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:prodId_, @"prod_id", nil];
             [[AFServiceAPIClient sharedClient] getPath:kPathProgramInvalid parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-
-                 [self showOpSuccessModalView:3 with:REPORT];
+                
+                [self showOpSuccessModalView:3 with:REPORT];
                 
             } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-                 [self showOpSuccessModalView:3 with:REPORT];
+                [self showOpSuccessModalView:3 with:REPORT];
             }];
-
+            
             break;
         }
         default:
@@ -1039,23 +1041,22 @@
 }
 
 -(void)more{
-   
-        moreBtn_.selected = !moreBtn_.selected;
-        float height = [self heightForString:summary_ fontSize:13 andWidth:271];
-        if (moreBtn_.selected) {
-            if (height < 85) {
-                return;
-            }
-            summaryBg_.frame = CGRectMake(14, 35, 292, height+10);
-            summaryLabel_.frame = CGRectMake(28, 35+5, 264,height);
-            
-            
+    
+    moreBtn_.selected = !moreBtn_.selected;
+    float height = [self heightForString:summary_ fontSize:13 andWidth:271];
+    if (moreBtn_.selected) {
+        if (height < 85) {
+            return;
         }
-        else{
-            summaryBg_.frame = CGRectMake(14, 35, 292, 90);
-            summaryLabel_.frame = CGRectMake(28, 35, 264,90);
-            
-        }
+        summaryBg_.frame = CGRectMake(14, 35, 292, height+10);
+        summaryLabel_.frame = CGRectMake(28, 35 + 5, 264,height);
+        
+    }
+    else{
+        summaryBg_.frame = CGRectMake(14, 35, 292, 90);
+        summaryLabel_.frame = CGRectMake(28, 35, 264,90);
+        
+    }
     [self loadTable];
     [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:1 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
     
@@ -1110,7 +1111,7 @@
     NSString *videoUrl = nil;
     NSArray *videoUrlArray = [[episodesArr_ objectAtIndex:0] objectForKey:@"down_urls"];
     if(videoUrlArray.count > 0){
-      
+        
         for(NSDictionary *tempVideo in videoUrlArray){
             if([LETV isEqualToString:[tempVideo objectForKey:@"source"]]){
                 videoUrl = [self parseVideoUrl:tempVideo];
@@ -1142,7 +1143,7 @@
         }
     }
     return downloadUrl;
-
+    
 }
 - (NSString *)parseDownloadUrl:(NSDictionary *)tempVideo
 {
@@ -1157,7 +1158,7 @@
         }
         if([GAO_QING isEqualToString:[url objectForKey:@"type"]]&&[@"m3u8" isEqualToString:[url objectForKey:@"file"]]){
             videoUrl = [url objectForKey:@"url"];
-          
+            
             break;
         }
     }
@@ -1165,12 +1166,12 @@
         for(NSDictionary *url in urlArray){
             if([BIAO_QING isEqualToString:[url objectForKey:@"type"]]&&[@"mp4" isEqualToString:[url objectForKey:@"file"]]){
                 videoUrl = [url objectForKey:@"url"];
-               
+                
                 break;
             }
             if([BIAO_QING isEqualToString:[url objectForKey:@"type"]]&&[@"m3u8" isEqualToString:[url objectForKey:@"file"]]){
                 videoUrl = [url objectForKey:@"url"];
-               
+                
                 break;
             }
         }
@@ -1179,12 +1180,12 @@
         for(NSDictionary *url in urlArray){
             if([LIU_CHANG isEqualToString:[[url objectForKey:@"type"] lowercaseString]]&&[@"mp4" isEqualToString:[url objectForKey:@"file"]]){
                 videoUrl = [url objectForKey:@"url"];
-              
+                
                 break;
             }
             if([LIU_CHANG isEqualToString:[[url objectForKey:@"type"] lowercaseString]]&&[@"m3u8" isEqualToString:[url objectForKey:@"file"]]){
                 videoUrl = [url objectForKey:@"url"];
-               
+                
                 break;
             }
         }
@@ -1210,13 +1211,13 @@
             for(NSDictionary *url in urlArray){
                 if ([[url objectForKey:@"file"] isEqualToString:@"mp4"]) {
                     videoUrl = [url objectForKey:@"url"];
-                   
+                    
                 }
                 if ([[url objectForKey:@"file"] isEqualToString:@"m3u8"]) {
                     videoUrl = [url objectForKey:@"url"];
                     
                 }
-            
+                
             }
         }
     }
@@ -1255,13 +1256,13 @@
             }
             
         }
-
+        
     }
     
 }
 
 #pragma mark -
-#pragma mark - FilmReviewViewCellDelegate 
+#pragma mark - FilmReviewViewCellDelegate
 
 - (void)filmReviewTaped:(NSString *)title content:(NSString *)content
 {
@@ -1298,18 +1299,18 @@
                                 reason,@"memo",\
                                 nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathProgramInvalid parameters:parameters success:^(AFHTTPRequestOperation *operation, id result)
-    {
-        
-    }failure:^(__unused AFHTTPRequestOperation *operation, NSError *error)
-    {
-        
-//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
-//                                                        message:@"问题反馈提交失败!"
-//                                                       delegate:nil
-//                                              cancelButtonTitle:@"我知道了"
-//                                              otherButtonTitles:nil, nil];
-//        [alert show];
-    }];
+     {
+         
+     }failure:^(__unused AFHTTPRequestOperation *operation, NSError *error)
+     {
+         
+         //        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
+         //                                                        message:@"问题反馈提交失败!"
+         //                                                       delegate:nil
+         //                                              cancelButtonTitle:@"我知道了"
+         //                                              otherButtonTitles:nil, nil];
+         //        [alert show];
+     }];
 }
 
 -(void)dealloc{

@@ -108,7 +108,9 @@
             DownloadItem *item = [playlists objectAtIndex:0];
             item = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class
                                                                queryString:[NSString stringWithFormat:@"where itemId = %@", item.itemId]];
-            if([item.downloadStatus isEqualToString:@"done"] || item.percentage == 100)
+            if([item.downloadStatus isEqualToString:@"done"]
+               || [item.downloadStatus isEqualToString:@"finish"]
+               || item.percentage == 100)
             {
                 NSString *filePath;
                 if ([item.downloadType isEqualToString:@"m3u8"])

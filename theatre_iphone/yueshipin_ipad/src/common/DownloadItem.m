@@ -22,6 +22,9 @@
 @synthesize isDownloadingNum;
 @synthesize downloadType;
 @synthesize duration;
+@synthesize downloadURLSource;
+@synthesize mp4SourceNum;
+@synthesize m3u8DownloadInfo;
 
 - (id)init
 {

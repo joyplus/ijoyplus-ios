@@ -53,7 +53,7 @@
 #define NotificationSelectedValue @"pushNotificationSelectedValue"
 #define PUSH_NotificationSelected @"PushNotificationSelected"
 #define LOCAL_KEYS_NUMBER 10
-#define MAX_DOWNLOADING_THREADS 1
+#define MAX_DOWNLOADING_THREADS 2
 #define umengAppKey @"5188669c5270154d61000005"
 
 #define YOU_KU @"youku"
