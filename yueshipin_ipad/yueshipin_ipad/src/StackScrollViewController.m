@@ -768,10 +768,10 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
         [topController.view setAlpha:0];
     } completion:^(BOOL finished) {
         [[slideViews viewWithTag:20110106 + lastViewControllerIndex] removeFromSuperview];
-        [viewControllersStack removeLastObject];
+        //[viewControllersStack removeLastObject];
         [self managerCloseTipsView];
     }];
-    
+    [viewControllersStack removeLastObject];
 }
 
 - (void)removeAllSubviewInSlider
