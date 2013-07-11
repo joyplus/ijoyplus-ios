@@ -70,6 +70,7 @@ enum
 @property (nonatomic) double seekBeginTime;
 @property (nonatomic, strong) NSMutableArray * downloadIndex;
 @property (nonatomic) BOOL fromBaidu;
+@property (nonatomic, strong) NSString * fileType;
 - (void)stopMyTimer;
 - (void)beginMyTimer;
 - (void)showActivityView;
@@ -129,7 +130,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 @synthesize isM3u8 = isM3u8_;
 @synthesize continuePlayInfo = continuePlayInfo_;
 @synthesize isPlayFromRecord = isPlayFromRecord_;
-@synthesize localPlaylist,downloadIndex, fromBaidu;
+@synthesize localPlaylist,downloadIndex, fromBaidu,fileType;
 #pragma mark Asset URL
 
 - (void)setURL:(NSURL*)URL
@@ -1054,7 +1055,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
             if (url_str) {                
                 [urlandSource setObject:url_str forKey:@"url"];
             }
-            
+            [urlandSource setObject:[url_dic objectForKey:@"file"] forKey:@"fileType"];
             if ([type_str isEqualToString:@"hd2"]) {
                 [superClearArr addObject:urlandSource];
             }
@@ -1088,6 +1089,8 @@ NSComparator cmpString = ^(id obj1, id obj2){
         case PLAIN_CLEAR:{
             if ([plainClearArr count] > 0) {
                 url = [[plainClearArr objectAtIndex:0] objectForKey:@"url"];
+                fileType = [[plainClearArr objectAtIndex:0] objectForKey:@"fileType"];
+                videoSource_ = [[plainClearArr objectAtIndex:0] objectForKey:@"source"];
                 [self sendHttpRequest:url];
             }
             else{
@@ -1098,6 +1101,8 @@ NSComparator cmpString = ^(id obj1, id obj2){
         case HIGH_CLEAR:{
             if ([highClearArr count] > 0) {
                 url = [[highClearArr objectAtIndex:0] objectForKey:@"url"];
+                fileType = [[highClearArr objectAtIndex:0] objectForKey:@"fileType"];
+                videoSource_ = [[highClearArr objectAtIndex:0] objectForKey:@"source"];
                 [self sendHttpRequest:url];
             }
             else{
@@ -1110,6 +1115,8 @@ NSComparator cmpString = ^(id obj1, id obj2){
             
             if ([superClearArr count] > 0) {
                 url = [[superClearArr objectAtIndex:0] objectForKey:@"url"];
+                fileType = [[superClearArr objectAtIndex:0] objectForKey:@"fileType"];
+                videoSource_ = [[superClearArr objectAtIndex:0] objectForKey:@"source"];
                 [self sendHttpRequest:url];
             }
             else{
@@ -1122,12 +1129,18 @@ NSComparator cmpString = ^(id obj1, id obj2){
             // 播放顺序:高清-超清-标清;
             if ([highClearArr count] > 0) {
                 url = [[highClearArr objectAtIndex:0] objectForKey:@"url"];
+                fileType = [[highClearArr objectAtIndex:0] objectForKey:@"fileType"];
+                videoSource_ = [[highClearArr objectAtIndex:0] objectForKey:@"source"];
             }
             else if ([superClearArr count] > 0) {
                 url = [[superClearArr objectAtIndex:0] objectForKey:@"url"];
+                fileType = [[superClearArr objectAtIndex:0] objectForKey:@"fileType"];
+                videoSource_ = [[superClearArr objectAtIndex:0] objectForKey:@"source"];
             }
             else if ([plainClearArr count] > 0) {
                 url = [[plainClearArr objectAtIndex:0] objectForKey:@"url"];
+                fileType = [[plainClearArr objectAtIndex:0] objectForKey:@"fileType"];
+                videoSource_ = [[plainClearArr objectAtIndex:0] objectForKey:@"source"];
             }
             
             if(url != nil){
@@ -1362,7 +1375,10 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
         NSDictionary *headerFields = [HTTPResponse allHeaderFields];
         NSString *content_type = [NSString stringWithFormat:@"%@", [headerFields objectForKey:@"Content-Type"]];
         NSString *contentLength = [headerFields objectForKey:@"Content-Length"];
-        if (![content_type hasPrefix:@"text/html"] &&  contentLength.intValue > 0) {
+        
+        if ((![content_type hasPrefix:@"text/html"] &&  contentLength.intValue > 0)
+            || ([videoSource_ isEqualToString:@"sohu"] && ([fileType isEqualToString:@"m3u8"] || [fileType isEqualToString:@"m3u"])))
+        {
             [self setURL:connection.originalRequest.URL];
             [connection cancel];
             if (isPlayOnTV)

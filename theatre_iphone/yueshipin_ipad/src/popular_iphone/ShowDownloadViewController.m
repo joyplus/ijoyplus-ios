@@ -194,7 +194,7 @@
             NSLog(@"Get the download prodId is failed");
             return;
         }
-        NSArray *infoArr = [NSArray arrayWithObjects:prod_Id,name,imageviewUrl_,@"3",[NSString stringWithFormat:@"%d",num], nil];
+        NSArray *infoArr = [NSArray arrayWithObjects:prod_Id,name,imageviewUrl_,@"3",[NSString stringWithFormat:@"%d",num], [[listArr_ objectAtIndex:num] objectForKey:@"sources"], nil];
         
         CheckDownloadUrls *check = [[CheckDownloadUrls alloc] init];
         check.downloadInfoArr = infoArr;

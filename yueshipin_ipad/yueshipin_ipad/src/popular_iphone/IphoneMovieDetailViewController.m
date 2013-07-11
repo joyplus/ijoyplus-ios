@@ -980,7 +980,7 @@
             if (imgUrl == nil) {
                 imgUrl = [self.infoDic objectForKey:@"poster"];
             }
-            NSArray *infoArr = [NSArray arrayWithObjects:prodId,name,imgUrl,@"1",[NSNumber numberWithInt:0], nil];
+            NSArray *infoArr = [NSArray arrayWithObjects:prodId,name,imgUrl,@"1",[NSNumber numberWithInt:0], [self.infoDic objectForKey:@"sources"], nil];
             
             CheckDownloadUrls *check = [[CheckDownloadUrls alloc] init];
             check.downloadInfoArr = infoArr;

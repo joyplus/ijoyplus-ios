@@ -1530,36 +1530,40 @@ NSComparator sortStr = ^(id obj1, id obj2){
     
     NSHTTPURLResponse *HTTPResponse = (NSHTTPURLResponse *)response;
     int status_Code = HTTPResponse.statusCode;
-    if (status_Code >= 200 && status_Code <= 299) {
+    if (status_Code >= 200 && status_Code <= 299)
+    {
         NSDictionary *headerFields = [HTTPResponse allHeaderFields];
         NSString *content_type = [headerFields objectForKey:@"Content-Type"];
         NSString *contentLength = [headerFields objectForKey:@"Content-Length"];
-        if (![content_type hasPrefix:@"text/html"] && (contentLength.intValue) ) {
-            
-            NSString *proid = [downloadInfoArr_ objectAtIndex:0];
-            NSString *urlStr = connection.originalRequest.URL.absoluteString;
-            NSString *name = [downloadInfoArr_ objectAtIndex:1];
-            NSString *imgUrl = [downloadInfoArr_ objectAtIndex:2];
-            NSString *type = [downloadInfoArr_ objectAtIndex:3];
-            NSString *num = [downloadInfoArr_ objectAtIndex:4];
-            NSString *fileType = nil;
-            for (NSDictionary *dic  in allUrls_) {
-                NSString *str = [dic objectForKey:@"url"];
-                if ([str isEqualToString:urlStr]) {
-                    fileType = [dic objectForKey:@"type"];
-                    break;
-                }
+        
+        NSString *proid = [downloadInfoArr_ objectAtIndex:0];
+        NSString *urlStr = connection.originalRequest.URL.absoluteString;
+        NSString *name = [downloadInfoArr_ objectAtIndex:1];
+        NSString *imgUrl = [downloadInfoArr_ objectAtIndex:2];
+        NSString *type = [downloadInfoArr_ objectAtIndex:3];
+        NSString *num = [downloadInfoArr_ objectAtIndex:4];
+        NSString *source = [downloadInfoArr_ objectAtIndex:5];
+        NSString *fileType = nil;
+        for (NSDictionary *dic  in allUrls_) {
+            NSString *str = [dic objectForKey:@"url"];
+            if ([str isEqualToString:urlStr]) {
+                fileType = [dic objectForKey:@"type"];
+                break;
             }
-            
-            if ([fileType isEqualToString:@"mp4"] && contentLength.integerValue <= MIN_MP4_FILE_SIZE)
-            {
-                fileType = @"m3u8";
-            }
-            else if ([fileType isEqualToString:@"m3u8"] && contentLength.integerValue > MAX_M3U8_FILE_SIZE)
-            {
-                fileType = @"mp4";
-            }
-            
+        }
+        
+        if ([fileType isEqualToString:@"mp4"] && contentLength.integerValue <= MIN_MP4_FILE_SIZE)
+        {
+            fileType = @"m3u8";
+        }
+        else if ([fileType isEqualToString:@"m3u8"] && contentLength.integerValue > MAX_M3U8_FILE_SIZE)
+        {
+            fileType = @"mp4";
+        }
+        
+        if ((![content_type hasPrefix:@"text/html"] && (contentLength.intValue))
+            || ([source isEqualToString:@"sohu"] && ([fileType isEqualToString:@"m3u8"] || [fileType isEqualToString:@"m3u"])))
+        {
             NSArray *arr = [NSArray arrayWithObjects:proid,urlStr,name,imgUrl,type,num,fileType,nil];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"DOWNLOAD_MSG" object:arr];
             [connection cancel];
@@ -1567,7 +1571,6 @@ NSComparator sortStr = ^(id obj1, id obj2){
             return;
             
         }
-        
     }
     [self sendHttpRequest];
     

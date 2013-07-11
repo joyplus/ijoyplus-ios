@@ -1122,7 +1122,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
     if (imgUrl == nil) {
         imgUrl = [self.infoDic objectForKey:@"poster"];
     }
-    NSArray *infoArr = [NSArray arrayWithObjects:prodId,name,imgUrl,@"2",[NSString stringWithFormat:@"%d",num],nil];
+    NSArray *infoArr = [NSArray arrayWithObjects:prodId,name,imgUrl,@"2",[NSString stringWithFormat:@"%d",num],[self.infoDic objectForKey:@"sources"],nil];
     CheckDownloadUrls *check = [[CheckDownloadUrls alloc] init];
     check.downloadInfoArr = infoArr;
     check.oneEsp = [self checkDownloadUrls:[episodesArr_ objectAtIndex:num]];

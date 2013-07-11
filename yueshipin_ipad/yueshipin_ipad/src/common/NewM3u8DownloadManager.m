@@ -302,7 +302,8 @@
                 if (bSegmentDownloadingOp.downloadingSegmentIndex % 5 == 0 || bSegmentDownloadingOp.downloadingSegmentIndex == segmentUrlArray.count) {
                     [DatabaseManager update:downloadingItem];
                 }
-                if (bSegmentDownloadingOp.downloadingSegmentIndex == segmentUrlArray.count) {//All segments are downloaded successfully.
+                if (bSegmentDownloadingOp.downloadingSegmentIndex == segmentUrlArray.count
+                    || downloadingItem.percentage == 100) {//All segments are downloaded successfully.
                     [[AppDelegate instance].curDownloadingTask removeObject:self];
                     if(downloadingItem.type == 1){
                         // will call NewDownloadManager or DownloadViewController
