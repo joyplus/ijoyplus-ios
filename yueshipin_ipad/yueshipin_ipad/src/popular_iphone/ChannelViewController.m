@@ -160,6 +160,11 @@ enum
     }
 }
 
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    [self hiddenSortedSelectedView];
+    ((UIButton *)self.navigationItem.rightBarButtonItem.customView).selected = NO;
+}
 -(void)initDefaultParameters{
     videoType_ = TYPE_MOVIE;
     _parameters = [NSMutableDictionary dictionaryWithCapacity:5];

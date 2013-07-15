@@ -158,6 +158,11 @@ enum
         self.navigationItem.rightBarButtonItem.customView.hidden = YES;
     }
 }
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    [self hiddenSortedSelectedView];
+    ((UIButton *)self.navigationItem.rightBarButtonItem.customView).selected = NO;
+}
 
 -(void)initDefaultParameters{
     videoType_ = TYPE_MOVIE;
