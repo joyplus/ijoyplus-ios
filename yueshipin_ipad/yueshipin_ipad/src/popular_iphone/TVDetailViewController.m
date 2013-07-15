@@ -956,7 +956,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
         
         if([responseCode isEqualToString:kSuccessResCode]){
             isFavority_ = YES; 
-            [self SubscribingToChannels];
+            //[self SubscribingToChannels];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"REFRESH_FAV"object:nil];
             favCount_++;
             [self showOpSuccessModalView:1.5 with:type];

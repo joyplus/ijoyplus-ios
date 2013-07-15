@@ -895,6 +895,7 @@
 
 - (void)SubscribingToChannels
 {
+    return;
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     
     NSArray *channels = [NSArray arrayWithObjects:[NSString stringWithFormat:@"CHANNEL_PROD_%@",self.prodId], nil];

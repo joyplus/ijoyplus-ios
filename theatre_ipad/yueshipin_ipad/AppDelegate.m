@@ -225,12 +225,12 @@
     [self isParseReachable];
     [Parse setApplicationId:PARSE_APP_ID clientKey:PARSE_CLIENT_KEY];
 
-    if (application.applicationIconBadgeNumber != 0) {
-        application.applicationIconBadgeNumber = 0;
-        PFInstallation *installation = [PFInstallation currentInstallation];
-        [installation setBadge:0];
-        [installation saveInBackground];
-    }
+//    if (application.applicationIconBadgeNumber != 0) {
+//        application.applicationIconBadgeNumber = 0;
+//        PFInstallation *installation = [PFInstallation currentInstallation];
+//        [installation setBadge:0];
+//        [installation saveInBackground];
+//    }
     self.closed = YES;
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
  
@@ -426,12 +426,12 @@
 }
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-    if (application.applicationIconBadgeNumber != 0) {
-        application.applicationIconBadgeNumber = 0;
-        PFInstallation *installation = [PFInstallation currentInstallation];
-        [installation setBadge:0];
-        [installation saveInBackground];
-    }
+//    if (application.applicationIconBadgeNumber != 0) {
+//        application.applicationIconBadgeNumber = 0;
+//        PFInstallation *installation = [PFInstallation currentInstallation];
+//        [installation setBadge:0];
+//        [installation saveInBackground];
+//    }
     [self.sinaweibo applicationDidBecomeActive];
     [self performSelector:@selector(triggerDownload) withObject:self afterDelay:5];
     
