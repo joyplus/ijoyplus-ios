@@ -616,8 +616,9 @@
 -(void) onResp:(BaseResp*)resp{
     if (resp.errCode == 0) {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"wechat_share_success" object:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"WXShare" object:nil];
     }
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"WXShare" object:nil];
+   
 }
 
 - (void)showAPNSMessage:(NSDictionary *)dic
