@@ -664,12 +664,12 @@ NSComparator cmptr = ^(id obj1, id obj2){
             tempTopsArray = [result objectForKey:@"results"];
             if(tempTopsArray.count > 0){
                 [videoArray addObjectsFromArray:tempTopsArray];
-                if (videoType == MORE_TYPE && sortedByScore_) {
+                if (videoType == MOVIE_TYPE && sortedByScore_) {
                     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"score" ascending:NO comparator:cmptr];
                     NSArray *tempArr = videoArray;
                     NSArray *sortedArr = [tempArr sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
                     [videoArray removeAllObjects];
-                    videoArray = [NSArray arrayWithArray:sortedArr];
+                    [videoArray addObjectsFromArray:sortedArr];
                 }
                 reloads_ ++;
             }
