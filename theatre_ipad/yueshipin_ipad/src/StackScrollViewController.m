@@ -754,7 +754,7 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
 {
     CGRect frame = [UIScreen mainScreen].bounds;
     NSInteger lastViewControllerIndex = viewControllersStack.count - 1;
-    if(lastViewControllerIndex < 1 || lastViewControllerIndex >= viewControllersStack.count){
+    if(lastViewControllerIndex <= 1 || lastViewControllerIndex >= viewControllersStack.count){
         return;
     }
     
@@ -768,7 +768,7 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
         [topController.view setAlpha:0];
     } completion:^(BOOL finished) {
         [[slideViews viewWithTag:20110106 + lastViewControllerIndex] removeFromSuperview];
-        //[viewControllersStack removeLastObject];
+      
         [self managerCloseTipsView];
     }];
     [viewControllersStack removeLastObject];
