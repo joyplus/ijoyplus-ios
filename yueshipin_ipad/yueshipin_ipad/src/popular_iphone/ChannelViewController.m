@@ -510,13 +510,14 @@ enum
     [_parameters setObject:[NSString stringWithFormat:@"%d",loadCount] forKey:@"page_num"];
     [[AFServiceAPIClient sharedClient] getPath:kPathFilter parameters:_parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSArray *itemsArr = [result objectForKey:@"results"];
+        [_dataArr addObjectsFromArray:itemsArr];
+        
         if (videoType_ == TYPE_MOVIE && sortedByScore_) {
             NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"score" ascending:NO comparator:cmptr];
-            NSArray *sortedArr = [itemsArr sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+            NSArray *tempArr = [NSArray arrayWithArray:_dataArr];
+            NSArray *sortedArr = [tempArr sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+            [_dataArr removeAllObjects];
             [_dataArr addObjectsFromArray:sortedArr];
-        }
-        else{
-            [_dataArr addObjectsFromArray:itemsArr];
         }
         
         if ([itemsArr count]<12) {

@@ -237,11 +237,11 @@
 }
 
 NSComparator cmptr = ^(id obj1, id obj2){
-    if ([obj1 integerValue] > [obj2 integerValue]) {
+    if ([obj1 floatValue] > [obj2 floatValue]) {
         return (NSComparisonResult)NSOrderedDescending;
     }
     
-    if ([obj1 integerValue] < [obj2 integerValue]) {
+    if ([obj1 floatValue] < [obj2 floatValue]) {
         return (NSComparisonResult)NSOrderedAscending;
     }
     return (NSComparisonResult)NSOrderedSame;
