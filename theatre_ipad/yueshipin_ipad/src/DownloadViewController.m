@@ -288,7 +288,6 @@
 
 - (void)downloadSuccess:(NSString *)operationId
 {
-    [[AppDelegate instance].padDownloadManager.retryCountInfo setObject:@"0" forKey:operationId];
     for (int i = 0; i < allDownloadItems.count; i++) {
         DownloadItem *item = [allDownloadItems objectAtIndex:i];
         if (item.type == 1 && [item.itemId isEqualToString:operationId]) {
@@ -307,6 +306,7 @@
 
 - (void)updateProgress:(NSString *)operationId progress:(float)progress
 {
+    [[AppDelegate instance].padDownloadManager.retryCountInfo setObject:@"0" forKey:operationId];
     for (int i = 0; i < allDownloadItems.count; i++) {
         DownloadItem *item = [allDownloadItems objectAtIndex:i];
         if (item.type == 1 && [item.itemId isEqualToString:operationId]) {
