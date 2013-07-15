@@ -455,12 +455,23 @@ NSComparator cmptr = ^(id obj1, id obj2){
                 if (titleStr == nil) {
                     titleStr = [self.infoDic objectForKey:@"name"];
                 }
-                UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 14, 170, 18)];
+                UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 14, 150, 18)];
                 titleLabel.font = [UIFont systemFontOfSize:15];
                 titleLabel.textColor = [UIColor grayColor];
                 titleLabel.backgroundColor = [UIColor clearColor];
                 titleLabel.text = titleStr;
                 [cell addSubview:titleLabel];
+                
+                UILabel *scoreLabel = [[UILabel alloc] initWithFrame:CGRectMake(270, 14, 25, 18)];
+                scoreLabel.font = [UIFont systemFontOfSize:15];
+                scoreLabel.textColor = [UIColor orangeColor];
+                scoreLabel.backgroundColor = [UIColor clearColor];
+                scoreLabel.text = [self.infoDic objectForKey:@"score"];
+                [cell addSubview:scoreLabel];
+                
+                UIImageView *logo = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"list_numeral_watercress.png"]];
+                logo.frame = CGRectMake(298, 16, 14, 14);
+                [cell addSubview:logo];
                 
                 UILabel *actorsLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 39, 200, 15)];
                 actorsLabel.font = [UIFont systemFontOfSize:12];
