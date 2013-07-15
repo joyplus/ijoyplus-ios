@@ -195,17 +195,10 @@
 
 - (void)downloadSuccess:(NSString *)operationId suboperationId:(NSString *)suboperationId
 {
-    for (int i = 0; i < subitems.count; i++) {
-        SubdownloadItem *tempitem = [subitems objectAtIndex:i];
-        if ([tempitem.itemId isEqualToString:operationId] && [suboperationId isEqualToString:tempitem.subitemId]) {
-            tempitem = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@ and subitemId = '%@'", tempitem.itemId, tempitem.subitemId]];
-            tempitem.percentage = 100;
-            tempitem.downloadStatus  = @"done";
-            //[AppDelegate instance].currentDownloadingNum --;//0
-            [DatabaseManager update:tempitem];
-            break;
-        }
-    }
+    SubdownloadItem * subItem = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@ and subitemId = '%@'", operationId, suboperationId]];
+    subItem.percentage = 100;
+    subItem.downloadStatus  = @"done";
+    [DatabaseManager update:subItem];
     [_gmGridView reloadData];
     [[AppDelegate instance].padDownloadManager startDownloadingThreads];
     [[NSNotificationCenter defaultCenter] postNotificationName:UPDATE_DISK_STORAGE object:nil];
