@@ -465,6 +465,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
                 UILabel *scoreLabel = [[UILabel alloc] initWithFrame:CGRectMake(270, 14, 25, 18)];
                 scoreLabel.font = [UIFont systemFontOfSize:15];
                 scoreLabel.textColor = [UIColor orangeColor];
+                scoreLabel.textAlignment = NSTextAlignmentRight;
                 scoreLabel.backgroundColor = [UIColor clearColor];
                 scoreLabel.text = [self.infoDic objectForKey:@"score"];
                 [cell addSubview:scoreLabel];

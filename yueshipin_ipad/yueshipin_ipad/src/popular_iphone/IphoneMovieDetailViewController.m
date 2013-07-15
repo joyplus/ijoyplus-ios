@@ -383,6 +383,7 @@
                 scoreLabel.font = [UIFont systemFontOfSize:15];
                 scoreLabel.textColor = [UIColor orangeColor];
                 scoreLabel.backgroundColor = [UIColor clearColor];
+                scoreLabel.textAlignment = NSTextAlignmentRight;
                 scoreLabel.text = [self.infoDic objectForKey:@"score"];
                 [cell addSubview:scoreLabel];
                 
