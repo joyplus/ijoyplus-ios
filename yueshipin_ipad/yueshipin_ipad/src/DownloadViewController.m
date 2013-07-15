@@ -289,17 +289,12 @@
 - (void)downloadSuccess:(NSString *)operationId
 {
     [[AppDelegate instance].padDownloadManager.retryCountInfo setObject:@"0" forKey:operationId];
-    for (int i = 0; i < allDownloadItems.count; i++) {
-        DownloadItem *item = [allDownloadItems objectAtIndex:i];
-        if (item.type == 1 && [item.itemId isEqualToString:operationId]) {
-            item = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@", item.itemId]];
-            item.downloadStatus = @"done";
-            item.percentage = 100;
-            //[AppDelegate instance].currentDownloadingNum = 0;
-            [DatabaseManager update:item];
-            break;
-        }
-    }
+    
+    DownloadItem * item = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@", operationId]];
+    item.downloadStatus = @"done";
+    item.percentage = 100;
+    [DatabaseManager update:item];
+    
     [_gmGridView reloadData];
     [[AppDelegate instance].padDownloadManager startDownloadingThreads];
     [self updateDiskStorage];

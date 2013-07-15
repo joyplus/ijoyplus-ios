@@ -158,14 +158,6 @@
                             //[AppDelegate instance].currentDownloadingNum --;
                         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                             NSLog(@"Download mp4 file error: %@", error);
-//                            if (afOperation.isDownloadingType == 1) {
-//                                [self downloadFailure:afOperation.operationId
-//                                                error:error];
-//                            } else {
-//                                [self downloadFailure:afOperation.operationId
-//                                       suboperationId:afOperation.suboperationId
-//                                                error:error];
-//                            }
                             [operation cancel];
                         }];
                         [DLOperation setProgressiveDownloadProgressBlock:^(NSInteger bytesRead, long long totalBytesRead, long long totalBytesExpected, long long totalBytesReadForFile, long long totalBytesExpectedToReadForFile) {
