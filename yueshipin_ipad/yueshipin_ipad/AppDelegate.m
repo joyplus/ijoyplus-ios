@@ -258,9 +258,8 @@
         self.downLoadManager = [DownLoadManager defaultDownLoadManager];
         [self.downLoadManager resumeDownLoad];
         self.window.rootViewController = tabBarView;
-        [[BundingTVManager shareInstance] connecteServer];
     }
-    
+    [[BundingTVManager shareInstance] connecteServer];
     [self.window makeKeyAndVisible];
     
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:

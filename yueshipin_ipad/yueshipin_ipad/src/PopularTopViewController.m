@@ -15,7 +15,9 @@
 #import "ListViewController.h"
 #import "SubsearchViewController.h"
 #import "CommonHeader.h"
-
+#import "AppDelegate.h"
+#import "ScanDetailViewController.h"
+#import "ScanViewController.h"
 #define TOP_IMAGE_HEIGHT 170
 #define VIDEO_BUTTON_WIDTH 120
 #define VIDEO_BUTTON_HEIGHT 45
@@ -123,12 +125,45 @@
     {
         [self retrieveMovieTopsData];
     }
+    
+    [self showBundingTap];
 }
 
+-(void)showBundingTap{
+    NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:@"kUserId"];
+    NSDictionary * data = (NSDictionary *)[[ContainerUtility sharedInstance] attributeForKey:[NSString stringWithFormat:@"%@_isBunding",userId]];
+    NSNumber *isbunding = [data objectForKey:KEY_IS_BUNDING];
+    //isbunding= [NSNumber numberWithInt:1];
+    if ([isbunding boolValue]) {
+        UIImageView *bunding_succeed_tip = (UIImageView *)[self.view viewWithTag:99999];
+        if (bunding_succeed_tip == nil) {
+            bunding_succeed_tip = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bunding_succeed_tip"]];
+            bunding_succeed_tip.frame = CGRectMake(2, 80, 513, 34);
+            bunding_succeed_tip.tag = 99999;
+            bunding_succeed_tip.userInteractionEnabled = YES;
+            UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self
+                                                                                        action:@selector(TopImageTaped)];
+            tapGesture.numberOfTapsRequired = 1;
+            tapGesture.numberOfTouchesRequired = 1;
+            [bunding_succeed_tip addGestureRecognizer:tapGesture];
+            
+            [self.view addSubview:bunding_succeed_tip];
+        }
+        table.frame = CGRectMake(table.frame.origin.x, table.frame.origin.y+30, table.frame.size.width, table.frame.size.height);
+    }
+    else{
+        UIImageView *bunding_succeed_tip = (UIImageView *)[self.view viewWithTag:99999];
+        if (bunding_succeed_tip) {
+            [bunding_succeed_tip removeFromSuperview];
+        }
+        table.frame = CGRectMake(3, 92, self.view.frame.size.width - 16, self.view.frame.size.height - TOP_SOLGAN_HEIGHT - 20);
+    }
+}
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     [[AppDelegate instance].rootViewController showIntroModalView:SHOW_MENU_INTRO introImage:[UIImage imageNamed:@"menu_intro_yuebang"]];
+    
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -152,6 +187,12 @@
     comicTopsArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
     showTopsArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
     
+    UIButton *saoyisao = [UIButton buttonWithType:UIButtonTypeCustom];
+    saoyisao.frame = CGRectMake(430, 30, 55, 44);
+    [saoyisao setBackgroundImage:[UIImage imageNamed:@"scan_btn_ipad"] forState:UIControlStateNormal];
+    [saoyisao setBackgroundImage:[UIImage imageNamed:@"scan_btn_f_ipad"] forState:UIControlStateHighlighted];
+    [saoyisao addTarget:self action:@selector(saoyisaoClicked) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:saoyisao];
     [self performSelectorInBackground:@selector(transferDataFromOldDb) withObject:nil];
 }
 
@@ -646,7 +687,17 @@ void transferDataFromOldDbWithCatch()
     [self retrieveComicTopsData];
 }
 
+-(void)saoyisaoClicked{
+    ScanDetailViewController *scanDetailViewController = [[ScanDetailViewController alloc] init];
+    scanDetailViewController.isBunding = NO;
+   [self presentModalViewController:[[UINavigationController alloc] initWithRootViewController:scanDetailViewController] animated:YES];
+}
 
+-(void)TopImageTaped{
+    ScanDetailViewController *scanDetailViewController = [[ScanDetailViewController alloc] init];
+    scanDetailViewController.isBunding = YES;
+    [self presentModalViewController:[[UINavigationController alloc] initWithRootViewController:scanDetailViewController] animated:YES];
+}
 #pragma mark -
 #pragma mark Table view data source
 

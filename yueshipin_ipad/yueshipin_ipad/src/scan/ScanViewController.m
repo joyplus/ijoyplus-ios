@@ -1,22 +1,22 @@
 //
-//  DimensionalCodeScanViewController.m
+//  ScanViewController.m
 //  yueshipin
 //
-//  Created by 08 on 13-4-9.
+//  Created by lily on 13-7-10.
 //  Copyright (c) 2013年 joyplus. All rights reserved.
 //
 
-#import "DimensionalCodeScanViewController.h"
+#import "ScanViewController.h"
+
 #import "BundingViewController.h"
 
 #define SCAN_TIMER_INTERVAL (4.0f)
-
-@interface DimensionalCodeScanViewController ()
-@property (nonatomic,strong) NSTimer    *scanTimer;
+@interface ScanViewController ()
+@property (nonatomic,strong) NSTimer *scanTimer;
 - (void)fireANewTimer;
 @end
 
-@implementation DimensionalCodeScanViewController
+@implementation ScanViewController
 @synthesize scanSymbolView,scanTimer;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -50,22 +50,14 @@
                                              selector:@selector(appDidBecomeActive)
                                                  name:UIApplicationDidBecomeActiveNotification
                                                object:nil];
-   
-    self.title = @"扫一扫";
-    
-    UIButton *leftButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [leftButton addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
-    leftButton.frame = CGRectMake(0, 0, 55, 44);
-    leftButton.backgroundColor = [UIColor clearColor];
-    [leftButton setImage:[UIImage imageNamed:@"back.png"] forState:UIControlStateNormal];
-    [leftButton setImage:[UIImage imageNamed:@"back_f.png"] forState:UIControlStateHighlighted];
-    UIBarButtonItem *leftButtonItem = [[UIBarButtonItem alloc] initWithCustomView:leftButton];
-    self.navigationItem.leftBarButtonItem = leftButtonItem;
-    
+
     scanSymbolView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"scan_symbol.png"]];
-    scanSymbolView.frame = CGRectMake(72, kCurrentWindowHeight - 391, 175, 20.5);
+    scanSymbolView.frame = CGRectMake(190,100, 175, 20.5);
     [self.view addSubview:scanSymbolView];
+
+    [self fireANewTimer];
     
+    [self viewWillAppear:YES];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -77,24 +69,19 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self fireANewTimer];
+   
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    scanSymbolView.frame = CGRectMake(72, kCurrentWindowHeight - 391, 175, 20.5);
+    //scanSymbolView.frame = CGRectMake(72, 391, 175, 20.5);
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
-- (void)back
-{
-    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)fireANewTimer
@@ -112,13 +99,13 @@
 
 - (void)scanAnimation
 {
-    scanSymbolView.frame = CGRectMake(72, kCurrentWindowHeight - 391, 175, 20.5);
+    scanSymbolView.frame = CGRectMake(190, 100, 175, 20.5);
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationDuration:SCAN_TIMER_INTERVAL];
     [UIView setAnimationDelegate:self];
     [UIView setAnimationRepeatCount:MAXFLOAT];
     //[UIView setAnimationDidStopSelector:@selector(fireANewTimer)];
-    scanSymbolView.frame = CGRectMake(72, kCurrentWindowHeight - 391 + 168.5, 175, 20.5);
+    scanSymbolView.frame = CGRectMake(190,250 + 168.5, 175, 20.5);
     [UIView commitAnimations];
 }
 
@@ -127,7 +114,7 @@
     [self fireANewTimer];
 }
 
-#pragma mark - 
+#pragma mark -
 #pragma mark - ZBarReaderDelegate
 - (void) imagePickerController: (UIImagePickerController*) reader
  didFinishPickingMediaWithInfo: (NSDictionary*) info
@@ -149,11 +136,13 @@
         return;
     }
     
-    BundingViewController * bCtrl = [[BundingViewController  alloc] init];
-    bCtrl.strData = symbol.data;
-    bCtrl.hidesBottomBarWhenPushed = NO;
-    [self.navigationController pushViewController:bCtrl animated:YES];
+//    BundingViewController * bCtrl = [[BundingViewController  alloc] init];
+//    bCtrl.strData = symbol.data;
+//    bCtrl.hidesBottomBarWhenPushed = NO;
+//    [self.navigationController pushViewController:bCtrl animated:YES];
+    [[NSNotificationCenter defaultCenter] postNotificationName:ZBarReader object:symbol.data];
     
 }
+
 
 @end

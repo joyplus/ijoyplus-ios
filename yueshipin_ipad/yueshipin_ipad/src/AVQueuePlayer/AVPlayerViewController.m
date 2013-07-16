@@ -832,6 +832,29 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
      [self disableAirPlayButton];
     }
     
+    NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:@"kUserId"];
+    NSDictionary * data = (NSDictionary *)[[ContainerUtility sharedInstance] attributeForKey:[NSString stringWithFormat:@"%@_isBunding",userId]];
+    NSNumber * isbunding = [data objectForKey:KEY_IS_BUNDING];
+    if ([isbunding boolValue])
+    {
+        
+        if (![BundingTVManager shareInstance].isConnected)
+        {
+            NSString * sendChannel = [NSString stringWithFormat:@"/screencast/CHANNEL_TV_%@",[data objectForKey:KEY_MACADDRESS]];
+            [[BundingTVManager shareInstance] connecteServerWithChannel:sendChannel];
+        }
+        
+    [BundingTVManager shareInstance].sendClient.delegate = self;
+    cloudPlayButton_ = [UIButton buttonWithType:UIButtonTypeCustom];
+    cloudPlayButton_.frame = CGRectMake(routeBtn.frame.origin.x+routeBtn.frame.size.width+20, 25, 55, BUTTON_HEIGHT);
+    [cloudPlayButton_ setBackgroundImage:[UIImage imageNamed:@"ipad_cloud_tv"] forState:UIControlStateNormal];
+    [cloudPlayButton_ setBackgroundImage:[UIImage imageNamed:@"ipad_cloud_tv_f"] forState:UIControlStateHighlighted];
+     [cloudPlayButton_ setBackgroundImage:[UIImage imageNamed:@"ipad_cloud_tv_f"] forState:UIControlStateSelected];
+        [cloudPlayButton_ addTarget:self action:@selector(couldPlayButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    cloudPlayButton_.enabled = NO;
+    [mToolbar addSubview:cloudPlayButton_];
+    }
+    
     mPlayButton = [UIButton buttonWithType:UIButtonTypeCustom];
     mPlayButton.frame = CGRectMake(0, 0, 55, BUTTON_HEIGHT);
     [mPlayButton setHidden:YES];
@@ -1180,6 +1203,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 
 - (void)prevBtnClicked
 {
+    if (isPlayOnTV)
+    {
+        [self controlCloundTV:CLOUND_TV_SEEK_TO_TIME];
+    }
     [self resetControlVisibilityTimer];
     int currentTime = 0;
     if (CMTIME_IS_VALID(mPlayer.currentTime)) {
@@ -1332,6 +1359,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 {
 	/* If we are at the end of the movie, we must seek to the beginning first
      before starting playback. */
+    if (isPlayOnTV && isTVReady)
+    {
+        [self controlCloundTV:CLOUND_TV_PLAY];
+    }
 	if (YES == seekToZeroBeforePlay) {
 		seekToZeroBeforePlay = NO;
 		[mPlayer seekToTime:kCMTimeZero];
@@ -1349,6 +1380,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 
 - (void)stopBtnClicked:(id)sender
 {
+    if (isPlayOnTV && isTVReady)
+    {
+        [self controlCloundTV:CLOUND_TV_PAUSE];
+    }
 	[mPlayer pause];
     [self showPlayButton];
     [self resetControlVisibilityTimer];
@@ -1419,6 +1454,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 
 - (void)closeSelf
 {
+    if (isPlayOnTV)
+    {
+        [self controlCloundTV:CLOUND_TV_CLOSE];
+    }
+    [BundingTVManager shareInstance].sendClient.delegate = (id)[BundingTVManager shareInstance];
+    
     [self destoryPlayer];
     if ([@"0" isEqualToString:[AppDelegate instance].closeVideoMode]){
         [self dismissViewControllerAnimated:YES completion:^{
@@ -1782,6 +1823,20 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     }
 }
 
+-(void)couldPlayButtonPressed:(UIButton *)btn{
+
+    btn.selected = !btn.selected;
+    isPlayOnTV = btn.selected;
+    if (isPlayOnTV)
+    {
+        [self pushWebURLToCloudTV:@"41"];
+    }
+    else
+    {
+        [self controlCloundTV:CLOUND_TV_CLOSE];
+    }
+
+}
 #pragma mark -
 #pragma mark Play, Stop buttons
 
@@ -1824,8 +1879,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
             if (!isClosed)
                 [self prepareToPlayAsset:asset];
         });
-        
-       
         
         /* Tells the asset to load the values of any of the specified keys that are not already loaded. */
 //        __block typeof (self) myself = self;
@@ -2087,6 +2140,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 		[mPlayer setRate:mRestoreAfterScrubbingRate];
 		mRestoreAfterScrubbingRate = 0.f;
 	}
+    if (isPlayOnTV)
+    {
+        [self controlCloundTV:CLOUND_TV_SEEK_TO_TIME];
+    }
 }
 
 - (BOOL)isScrubbing
@@ -2456,6 +2513,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 
 }
 
+-(void)enableCloudPlayButton{
+    if (cloudPlayButton_) {
+        cloudPlayButton_.enabled = YES;
+    }
+}
 - (void)changeTracks:(int)atype{    //0-第1个音轨；1-第2个音轨；
         if (audioMix_) {
                     NSArray *inputParametersArray = audioMix_.inputParameters;
@@ -2671,6 +2733,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                 [self enableNextButton];
                 [self enableTracksSelectButton];
                 [self enaleAirPlayButton];
+                [self enableCloudPlayButton];
                 
                 [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
                     for (UIView *subview in playCacheView.subviews) {
@@ -2687,39 +2750,39 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                     [mPlayButton sendActionsForControlEvents:UIControlEventTouchUpInside];
                     NSDictionary *tempDic = [combinedArr objectAtIndex:combinedIndex];
                     //                    NSLog(@"%@", tempDic);
-                    NSString *source_str = [[tempDic objectForKey:URL_KEY] objectForKey:@"source"];
+                    sourceStr = [[tempDic objectForKey:URL_KEY] objectForKey:@"source"];
                     BOOL exists = YES;
-                    if ([source_str isEqualToString:@"letv"] || [source_str isEqualToString:@"le_tv_fee"]) {
-                        source_str = @"letv";
+                    if ([sourceStr isEqualToString:@"letv"] || [sourceStr isEqualToString:@"le_tv_fee"]) {
+                        sourceStr = @"letv";
                         sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width, 17, 58, 17);
-                    } else if ([source_str isEqualToString:@"fengxing"]){
+                    } else if ([sourceStr isEqualToString:@"fengxing"]){
                         sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width, 17, 17, 17);
-                    } else if ([source_str isEqualToString:@"qiyi"]){
+                    } else if ([sourceStr isEqualToString:@"qiyi"]){
                         sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width, 17, 58, 17);
-                    } else if ([source_str isEqualToString:@"youku"]){
+                    } else if ([sourceStr isEqualToString:@"youku"]){
                         sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width, 17, 86, 17);
-                    } else if ([source_str isEqualToString:@"sinahd"]){
+                    } else if ([sourceStr isEqualToString:@"sinahd"]){
                         sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width, 17, 23, 17);
-                    } else if ([source_str isEqualToString:@"sohu"]){
+                    } else if ([sourceStr isEqualToString:@"sohu"]){
                         sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width, 17, 43, 17);
-                    } else if ([source_str isEqualToString:@"56"]){
+                    } else if ([sourceStr isEqualToString:@"56"]){
                         sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width, 17, 54, 17);
-                    } else if ([source_str isEqualToString:@"qq"]){
+                    } else if ([sourceStr isEqualToString:@"qq"]){
                         sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width, 17, 17, 17);
-                    } else if ([source_str isEqualToString:@"pptv"]
-                               || [source_str isEqualToString:@"wangpan"]
-                               || [source_str isEqualToString:@"baidu_wangpan"]){
-                        source_str = @"pptv";
+                    } else if ([sourceStr isEqualToString:@"pptv"]
+                               || [sourceStr isEqualToString:@"wangpan"]
+                               || [sourceStr isEqualToString:@"baidu_wangpan"]){
+                        sourceStr = @"pptv";
                         sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width, 17, 56, 17);
-                    } else if ([source_str isEqualToString:@"m1905"]){
+                    } else if ([sourceStr isEqualToString:@"m1905"]){
                         sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width, 16, 45, 17);
-                    } else if ([source_str isEqualToString:@"pps"]){
+                    } else if ([sourceStr isEqualToString:@"pps"]){
                         sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width, 17, 53, 17);
                     } else {
                         exists = NO;
                     }
                     if (exists) {
-                        sourceImage.image = [UIImage imageNamed:[NSString stringWithFormat:@"logo_%@", source_str]];
+                        sourceImage.image = [UIImage imageNamed:[NSString stringWithFormat:@"logo_%@", sourceStr]];
                         [sourceLabel setHidden:NO];
                         [sourceImage setHidden:NO];
                     }
@@ -2909,6 +2972,122 @@ NSComparator cmpStr = ^(id obj1, id obj2){
 - (void)appDidBecomeActive:(NSNotification *)niti
 {
     //isAppEnterBackground = NO;
+}
+
+#pragma mark -
+#pragma mark FayeObjc delegate
+- (void) messageReceived:(NSDictionary *)messageDict
+{
+    if ([[messageDict objectForKey:@"push_type"] isEqualToString:@"31"])
+    {
+        
+    }
+    else if ([[messageDict objectForKey:@"push_type"] isEqualToString:@"32"])
+    {
+        
+    }
+    else if ([[messageDict objectForKey:@"push_type"] isEqualToString:@"42"])
+    {
+        isTVReady = YES;
+    }
+}
+
+- (void)connectedToServer
+{
+    
+}
+
+- (void)disconnectedFromServer
+{
+    [[BundingTVManager shareInstance] reconnectToServer];
+    [BundingTVManager shareInstance].sendClient.delegate = self;
+}
+
+- (void)socketDidSendMessage:(ZTWebSocket *)aWebSocket
+{
+    
+}
+
+- (void)subscriptionFailedWithError:(NSString *)error
+{
+    
+}
+- (void)subscribedToChannel:(NSString *)channel
+{
+    
+}
+
+#pragma mark -
+#pragma mark - 控制投放TV接口(private)
+- (void)controlCloundTV:(NSInteger)controlType
+{
+    NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:@"kUserId"];
+    NSDictionary * data = (NSDictionary *)[[ContainerUtility sharedInstance] attributeForKey:[NSString stringWithFormat:@"%@_isBunding",userId]];
+    NSString * sendChannel = [NSString stringWithFormat:@"CHANNEL_TV_%@",[data objectForKey:KEY_MACADDRESS]];
+    double curTime = mScrubber.value * CMTimeGetSeconds([self playerItemDuration]);//CMTimeGetSeconds([self.mPlayer currentTime]);
+    NSNumber * videoType = [NSNumber numberWithInt:type];
+    NSString * cType = nil;
+    switch (controlType)
+    {
+        case CLOUND_TV_PLAY:
+        {
+            cType = @"403";
+        }
+            break;
+        case CLOUND_TV_PAUSE:
+        {
+            cType = @"405";
+        }
+            break;
+        case CLOUND_TV_CLOSE:
+        {
+            cType = @"409";
+        }
+            break;
+        case CLOUND_TV_SEEK_TO_TIME:
+        {
+            cType = @"407";
+        }
+            break;
+        default:
+            break;
+    }
+    
+    NSDictionary *reqData = [NSDictionary dictionaryWithObjectsAndKeys:
+                             cType, @"push_type",
+                             userId, @"user_id",
+                             sendChannel, @"tv_channel",
+                             [NSNumber numberWithFloat:curTime],@"prod_time",
+                             workingUrl.absoluteString,@"prod_url",
+                             prodId,@"prod_id",
+                             name,@"prod_name",
+                             videoType,@"prod_type",
+                             nil];
+    
+    [[BundingTVManager shareInstance] sendMsg:reqData];
+}
+
+- (void)pushWebURLToCloudTV:(NSString *)pushType
+{
+    NSNumber * videotype = [NSNumber numberWithInt:type];
+    NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:@"kUserId"];
+    double curTime = CMTimeGetSeconds([self.mPlayer currentTime]);
+    NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
+                          pushType, @"push_type",
+                          userId, @"user_id",
+                          workingUrl.absoluteString,@"prod_url",
+                          [NSString stringWithFormat:@"%@",sourceStr],@"prod_src",
+                          [NSNumber numberWithFloat:curTime],@"prod_time",
+                          prodId,@"prod_id",
+                          name,@"prod_name",
+                          videotype,@"prod_type",
+                          [NSNumber numberWithInt:0],@"prod_qua",
+                          subname,@"prod_subname",
+                          nil];
+    
+    [[BundingTVManager shareInstance] sendMsg:data];
+    [MobClick event:KEY_PUSH_VIDEO];
+    isTVReady = NO;
 }
 
 @end
