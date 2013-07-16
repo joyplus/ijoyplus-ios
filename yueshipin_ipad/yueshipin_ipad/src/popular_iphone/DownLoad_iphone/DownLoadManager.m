@@ -163,7 +163,22 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
         if (item.type == 1) {
             if (![item.downloadStatus isEqualToString:@"finish"]) {
                 NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:item.url] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60];
-                NSString *filePath = [NSString stringWithFormat:@"%@/%@.mp4", documentsDir,item.itemId];
+                NSString *filePath = nil;
+                
+                if ([item.downloadType isEqualToString:@"m3u8"])
+                {
+                    NSString *subPath = [NSString stringWithFormat:@"%@_1",item.itemId,nil];
+                    NSString * storeFileName = [[NSURL URLWithString:item.url] lastPathComponent];
+                    filePath = [NSString stringWithFormat:@"%@/%@/%@/%@",documentsDir,item.itemId,subPath,storeFileName,nil];
+                    if (![[NSFileManager new] fileExistsAtPath:filePath isDirectory:NO]) {
+                        [[NSFileManager new] createDirectoryAtPath:filePath withIntermediateDirectories:YES attributes:nil error:nil];
+                    }
+                }
+                else
+                {
+                    filePath = [NSString stringWithFormat:@"%@/%@.mp4", documentsDir,item.itemId];
+                }
+                
                 AFDownloadRequestOperation *downloadingOperation= [[AFDownloadRequestOperation alloc] initWithRequest:request targetPath:filePath shouldResume:YES];
                 
                 downloadingOperation.operationId = item.itemId;
@@ -193,7 +208,23 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
             for (SubdownloadItem *sub in tempArr) {
                 
                 NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:sub.url] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60];
-                NSString *filePath = [NSString stringWithFormat:@"%@/%@.mp4", documentsDir,sub.subitemId];
+                
+                NSString *filePath = nil;
+                
+                if ([item.downloadType isEqualToString:@"m3u8"])
+                {
+                    NSString *subPath = [NSString stringWithFormat:@"%@_%@",sub.itemId,sub.subitemId,nil];
+                    NSString * storeFileName = [[NSURL URLWithString:sub.url] lastPathComponent];
+                    filePath = [NSString stringWithFormat:@"%@/%@/%@/%@",documentsDir,sub.itemId,subPath,storeFileName,nil];
+                    if (![[NSFileManager new] fileExistsAtPath:filePath isDirectory:NO]) {
+                        [[NSFileManager new] createDirectoryAtPath:filePath withIntermediateDirectories:YES attributes:nil error:nil];
+                    }
+                }
+                else
+                {
+                    filePath = [NSString stringWithFormat:@"%@/%@.mp4", documentsDir,sub.subitemId];
+                }
+                
                 AFDownloadRequestOperation *downloadingOperation= [[AFDownloadRequestOperation alloc] initWithRequest:request targetPath:filePath shouldResume:YES];
                 
                 downloadingOperation.operationId = sub.subitemId;
@@ -213,14 +244,9 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
                 else if ([sub.downloadStatus isEqualToString:@"fail"]) {
                     downloadingOperation.operationStatus = @"fail";
                 }
-                
                 [downLoadQueue_ addObject:downloadingOperation];
-                
             }
-            
         }
-        
-        
     }
     
     [self resumeDownLoadStart];
