@@ -49,7 +49,7 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
     
     downLoadQueue_ = [[NSMutableArray alloc] initWithCapacity:10];
     downloadItemDic_ = [[NSMutableDictionary alloc] initWithCapacity:2];
-    
+    retryCountDic_ = [NSMutableDictionary dictionaryWithCapacity:2];
     lock_ = [[NSLock alloc] init];
     [[NSNotificationCenter defaultCenter]
      addObserver:self selector:@selector(addtoDownLoadQueue:) name:@"DOWNLOAD_MSG" object:nil];
@@ -365,42 +365,53 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
         [downloadItemDic_ removeObjectForKey:tempdownloadRequestOperation.operationId];
         tempdownloadRequestOperation.operationStatus = @"fail";
         
-        if (retryCount_ <= DOWNLOAD_FAIL_RETRY_TIME) {
+        NSNumber *retryCount = [retryCountDic_ objectForKey:tempdownloadRequestOperation.operationId];
+        if (retryCount == nil ) {
+            [retryCountDic_ setObject:[NSNumber numberWithInt:1] forKey:tempdownloadRequestOperation.operationId];
+            
             if (retryTimer_ != nil) {
                 [retryTimer_ invalidate];
                 retryTimer_ = nil;
             }
-            else{
-                retryCount_ ++;
-                retryTimer_ = [NSTimer scheduledTimerWithTimeInterval:DOWNLOAD_FAIL_RETRY_INTERVAL
-                                                               target:self
-                                                             selector:@selector(retry:)
-                                                             userInfo:tempdownloadRequestOperation
-                                                              repeats:NO];
-                
-            }
+            
+            retryTimer_ = [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(retry:) userInfo:tempdownloadRequestOperation repeats:NO];
         }
         else{
             
-            [self downloadFail:tempdownloadRequestOperation];
-            NSRange range = [tempdownloadRequestOperation.operationId rangeOfString:@"_"];
-            if (range.location == NSNotFound){
-                [self saveDataBaseIntable:@"DownloadItem" withId:tempdownloadRequestOperation.operationId withStatus:@"fail" withPercentage:-1];
-                [self.downLoadMGdelegate downloadFailedwithId:tempdownloadRequestOperation.operationId inClass:@"IphoneDownloadViewController"];
+            if (retryCount.intValue <= 6) {
+                if (retryTimer_ != nil) {
+                    [retryTimer_ invalidate];
+                    retryTimer_ = nil;
+                }
+                int tempint = retryCount.intValue+1;
+                [retryCountDic_ setObject:[NSNumber numberWithInt:tempint] forKey:tempdownloadRequestOperation.operationId];
+                retryTimer_ = [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(retry:) userInfo:tempdownloadRequestOperation repeats:NO];
+                
                 
             }
             else{
-                [self saveDataBaseIntable:@"SubdownloadItem" withId:tempdownloadRequestOperation.operationId withStatus:@"fail" withPercentage:-1];
-                [self.downLoadMGdelegate downloadFailedwithId:tempdownloadRequestOperation.operationId inClass:@"IphoneSubdownloadViewController"];
+                
+                [self downloadFail:tempdownloadRequestOperation];
+                NSRange range = [tempdownloadRequestOperation.operationId rangeOfString:@"_"];
+                if (range.location == NSNotFound){
+                    [self saveDataBaseIntable:@"DownloadItem" withId:tempdownloadRequestOperation.operationId withStatus:@"fail" withPercentage:-1];
+                    [self.downLoadMGdelegate downloadFailedwithId:tempdownloadRequestOperation.operationId inClass:@"IphoneDownloadViewController"];
+                    
+                }
+                else{
+                    [self saveDataBaseIntable:@"SubdownloadItem" withId:tempdownloadRequestOperation.operationId withStatus:@"fail" withPercentage:-1];
+                    [self.downLoadMGdelegate downloadFailedwithId:tempdownloadRequestOperation.operationId inClass:@"IphoneSubdownloadViewController"];
+                }
+                
+                [self startDownLoad];
             }
-            
-            [self startDownLoad];
         }
+
         
     }];
     
     [downloadRequestOperation setProgressiveDownloadProgressBlock:^(NSInteger bytesRead, long long totalBytesRead, long long totalBytesExpected, long long totalBytesReadForFile, long long totalBytesExpectedToReadForFile) {
-        retryCount_ = 0;
+        [retryCountDic_ setObject:[NSNumber numberWithInt:0] forKey:tempdownloadRequestOperation.operationId];
         float percentDone = totalBytesReadForFile/(float)totalBytesExpectedToReadForFile;
         
         NSRange range = [tempdownloadRequestOperation.operationId rangeOfString:@"_"];
@@ -859,7 +870,9 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
         [retryTimer_ invalidate];
         retryTimer_ = nil;
     }
-    retryCount_ = 0;
+    for (NSString *key in [retryCountDic_ allKeys]) {
+        [retryCountDic_ setObject:[NSNumber numberWithInt:0] forKey:key];
+    }
 }
 
 -(void)updateSapce{
