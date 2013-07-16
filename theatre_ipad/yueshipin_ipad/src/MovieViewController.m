@@ -23,9 +23,9 @@
     [sortButton addTarget:self action:@selector(sort:) forControlEvents:UIControlEventTouchUpInside];
     sortButton.frame = CGRectMake(420, 50, 70, 27);
     sortButton.backgroundColor = [UIColor clearColor];
-    [sortButton setBackgroundImage:[UIImage imageNamed:@"sort_iPad.png"] forState:UIControlStateNormal];
+    [sortButton setBackgroundImage:[UIImage imageNamed:@"sort_ipad.png"] forState:UIControlStateNormal];
     //[sortButton setImage:[UIImage imageNamed:@"sort_iPad_s.png"] forState:UIControlStateHighlighted];
-    [sortButton setBackgroundImage:[UIImage imageNamed:@"sort_iPad_s.png"] forState:UIControlStateSelected];
+    [sortButton setBackgroundImage:[UIImage imageNamed:@"sort_ipad_s.png"] forState:UIControlStateSelected];
     sortButton.adjustsImageWhenHighlighted = NO;
     [self.view addSubview:sortButton];
 }
