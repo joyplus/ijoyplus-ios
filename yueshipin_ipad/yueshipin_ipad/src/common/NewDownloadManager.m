@@ -158,14 +158,6 @@
                             //[AppDelegate instance].currentDownloadingNum --;
                         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                             NSLog(@"Download mp4 file error: %@", error);
-//                            if (afOperation.isDownloadingType == 1) {
-//                                [self downloadFailure:afOperation.operationId
-//                                                error:error];
-//                            } else {
-//                                [self downloadFailure:afOperation.operationId
-//                                       suboperationId:afOperation.suboperationId
-//                                                error:error];
-//                            }
                             [operation cancel];
                         }];
                         [DLOperation setProgressiveDownloadProgressBlock:^(NSInteger bytesRead, long long totalBytesRead, long long totalBytesExpected, long long totalBytesReadForFile, long long totalBytesExpectedToReadForFile) {
@@ -278,7 +270,6 @@
 
 - (void)downloadSuccess:(NSString *)operationId
 {
-    [retryCountInfo setObject:@"0" forKey:operationId];
     downloadingItem = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@", operationId]];
     downloadingItem.downloadStatus = @"done";
     downloadingItem.percentage = 100;
@@ -295,6 +286,7 @@
 
 - (void)updateProgress:(NSString *)operationId progress:(float)progress
 {
+    [retryCountInfo setObject:@"0" forKey:operationId];
     downloadingItem = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@", operationId]];
     [self updateProgress:progress];
 }
@@ -335,7 +327,6 @@
 
 - (void)downloadSuccess:(NSString *)operationId suboperationId:(NSString *)suboperationId
 {
-    [retryCountInfo setObject:@"0" forKey:[NSString stringWithFormat:@"%@_%@",operationId,suboperationId]];
     downloadingItem = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@ and subitemId = '%@'", operationId, suboperationId]];
     downloadingItem.downloadStatus = @"done";
     downloadingItem.percentage = 100;
@@ -346,6 +337,7 @@
 
 - (void)updateProgress:(NSString *)operationId suboperationId:(NSString *)suboperationId progress:(float)progress
 {
+    [retryCountInfo setObject:@"0" forKey:[NSString stringWithFormat:@"%@_%@",operationId,suboperationId]];
     downloadingItem = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@ and subitemId = '%@'", operationId, suboperationId]];
     [self updateProgress:progress];
 }

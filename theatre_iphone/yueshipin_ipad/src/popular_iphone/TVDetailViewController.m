@@ -237,11 +237,11 @@
 }
 
 NSComparator cmptr = ^(id obj1, id obj2){
-    if ([obj1 integerValue] > [obj2 integerValue]) {
+    if ([obj1 floatValue] > [obj2 floatValue]) {
         return (NSComparisonResult)NSOrderedDescending;
     }
     
-    if ([obj1 integerValue] < [obj2 integerValue]) {
+    if ([obj1 floatValue] < [obj2 floatValue]) {
         return (NSComparisonResult)NSOrderedAscending;
     }
     return (NSComparisonResult)NSOrderedSame;
@@ -453,12 +453,24 @@ NSComparator cmptr = ^(id obj1, id obj2){
                 if (titleStr == nil) {
                     titleStr = [self.infoDic objectForKey:@"name"];
                 }
-                UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 14, 170, 18)];
+                UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 14, 150, 18)];
                 titleLabel.font = [UIFont systemFontOfSize:15];
                 titleLabel.textColor = [UIColor grayColor];
                 titleLabel.backgroundColor = [UIColor clearColor];
                 titleLabel.text = titleStr;
                 [cell addSubview:titleLabel];
+                
+                UILabel *scoreLabel = [[UILabel alloc] initWithFrame:CGRectMake(270, 14, 25, 18)];
+                scoreLabel.font = [UIFont systemFontOfSize:15];
+                scoreLabel.textColor = [UIColor colorWithRed:247/255.0 green:122/255.0 blue:151/255.0 alpha:1];
+                scoreLabel.backgroundColor = [UIColor clearColor];
+                scoreLabel.textAlignment = NSTextAlignmentRight;
+                scoreLabel.text = [self.infoDic objectForKey:@"score"];
+                [cell addSubview:scoreLabel];
+                
+                UIImageView *logo = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"list_numeral_watercress.png"]];
+                logo.frame = CGRectMake(298, 16, 14, 14);
+                [cell addSubview:logo];
                 
                 UILabel *actorsLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 39, 200, 15)];
                 actorsLabel.font = [UIFont systemFontOfSize:12];
@@ -920,6 +932,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
 
 - (void)SubscribingToChannels
 {
+    return;
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     
     NSArray *channels = [NSArray arrayWithObjects:[NSString stringWithFormat:@"CHANNEL_PROD_%@",self.prodId], nil];
@@ -1119,7 +1132,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
     if (imgUrl == nil) {
         imgUrl = [self.infoDic objectForKey:@"poster"];
     }
-    NSArray *infoArr = [NSArray arrayWithObjects:prodId,name,imgUrl,@"2",[NSString stringWithFormat:@"%d",num],nil];
+    NSArray *infoArr = [NSArray arrayWithObjects:prodId,name,imgUrl,@"2",[NSString stringWithFormat:@"%d",num],[self.infoDic objectForKey:@"sources"],nil];
     CheckDownloadUrls *check = [[CheckDownloadUrls alloc] init];
     check.downloadInfoArr = infoArr;
     check.oneEsp = [self checkDownloadUrls:[episodesArr_ objectAtIndex:num]];

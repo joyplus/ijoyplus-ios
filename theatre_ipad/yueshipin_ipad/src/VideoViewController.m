@@ -247,7 +247,14 @@
         NSArray *tempTopsArray = [result objectForKey:@"results"];
         if(tempTopsArray.count > 0){
             [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"%@_list%@%@%@", typePrefix, categoryType, regionType, yearType] result:result];
-            [videoArray addObjectsFromArray:tempTopsArray];
+            if (videoType == MOVIE_TYPE && sortedByScore_) {
+                NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"score" ascending:NO comparator:cmptr];
+                NSArray *sortedArr = [tempTopsArray sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+                [videoArray addObjectsFromArray:sortedArr];
+            }
+            else{
+                [videoArray addObjectsFromArray:tempTopsArray];
+            }
         }
         if(tempTopsArray.count < pageSize){
              pullToRefreshManager_.canLoadMore = NO;
@@ -600,7 +607,27 @@
     }
 }
 
+-(void)sort:(UIButton *)btn{
+    btn.selected = !btn.selected;
+    if (btn.selected) {
+        sortedByScore_ = YES;
+    }
+    else{
+        sortedByScore_ = NO;
+    }
+    [self pulltoReFresh];
+}
 
+NSComparator cmptr = ^(id obj1, id obj2){
+    if ([obj1 floatValue] > [obj2 floatValue]) {
+        return (NSComparisonResult)NSOrderedDescending;
+    }
+    
+    if ([obj1 floatValue] < [obj2 floatValue]) {
+        return (NSComparisonResult)NSOrderedAscending;
+    }
+    return (NSComparisonResult)NSOrderedSame;
+};
 #pragma mark -
 #pragma mark - UIScrollviewDelegate
 - (void) scrollViewWillBeginDragging:(UIScrollView *)scrollView
@@ -637,6 +664,13 @@
             tempTopsArray = [result objectForKey:@"results"];
             if(tempTopsArray.count > 0){
                 [videoArray addObjectsFromArray:tempTopsArray];
+                if (videoType == MOVIE_TYPE && sortedByScore_) {
+                    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"score" ascending:NO comparator:cmptr];
+                    NSArray *tempArr = videoArray;
+                    NSArray *sortedArr = [tempArr sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+                    [videoArray removeAllObjects];
+                    [videoArray addObjectsFromArray:sortedArr];
+                }
                 reloads_ ++;
             }
         } else {

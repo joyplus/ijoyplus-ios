@@ -9,7 +9,7 @@
 #import "GenericBaseViewController.h"
 #import "SinaWeibo.h"
 #import "SlideBaseViewController.h"
-#import "CMConstants.h"
+
 @protocol VideoDetailViewControllerDelegate <NSObject>
 
 - (void)refreshCommentListView:(int)tableHeight;
@@ -35,12 +35,13 @@
     NSInteger willPlayIndex;
     NSArray *episodeArray;
     NSString *umengPageName;
-     int playNum;
+    int playNum;
 }
 @property (strong, nonatomic)NSString *prodId;
 @property (nonatomic, strong)NSString *subname;
 @property (assign, nonatomic)int type;
 @property (strong, nonatomic)SlideBaseViewController *fromViewController;
+@property (strong, nonatomic)NSMutableArray *downloadUrls;
 @property (strong, nonatomic)NSMutableArray *mp4DownloadUrls;
 @property (strong, nonatomic)NSMutableArray *m3u8DownloadUrls;
 @property (strong, nonatomic)NSString *downloadSource;

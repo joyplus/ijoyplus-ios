@@ -17,6 +17,7 @@
 #import "AVPlayerViewController.h"
 #import "DDProgressView.h"
 #import "SegmentUrl.h"
+#import "CommonMotheds.h"
 
 @interface DownloadViewController ()<GMGridViewDataSource, GMGridViewActionDelegate, DownloadingDelegate,UIAlertViewDelegate>{
     UIImageView *topImage;
@@ -31,6 +32,7 @@
     BOOL displayNoSpaceFlag;
     __gm_weak GMGridView *_gmGridView;
     BOOL isItunesFile;
+    NSInteger retryConut;
 }
 
 @property (nonatomic, strong)NSArray *allDownloadItems;
@@ -55,16 +57,19 @@
     diskUsedProgress_ = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UPDATE_DISK_STORAGE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"updateDownloadView" object:nil];
+    
     [super viewDidUnload];
 }
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];    
+    [super viewDidLoad];
+    retryConut = 0;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDiskStorage) name:UPDATE_DISK_STORAGE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showNoEnoughSpace) name:NO_ENOUGH_SPACE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshDownloadView) name:@"updateDownloadView" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDiskStorage) name:APPLICATION_DID_BECOME_ACTIVE_NOTIFICATION object:nil];
+    
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
@@ -81,7 +86,7 @@
             BOOL inor = [cell pointInside:ptInbtn withEvent:nil];
             if (inor) {
                 return inor;
-            }        
+            }
         }
         return YES;
     }
@@ -94,7 +99,7 @@
         
         leftWidth = 15;
         
-        topImage = [[UIImageView alloc]initWithFrame:CGRectMake(leftWidth, 40, 316, 42)];
+        topImage = [[UIImageView alloc]initWithFrame:CGRectMake(leftWidth, 40, 260, 42)];
         topImage.image = [UIImage imageNamed:@"download_title"];
         [self.view addSubview:topImage];
         
@@ -136,15 +141,15 @@
         UIImageView *downalodBgImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, spaceView.frame.size.width, spaceView.frame.size.height)];
         downalodBgImage.image = [[UIImage imageNamed:@"download_progress_bg"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 2, 0, 2)];
         [spaceView addSubview:downalodBgImage];
-               
+        
         UIImageView *diskFrame = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, spaceView.frame.size.width - 30, 28)];
         diskFrame.image = [[UIImage imageNamed:@"download_progress"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 5, 0, 5)];
         diskFrame.center = CGPointMake(spaceView.frame.size.width/2, spaceView.frame.size.height/2);
         [spaceView addSubview:diskFrame];
         
-        diskUsedProgress_ = [[DDProgressView alloc] initWithFrame:CGRectMake(0, 2, spaceView.frame.size.width - 26, 32)];
+        diskUsedProgress_ = [[DDProgressView alloc] initWithFrame:CGRectMake(0, 0, spaceView.frame.size.width - 26, 32)];
         diskUsedProgress_.center = CGPointMake(spaceView.frame.size.width/2, spaceView.frame.size.height/2 - 1);
-        diskUsedProgress_.innerColor = CMConstants.yellowColor;
+        diskUsedProgress_.innerColor = [UIColor colorWithRed:248/255.0 green:148/255.0 blue:48/255.0 alpha:1];
         diskUsedProgress_.outerColor = [UIColor clearColor];
         [spaceView addSubview:diskUsedProgress_];
         
@@ -168,7 +173,7 @@
     diskUsedProgress_.progress = percent;
     spaceInfoLabel.text = [NSString stringWithFormat:@"剩余: %0.2fGB / 总空间: %0.2fGB",totalFreeSpace_, totalSpace_];
 }
-    
+
 
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -183,7 +188,7 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    [AppDelegate instance].padDownloadManager.delegate = [AppDelegate instance].padDownloadManager; 
+    [AppDelegate instance].padDownloadManager.delegate = [AppDelegate instance].padDownloadManager;
     [editBtn setHidden:NO];
     [doneBtn setHidden:YES];
     displayNoSpaceFlag = NO;
@@ -202,6 +207,7 @@
         allDownloadItems = [DatabaseManager allObjects:DownloadItem.class];
     }
     
+    
     if (allDownloadItems.count == 0) {
         [editBtn setHidden:YES];
     } else {
@@ -211,59 +217,82 @@
 }
 
 -(NSArray *)getItunesSyncItems{
-        NSMutableArray *arr = [NSMutableArray arrayWithCapacity:5];
-        NSError *error;
-        // 创建文件管理器
-        NSFileManager *fileMgr = [NSFileManager defaultManager];
-        //指向文件目录
-        NSString *documentsDirectory= [NSHomeDirectory()
-                                      stringByAppendingPathComponent:@"Documents"];
-        NSArray *fileList = [fileMgr contentsOfDirectoryAtPath:documentsDirectory error:&error];
-        for (NSString *item in fileList) {
-            if ([item hasSuffix:@"mp4"]) {
-                    DownloadItem *tempDbObj = [[DownloadItem alloc]init];
-                    tempDbObj.itemId =  @"0";
-                    tempDbObj.name = [[item componentsSeparatedByString:@"."] objectAtIndex:0];
-                    tempDbObj.fileName = [[item componentsSeparatedByString:@"."] objectAtIndex:0];
-                    tempDbObj.downloadStatus = @"done";
-                    tempDbObj.type = 1;
-                    tempDbObj.percentage = 100;
-                    tempDbObj.downloadType = @"mp4";
-                    [arr addObject:tempDbObj];
-           }
+    NSMutableArray *arr = [NSMutableArray arrayWithCapacity:5];
+    NSError *error;
+    // 创建文件管理器
+    NSFileManager *fileMgr = [NSFileManager defaultManager];
+    //指向文件目录
+    NSString *documentsDirectory= [NSHomeDirectory()
+                                   stringByAppendingPathComponent:@"Documents"];
+    NSArray *fileList = [fileMgr contentsOfDirectoryAtPath:documentsDirectory error:&error];
+    for (NSString *item in fileList) {
+        if ([item hasSuffix:@"mp4"]) {
+            DownloadItem *tempDbObj = [[DownloadItem alloc]init];
+            tempDbObj.itemId =  @"0";
+            tempDbObj.name = [[item componentsSeparatedByString:@"."] objectAtIndex:0];
+            tempDbObj.fileName = [[item componentsSeparatedByString:@"."] objectAtIndex:0];
+            tempDbObj.downloadStatus = @"done";
+            tempDbObj.type = 1;
+            tempDbObj.percentage = 100;
+            tempDbObj.downloadType = @"mp4";
+            [arr addObject:tempDbObj];
         }
-        return arr;
+    }
+    return arr;
 }
 
 - (void)downloadFailure:(NSString *)operationId error:(NSError *)error
 {
     NSLog(@"error in DownloadViewController");
-    [[AppDelegate instance].padDownloadManager stopDownloading];
-    [self performSelector:@selector(restartNewDownloading) withObject:nil afterDelay:10];
+    
+    if (![CommonMotheds isNetworkEnbled])
+    {
+        NSLog(@"网络异常");
+        return;
+    }
+    
+    NSInteger retryNum = 0;
+    if ([[AppDelegate instance].padDownloadManager.retryCountInfo objectForKey:operationId])
+    {
+        retryNum = [[[AppDelegate instance].padDownloadManager.retryCountInfo objectForKey:operationId] intValue];
+    }
+    
+    if (retryNum <= DOWNLOAD_FAIL_RETRY_TIME)
+    {
+        retryNum ++;
+        [[AppDelegate instance].padDownloadManager.retryCountInfo setObject:[NSString stringWithFormat:@"%d",retryNum] forKey:operationId];
+        //[self stopDownloading];
+        [self performSelector:@selector(restartNewDownloading) withObject:nil afterDelay:DOWNLOAD_FAIL_RETRY_INTERVAL];
+    }
+    else
+    {
+        [[AppDelegate instance].padDownloadManager.retryCountInfo setObject:@"0" forKey:operationId];
+        DownloadItem * dlItem = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@", operationId]];
+        dlItem.downloadStatus = @"fail";
+        [DatabaseManager update:dlItem];
+        [[AppDelegate instance].padDownloadManager stopDownloading];
+        [[AppDelegate instance].padDownloadManager startDownloadingThreads];
+        
+        [_gmGridView reloadData];
+    }
 }
 
 - (void)restartNewDownloading
 {
     //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
-        [[AppDelegate instance] decreaseDownloadingNum];
+        [AppDelegate instance].currentDownloadingNum = 0;
         [NSThread  detachNewThreadSelector:@selector(startDownloadingThreads) toTarget:[AppDelegate instance].padDownloadManager withObject:nil];
     }
 }
 
 - (void)downloadSuccess:(NSString *)operationId
 {
-    for (int i = 0; i < allDownloadItems.count; i++) {
-        DownloadItem *item = [allDownloadItems objectAtIndex:i];
-        if (item.type == 1 && [item.itemId isEqualToString:operationId]) {
-            item = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@", item.itemId]];
-            item.downloadStatus = @"done";
-            item.percentage = 100;
-            [[AppDelegate instance] decreaseDownloadingNum];
-            [DatabaseManager update:item];
-            break;
-        }
-    }
+    DownloadItem * item = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@", operationId]];
+    item.downloadStatus = @"done";
+    item.percentage = 100;
+    [DatabaseManager update:item];
+    
     [_gmGridView reloadData];
     [[AppDelegate instance].padDownloadManager startDownloadingThreads];
     [self updateDiskStorage];
@@ -271,6 +300,7 @@
 
 - (void)updateProgress:(NSString *)operationId progress:(float)progress
 {
+    [[AppDelegate instance].padDownloadManager.retryCountInfo setObject:@"0" forKey:operationId];
     for (int i = 0; i < allDownloadItems.count; i++) {
         DownloadItem *item = [allDownloadItems objectAtIndex:i];
         if (item.type == 1 && [item.itemId isEqualToString:operationId]) {
@@ -325,12 +355,12 @@
     if([item.downloadStatus isEqualToString:@"start"] || [item.downloadStatus isEqualToString:@"waiting"]){
         if ([item.downloadStatus isEqualToString:@"start"]) {
             [[AppDelegate instance].padDownloadManager stopDownloading];
-            [[AppDelegate instance] decreaseDownloadingNum];
+            [AppDelegate instance].currentDownloadingNum --;//0
         }
         progressLabel.text = [NSString stringWithFormat:@"暂停：%i%%", (int)(progressView.progress*100)];
         item.downloadStatus = @"stop";
         [DatabaseManager update:item];
-    } else if([item.downloadStatus isEqualToString:@"stop"]){
+    } else if([item.downloadStatus isEqualToString:@"stop"] || [item.downloadStatus isEqualToString:@"fail"]){
         [self getFreeDiskspacePercent];
         if (totalFreeSpace_ <= LEAST_DISK_SPACE) {
             [UIUtility showNoSpace:self.view];
@@ -377,8 +407,9 @@
     
     DownloadItem *item = [allDownloadItems objectAtIndex:index];
     if (!isItunesFile) {
-    item = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@", item.itemId]];
+        item = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@", item.itemId]];
     }
+    
     [[cell.contentView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
     
     UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, 105, 146)];
@@ -409,13 +440,16 @@
             progressLabel.frame = CGRectMake(13, 110, 98, 25);
             progressLabel.text = [NSString stringWithFormat:@"暂停：%i%%", item.percentage];
         } else if([item.downloadStatus isEqualToString:@"done"] || item.percentage == 100){
-//            progressLabel.text = @"下载完成";
+            //            progressLabel.text = @"下载完成";
         } else if([item.downloadStatus isEqualToString:@"waiting"]){
             progressLabel.frame = CGRectMake(13, 110, 98, 25);
             progressLabel.text = [NSString stringWithFormat:@"等待中：%i%%", item.percentage];
         } else if([item.downloadStatus isEqualToString:@"error"]){
             progressLabel.frame = CGRectMake(13, 117, 98, 25);
             progressLabel.text = @"下载片源失效";
+        } else if ([item.downloadStatus isEqualToString:@"fail"]){
+            progressLabel.frame = CGRectMake(13, 117, 98, 25);
+            progressLabel.text = @"下载失败";
         }
         
         progressLabel.textAlignment = NSTextAlignmentCenter;
@@ -431,7 +465,7 @@
             progressView.tag = item.itemId.intValue + 20000000;
             [cell.contentView addSubview:progressView];
         }
-    } 
+    }
     else
     {
         NSString *query = [NSString stringWithFormat:@"WHERE itemId ='%@'",item.itemId];
@@ -484,9 +518,10 @@
 {
     if(position < allDownloadItems.count){
         DownloadItem *item = [allDownloadItems objectAtIndex:position];
-        if (!isItunesFile) { 
-        item = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@", item.itemId]];
+        if (!isItunesFile) {
+            item = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@", item.itemId]];
         }
+        
         if([item.downloadStatus isEqualToString:@"done"] && item.type == 1){
             NSString *filePath;
             if ([item.downloadType isEqualToString:@"m3u8"]) {
@@ -494,12 +529,14 @@
             } else {
                 NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
                 NSString *documentsDirectory = [paths objectAtIndex:0];
+                
                 if (isItunesFile) {
                     filePath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@.mp4", item.fileName]];
                 }
                 else{
                     filePath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@.mp4", item.itemId]];
                 }
+                
             }
             AVPlayerViewController *viewController = [[AVPlayerViewController alloc]init];
             viewController.videoFormat = item.downloadType;
@@ -518,7 +555,7 @@
                 if (![item.downloadStatus hasPrefix:@"error"]) {
                     [self movieImageClicked:position];
                 }
-                [[AppDelegate instance].rootViewController.stackScrollViewController removeViewToViewInSlider:self.class];
+                [[AppDelegate instance].rootViewController.stackScrollViewController removeViewInSlider];
             } else {
                 SubdownloadViewController *viewController = [[SubdownloadViewController alloc] initWithFrame:CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height)];
                 viewController.parentDelegate = self;
@@ -553,14 +590,14 @@
 - (void)deleteItemWithIndex:(NSInteger)index
 {
     DownloadItem *item = [allDownloadItems objectAtIndex:index];
-    if (!isItunesFile) { 
-    item = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@", item.itemId]];
+    if (!isItunesFile) {
+        item = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@", item.itemId]];
     }
+    
     if ([item.downloadStatus isEqualToString:@"start"]) {
         [[AppDelegate instance].padDownloadManager stopDownloading];
     }
     [self removeLastPlaytime:item];
-//    double result = [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"delete from SegmentUrl WHERE itemId = %@", item.itemId]];
     
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSArray *contents = [fileManager contentsOfDirectoryAtPath:DocumentsDirectory error:NULL];
@@ -579,11 +616,12 @@
     }
     NSString *filePath = nil;
     if (isItunesFile) {
-             filePath = [NSString stringWithFormat:@"%@/%@.mp4", DocumentsDirectory, item.fileName];
+        filePath = [NSString stringWithFormat:@"%@/%@.mp4", DocumentsDirectory, item.fileName];
     }
     else{
-             filePath = [NSString stringWithFormat:@"%@/%@", DocumentsDirectory, item.itemId];
+        filePath = [NSString stringWithFormat:@"%@/%@", DocumentsDirectory, item.itemId];
     }
+    
     if ([fileManager fileExistsAtPath:filePath]) {
         [fileManager removeItemAtPath:filePath error:nil];
     }
@@ -597,7 +635,7 @@
     [DatabaseManager performSQLAggregation:[NSString stringWithFormat:@"delete from SubdownloadItem WHERE itemId = %@", item.itemId]];
     [DatabaseManager deleteObject:item];
     if ([ActionUtility getStartItemNumber] == 0) {
-        [[AppDelegate instance] decreaseDownloadingNum];
+        [AppDelegate instance].currentDownloadingNum = 0;
     }
     allDownloadItems = [DatabaseManager allObjects:DownloadItem.class];
     [[AppDelegate instance].padDownloadManager startDownloadingThreads];

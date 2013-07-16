@@ -372,12 +372,24 @@
                 if (titleStr == nil) {
                         titleStr = [self.infoDic objectForKey:@"name"];
                 }
-                UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 14, 170, 18)];
+                UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 14, 150, 18)];
                 titleLabel.font = [UIFont systemFontOfSize:15];
                 titleLabel.textColor = [UIColor grayColor];
                 titleLabel.backgroundColor = [UIColor clearColor];
                 titleLabel.text = titleStr;
                 [cell addSubview:titleLabel];
+                
+                UILabel *scoreLabel = [[UILabel alloc] initWithFrame:CGRectMake(270, 14, 25, 18)];
+                scoreLabel.font = [UIFont systemFontOfSize:15];
+                scoreLabel.textColor = [UIColor orangeColor];
+                scoreLabel.backgroundColor = [UIColor clearColor];
+                scoreLabel.textAlignment = NSTextAlignmentRight;
+                scoreLabel.text = [self.infoDic objectForKey:@"score"];
+                [cell addSubview:scoreLabel];
+                
+                UIImageView *logo = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"list_numeral_watercress.png"]];
+                logo.frame = CGRectMake(298, 16, 14, 14);
+                [cell addSubview:logo];
                 
                 NSString *directors = [self.infoDic objectForKey:@"directors"];
                 if (directors == nil) {
@@ -980,7 +992,7 @@
             if (imgUrl == nil) {
                 imgUrl = [self.infoDic objectForKey:@"poster"];
             }
-            NSArray *infoArr = [NSArray arrayWithObjects:prodId,name,imgUrl,@"1",[NSNumber numberWithInt:0], nil];
+            NSArray *infoArr = [NSArray arrayWithObjects:prodId,name,imgUrl,@"1",[NSNumber numberWithInt:0], [self.infoDic objectForKey:@"sources"], nil];
             
             CheckDownloadUrls *check = [[CheckDownloadUrls alloc] init];
             check.downloadInfoArr = infoArr;

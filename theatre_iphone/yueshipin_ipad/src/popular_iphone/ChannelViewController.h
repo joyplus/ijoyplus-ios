@@ -18,6 +18,7 @@
     int videoType_;
     BOOL isLoading_;
     UIButton *moreButton_;
+    BOOL sortedByScore_; 
 }
 @property(nonatomic, strong)UIButton *titleButton;
 @property(nonatomic, strong)SegmentControlView *segV;
