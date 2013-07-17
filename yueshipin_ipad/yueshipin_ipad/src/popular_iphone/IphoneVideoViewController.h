@@ -31,6 +31,7 @@
     BOOL isTVReady;
     NSMutableArray *sortEpisodesArr_;
     int sendCount_;
+    BOOL haveVideoUrl_;
 }
 @property (nonatomic, strong) SinaWeibo *mySinaWeibo;
 @property (nonatomic, strong) NSDictionary *infoDic;
@@ -44,7 +45,7 @@
 @property (nonatomic, strong) UISegmentedControl *segmentedControl;
 @property (nonatomic, strong) NSString *wechatImgStr;
 @property (nonatomic) BOOL canPlayVideo;
-
+@property (nonatomic, assign) BOOL haveVideoUrl;
 - (void)showOpSuccessModalView:(float)closeTime with:(int)type;
 - (void)showOpFailureModalView:(float)closeTime with:(int)type;
 -(void)playVideo:(int)num;

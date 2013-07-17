@@ -58,6 +58,7 @@ extern NSComparator cmpString;
 @synthesize wechatImgStr = wechatImgStr_;
 @synthesize willPlayIndex;
 @synthesize canPlayVideo;
+@synthesize haveVideoUrl = haveVideoUrl_;
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -774,6 +775,7 @@ extern NSComparator cmpString;
     iphoneWebPlayerViewController.episodesArr = episodesArr_;
     iphoneWebPlayerViewController.videoType = type_;
     iphoneWebPlayerViewController.prodId = prodId_;
+    iphoneWebPlayerViewController.hasVideoUrl = haveVideoUrl_;
     NSString *str = [NSString stringWithFormat:@"%@_%@",prodId_,[NSString stringWithFormat:@"%d",(num+1) ]];
     NSNumber *cacheResult = [[CacheUtility sharedCache] loadFromCache:str];
     

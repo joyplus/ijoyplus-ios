@@ -543,6 +543,7 @@
                     [downLoad setBackgroundImage:[UIImage imageNamed:@"cache_no.png"] forState:UIControlStateDisabled];
                     downLoad.enabled = NO;
                     isEnableReportBtn = NO;
+                    haveVideoUrl_ = NO;
                 }
                 else{
                     [downLoad setBackgroundImage:[UIImage imageNamed:@"download_video.png"] forState:UIControlStateNormal];

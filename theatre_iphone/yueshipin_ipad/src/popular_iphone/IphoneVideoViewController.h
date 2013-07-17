@@ -29,6 +29,7 @@
     int playNum_;
     NSMutableArray *sortEpisodesArr_;
     int sendCount_;
+    BOOL haveVideoUrl_;
 }
 @property (nonatomic, strong) SinaWeibo *mySinaWeibo;
 @property (nonatomic, strong) NSDictionary *infoDic;

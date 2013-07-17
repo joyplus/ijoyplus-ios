@@ -757,7 +757,7 @@ extern NSComparator cmpString;
         iphoneAVPlayerViewController.lastPlayTime = CMTimeMakeWithSeconds(cacheResult.floatValue + 1, NSEC_PER_SEC);
         iphoneAVPlayerViewController.prodId = self.prodId;
         iphoneAVPlayerViewController.episodesArr = episodesArr_;
-        
+
         [self presentViewController:iphoneAVPlayerViewController animated:YES completion:nil];
         return;
     }
@@ -768,6 +768,7 @@ extern NSComparator cmpString;
     iphoneWebPlayerViewController.episodesArr = episodesArr_;
     iphoneWebPlayerViewController.videoType = type_;
     iphoneWebPlayerViewController.prodId = prodId_;
+    iphoneWebPlayerViewController.hasVideoUrl = haveVideoUrl_;
     NSString *str = [NSString stringWithFormat:@"%@_%@",prodId_,[NSString stringWithFormat:@"%d",(num+1) ]];
     NSNumber *cacheResult = [[CacheUtility sharedCache] loadFromCache:str];
     

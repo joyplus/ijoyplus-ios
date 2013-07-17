@@ -1001,6 +1001,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
     switch (button.tag) {
         case 10001:{
             [self playVideo:curSelectedNum];
+             haveVideoUrl_ = [self isDownloadUrlEnable:curSelectedNum];
             break;
         }
         case 10002:{
