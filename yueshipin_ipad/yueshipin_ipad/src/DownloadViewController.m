@@ -360,7 +360,13 @@
         progressLabel.text = [NSString stringWithFormat:@"暂停：%i%%", (int)(progressView.progress*100)];
         item.downloadStatus = @"stop";
         [DatabaseManager update:item];
-    } else if([item.downloadStatus isEqualToString:@"stop"] || [item.downloadStatus isEqualToString:@"fail"]){
+    }
+    else if([item.downloadStatus isEqualToString:@"stop"] || [item.downloadStatus isEqualToString:@"fail"])
+    {
+        if ([item.downloadStatus isEqualToString:@"fail"])
+        {
+            [[AppDelegate instance].padDownloadManager.retryCountInfo setObject:@"0" forKey:item.itemId];
+        }
         [self getFreeDiskspacePercent];
         if (totalFreeSpace_ <= LEAST_DISK_SPACE) {
             [UIUtility showNoSpace:self.view];
