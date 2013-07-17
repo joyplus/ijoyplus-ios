@@ -965,6 +965,7 @@
 
 - (void)unSubscribingToChannels:(NSString *)Id
 {
+    return;
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     NSArray *channels = [NSArray arrayWithObjects:[NSString stringWithFormat:@"CHANNEL_PROD_%@",Id], nil];
     
