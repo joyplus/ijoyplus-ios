@@ -549,6 +549,22 @@ NSComparator sortString = ^(id obj1, id obj2){
     if(num < 0 || num >= episodeArray.count){
         return;
     }
+    
+    NSArray *downUrls = [[episodeArray objectAtIndex:num] objectForKey:@"down_urls"];
+    for (NSDictionary *downUrl in downUrls)
+    {
+        NSArray *urls = [downUrl objectForKey:@"urls"];
+        for (NSDictionary *url in urls)
+        {
+            NSString *realurl = [url objectForKey:@"url"];
+            NSString *trimUrl = [realurl stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+            if (trimUrl && trimUrl.length > 0)
+            {
+                hasVideoUrl_ = YES;
+            }
+        }
+    }
+
     playNum = num;
     [self recordPlayStatics];
     // 网页地址
@@ -640,6 +656,7 @@ NSComparator sortString = ^(id obj1, id obj2){
     webViewController.currentNum = num;
     webViewController.dramaDetailViewControllerDelegate = self;
     webViewController.video = video;
+    webViewController.hasVideoUrl = hasVideoUrl_;
     webViewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
     [[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:webViewController]];
     

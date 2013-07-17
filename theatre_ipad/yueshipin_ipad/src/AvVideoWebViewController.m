@@ -224,7 +224,11 @@
         subname = [subnameArray objectAtIndex:currentNum];
     }
     NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: userId, @"userid", self.prodId, @"prod_id", [video objectForKey:@"name"], @"prod_name", subname, @"prod_subname", [NSNumber numberWithInt:self.type], @"prod_type", @"2", @"play_type", [NSNumber numberWithInt:0], @"playback_time", [NSNumber numberWithInt:0], @"duration", [videoHttpUrlArray objectAtIndex:self.currentNum], @"video_url", nil];
+    NSNumber *duration = [NSNumber numberWithInt:0];
+    if (!self.hasVideoUrl) {
+        duration = [NSNumber numberWithInt:-2];
+    }
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: userId, @"userid", self.prodId, @"prod_id", [video objectForKey:@"name"], @"prod_name", subname, @"prod_subname", [NSNumber numberWithInt:self.type], @"prod_type", @"2", @"play_type", [NSNumber numberWithInt:0], @"playback_time", duration, @"duration", [videoHttpUrlArray objectAtIndex:self.currentNum], @"video_url", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathAddPlayHistory parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         [[CacheUtility sharedCache] removeObjectForKey:WATCH_RECORD_CACHE_KEY];
         [[NSNotificationCenter defaultCenter] postNotificationName:WATCH_HISTORY_REFRESH object:nil];

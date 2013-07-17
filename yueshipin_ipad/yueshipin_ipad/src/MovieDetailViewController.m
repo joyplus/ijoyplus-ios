@@ -404,6 +404,7 @@
     {
         [self.downloadBtn setEnabled:NO];
         [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"no_download"] forState:UIControlStateDisabled];
+        hasVideoUrl_ = NO;
     }
     
     

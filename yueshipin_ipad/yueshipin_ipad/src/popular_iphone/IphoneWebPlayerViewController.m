@@ -191,11 +191,11 @@
     if (videoType_ != 1 && playNum < subnameArray.count) {
         subname = [subnameArray objectAtIndex:playNum];
     }
-    NSNumber *playBackTime = [NSNumber numberWithInt:0];
+    NSNumber *duration = [NSNumber numberWithInt:0];
     if (!hasVideoUrl_) {
-        playBackTime = [NSNumber numberWithInt:-2];
+        duration = [NSNumber numberWithInt:-2];
     }
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: userId, @"userid", prodId_, @"prod_id", nameStr_, @"prod_name", subname, @"prod_subname", [NSNumber numberWithInt:videoType_], @"prod_type", tempPlayType, @"play_type", [NSNumber numberWithInt:0], @"playback_time", playBackTime, @"duration", webUrl_, @"video_url", nil];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: userId, @"userid", prodId_, @"prod_id", nameStr_, @"prod_name", subname, @"prod_subname", [NSNumber numberWithInt:videoType_], @"prod_type", tempPlayType, @"play_type", [NSNumber numberWithInt:0], @"playback_time", duration, @"duration", webUrl_, @"video_url", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathAddPlayHistory parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         [[NSNotificationCenter defaultCenter] postNotificationName:WATCH_HISTORY_REFRESH object:nil];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
