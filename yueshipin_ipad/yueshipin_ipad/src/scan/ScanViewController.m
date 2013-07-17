@@ -52,7 +52,7 @@
                                                object:nil];
 
     scanSymbolView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"scan_symbol.png"]];
-    scanSymbolView.frame = CGRectMake(190,100, 175, 20.5);
+    scanSymbolView.frame = CGRectMake(160,100, 175, 20.5);
     [self.view addSubview:scanSymbolView];
 
     [self fireANewTimer];
@@ -99,13 +99,13 @@
 
 - (void)scanAnimation
 {
-    scanSymbolView.frame = CGRectMake(190, 100, 175, 20.5);
+    scanSymbolView.frame = CGRectMake(170, 100, 175, 20.5);
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationDuration:SCAN_TIMER_INTERVAL];
     [UIView setAnimationDelegate:self];
     [UIView setAnimationRepeatCount:MAXFLOAT];
     //[UIView setAnimationDidStopSelector:@selector(fireANewTimer)];
-    scanSymbolView.frame = CGRectMake(190,250 + 168.5, 175, 20.5);
+    scanSymbolView.frame = CGRectMake(170,250 + 168.5, 175, 20.5);
     [UIView commitAnimations];
 }
 

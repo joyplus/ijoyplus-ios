@@ -602,8 +602,10 @@ NSComparator sortString = ^(id obj1, id obj2){
         return;
     
     }
-    
-    [self beginPlayVideo:num withArray:httpUrlArray];
+    UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"使用哪种方式打开：" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"直接打开",@"使用悦视频TV版播放", nil];
+    sheet.tag = 10000002;
+    [sheet showInView:self.view];
+    //[self beginPlayVideo:num withArray:httpUrlArray];
     
 }
 

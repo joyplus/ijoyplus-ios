@@ -28,7 +28,7 @@
 - (void)showCloseBtn;;
 @end
 
-@interface VideoDetailViewController : SlideBaseViewController  <SinaWeiboDelegate, SinaWeiboRequestDelegate, VideoDetailViewControllerDelegate, UIAlertViewDelegate,  DramaDetailViewControllerDelegate>{
+@interface VideoDetailViewController : SlideBaseViewController  <SinaWeiboDelegate, SinaWeiboRequestDelegate, VideoDetailViewControllerDelegate, UIAlertViewDelegate,  DramaDetailViewControllerDelegate,UIActionSheetDelegate>{
     SinaWeibo *_sinaweibo;
     NSDictionary *video;
     NSArray *topics;

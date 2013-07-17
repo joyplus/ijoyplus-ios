@@ -52,7 +52,7 @@
 }
 -  (void)initLeftView{
     UIImageView * scanView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"saoyisao.png"]];
-    scanView.frame = CGRectMake(0, -44,536,750);
+    scanView.frame = CGRectMake(0, -44,516,750);
     scanView.backgroundColor = [UIColor clearColor];
 
     if (isBunding_) {
@@ -71,7 +71,7 @@
         [scanner setSymbology: ZBAR_I25
                        config: ZBAR_CFG_ENABLE
                            to: 0];
-        reader.view.frame = CGRectMake(80, 0, 260,1024);
+        reader.view.frame = CGRectMake(80, 0, 240,1024);
         reader.view.tag = 19999;
         [self.view addSubview:reader.view];
     }

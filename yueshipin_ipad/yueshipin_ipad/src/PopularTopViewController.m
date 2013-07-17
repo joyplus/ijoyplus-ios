@@ -690,13 +690,13 @@ void transferDataFromOldDbWithCatch()
 -(void)saoyisaoClicked{
     ScanDetailViewController *scanDetailViewController = [[ScanDetailViewController alloc] init];
     scanDetailViewController.isBunding = NO;
-   [self presentModalViewController:[[UINavigationController alloc] initWithRootViewController:scanDetailViewController] animated:YES];
+   [self presentModalViewController:[[UINavigationController alloc] initWithRootViewController:scanDetailViewController] animated:NO];
 }
 
 -(void)TopImageTaped{
     ScanDetailViewController *scanDetailViewController = [[ScanDetailViewController alloc] init];
     scanDetailViewController.isBunding = YES;
-    [self presentModalViewController:[[UINavigationController alloc] initWithRootViewController:scanDetailViewController] animated:YES];
+    [self presentModalViewController:[[UINavigationController alloc] initWithRootViewController:scanDetailViewController] animated:NO];
 }
 #pragma mark -
 #pragma mark Table view data source
