@@ -31,7 +31,7 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     self.title = @"扫一扫";
-    self.view.backgroundColor = [UIColor redColor];
+    self.view.backgroundColor = [UIColor clearColor];
     UIButton *leftButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [leftButton addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
     leftButton.frame = CGRectMake(0, 0, 55, 44);
@@ -50,9 +50,9 @@
    PopularTopViewController *root = (PopularTopViewController *)[self.navigationController presentingViewController];
     [root viewWillAppear:YES];
 }
--(void)initLeftView{
+-  (void)initLeftView{
     UIImageView * scanView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"saoyisao.png"]];
-    scanView.frame = CGRectMake(LEFT_MENU_DIPLAY_WIDTH-40, -44,513-40,750);
+    scanView.frame = CGRectMake(0, -44,536,750);
     scanView.backgroundColor = [UIColor clearColor];
 
     if (isBunding_) {
