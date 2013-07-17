@@ -312,6 +312,9 @@
 		2AABBF60178EB1ED000E6915 /* scan_btn_ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2AABBF5E178EB1ED000E6915 /* scan_btn_ipad@2x.png */; };
 		2AABBF63178EC38C000E6915 /* ipad_bunding_cancel.png in Resources */ = {isa = PBXBuildFile; fileRef = 2AABBF61178EC38B000E6915 /* ipad_bunding_cancel.png */; };
 		2AABBF64178EC38C000E6915 /* ipad_bunding_cancel@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2AABBF62178EC38C000E6915 /* ipad_bunding_cancel@2x.png */; };
+		2AB1B9C2179636960095C1BF /* VideoGather.m in Sources */ = {isa = PBXBuildFile; fileRef = 2AB1B9C1179636960095C1BF /* VideoGather.m */; };
+		2AB1B9C617967F040095C1BF /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 2AB1B9C517967F040095C1BF /* RegexKitLite.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		2AB1B9C817967F520095C1BF /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AB1B9C717967F520095C1BF /* libicucore.dylib */; };
 		2AC6C9D41778165F004B8908 /* libBPush-simulator.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AC6C9D31778165F004B8908 /* libBPush-simulator.a */; };
 		2ADA8E601786951E00E0AEBF /* WXShareRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ADA8E5F1786951E00E0AEBF /* WXShareRecord.m */; };
 		B3E72D02F27B43F78743B09A /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5EC20A508D204BAE89F5A027 /* libPods.a */; };
@@ -1459,6 +1462,11 @@
 		2AABBF5E178EB1ED000E6915 /* scan_btn_ipad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "scan_btn_ipad@2x.png"; sourceTree = "<group>"; };
 		2AABBF61178EC38B000E6915 /* ipad_bunding_cancel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ipad_bunding_cancel.png; sourceTree = "<group>"; };
 		2AABBF62178EC38C000E6915 /* ipad_bunding_cancel@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ipad_bunding_cancel@2x.png"; sourceTree = "<group>"; };
+		2AB1B9C0179636960095C1BF /* VideoGather.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoGather.h; sourceTree = "<group>"; };
+		2AB1B9C1179636960095C1BF /* VideoGather.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoGather.m; sourceTree = "<group>"; };
+		2AB1B9C417967F040095C1BF /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegexKitLite.h; sourceTree = "<group>"; };
+		2AB1B9C517967F040095C1BF /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegexKitLite.m; sourceTree = "<group>"; };
+		2AB1B9C717967F520095C1BF /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 		2AC6C9D31778165F004B8908 /* libBPush-simulator.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libBPush-simulator.a"; sourceTree = "<group>"; };
 		2ADA8E5E1786951E00E0AEBF /* WXShareRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXShareRecord.h; sourceTree = "<group>"; };
 		2ADA8E5F1786951E00E0AEBF /* WXShareRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXShareRecord.m; sourceTree = "<group>"; };
@@ -2308,6 +2316,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2AB1B9C817967F520095C1BF /* libicucore.dylib in Frameworks */,
 				EB6DEAA9165A347F00AF8003 /* QuartzCore.framework in Frameworks */,
 				EB02F6A816DB0130001C2E3A /* CoreMedia.framework in Frameworks */,
 				22EF023916B772460001F743 /* CoreLocation.framework in Frameworks */,
@@ -2735,6 +2744,24 @@
 				2AABBF1A178E8B00000E6915 /* IpadBunDingViewController.m */,
 			);
 			path = scan;
+			sourceTree = "<group>";
+		};
+		2AB1B9BF179636820095C1BF /* VideoGather */ = {
+			isa = PBXGroup;
+			children = (
+				2AB1B9C0179636960095C1BF /* VideoGather.h */,
+				2AB1B9C1179636960095C1BF /* VideoGather.m */,
+			);
+			path = VideoGather;
+			sourceTree = "<group>";
+		};
+		2AB1B9C317967F040095C1BF /* RegexKitLite */ = {
+			isa = PBXGroup;
+			children = (
+				2AB1B9C417967F040095C1BF /* RegexKitLite.h */,
+				2AB1B9C517967F040095C1BF /* RegexKitLite.m */,
+			);
+			path = RegexKitLite;
 			sourceTree = "<group>";
 		};
 		E711EFBE16917C090051D019 /* Resource_iphone */ = {
@@ -3615,6 +3642,7 @@
 		EB6DEA6B165A2F1A00AF8003 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2AB1B9C717967F520095C1BF /* libicucore.dylib */,
 				EB02F6A716DB0130001C2E3A /* CoreMedia.framework */,
 				22EF023816B772460001F743 /* CoreLocation.framework */,
 				220E4938169BF01A00A29756 /* AudioToolbox.framework */,
@@ -3689,6 +3717,8 @@
 		EB6DEAAA165A34F200AF8003 /* common */ = {
 			isa = PBXGroup;
 			children = (
+				2AB1B9C317967F040095C1BF /* RegexKitLite */,
+				2AB1B9BF179636820095C1BF /* VideoGather */,
 				228982CC175F0BD600B6000C /* HTML */,
 				E71FCF93174DBE2B0096A98C /* PullRefresh */,
 				EBC39F0F174C6DC900DB8EFD /* SystemMethods.h */,
@@ -5164,6 +5194,8 @@
 				2A937584178D530800848029 /* ScanViewController.m in Sources */,
 				2A93758B178D7CBF00848029 /* ScanDetailViewController.m in Sources */,
 				2AABBF1B178E8B01000E6915 /* IpadBunDingViewController.m in Sources */,
+				2AB1B9C2179636960095C1BF /* VideoGather.m in Sources */,
+				2AB1B9C617967F040095C1BF /* RegexKitLite.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
