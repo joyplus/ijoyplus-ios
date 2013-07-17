@@ -36,11 +36,13 @@
 }
 
 @property (nonatomic, strong)NSArray *allDownloadItems;
+@property (nonatomic, strong) NSTimer * opTimer;
+
 - (void)deleteItemWithIndex:(NSInteger)index;
 @end
 
 @implementation DownloadViewController
-@synthesize allDownloadItems;
+@synthesize allDownloadItems,opTimer;
 
 
 - (void)didReceiveMemoryWarning
@@ -376,7 +378,19 @@
         item.downloadStatus = @"waiting";
         [DatabaseManager update:item];
     }
-    [[AppDelegate instance].padDownloadManager startDownloadingThreads];
+    
+    if (opTimer)
+    {
+        [opTimer invalidate];
+        opTimer = nil;
+    }
+    
+    opTimer = [NSTimer scheduledTimerWithTimeInterval:1.f
+                                               target:[AppDelegate instance].padDownloadManager
+                                             selector:@selector(startDownloadingThreads)
+                                             userInfo:nil
+                                              repeats:NO];
+    //[[AppDelegate instance].padDownloadManager startDownloadingThreads];
     [self reloadItems];
 }
 

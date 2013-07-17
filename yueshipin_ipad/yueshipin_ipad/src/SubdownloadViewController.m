@@ -31,6 +31,8 @@
     NSInteger retryConut;
 }
 
+@property (nonatomic,strong) NSTimer * opTimer;
+
 - (void)deleteItemWithIndex:(NSInteger)index;
 
 @end
@@ -38,6 +40,7 @@
 @implementation SubdownloadViewController
 @synthesize itemId;
 @synthesize parentDelegate;
+@synthesize opTimer;
 
 - (void)didReceiveMemoryWarning
 {
@@ -293,7 +296,19 @@
         subitem.downloadStatus = @"waiting";
         [DatabaseManager update:subitem];
     }
-    [[AppDelegate instance].padDownloadManager startDownloadingThreads];
+    
+    if (opTimer)
+    {
+        [opTimer invalidate];
+        opTimer = nil;
+    }
+    
+    opTimer = [NSTimer scheduledTimerWithTimeInterval:1.f
+                                               target:[AppDelegate instance].padDownloadManager
+                                             selector:@selector(startDownloadingThreads)
+                                             userInfo:nil
+                                              repeats:NO];
+    //[[AppDelegate instance].padDownloadManager startDownloadingThreads];
     [_gmGridView reloadData];
 }
 
