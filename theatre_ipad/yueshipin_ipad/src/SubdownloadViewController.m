@@ -32,6 +32,7 @@
 }
 
 @property (nonatomic,strong) NSTimer * opTimer;
+@property (nonatomic, strong) NSTimer * retryTimer;
 
 - (void)deleteItemWithIndex:(NSInteger)index;
 
@@ -41,6 +42,7 @@
 @synthesize itemId;
 @synthesize parentDelegate;
 @synthesize opTimer;
+@synthesize retryTimer;
 
 - (void)didReceiveMemoryWarning
 {
@@ -172,11 +174,20 @@
     {
         retryNum ++;
         [[AppDelegate instance].padDownloadManager.retryCountInfo setObject:[NSString stringWithFormat:@"%d",retryNum] forKey:[NSString stringWithFormat:@"%@_%@",operationId,suboperationId]];
-        [self performSelector:@selector(restartNewDownloading) withObject:nil afterDelay:DOWNLOAD_FAIL_RETRY_INTERVAL];
+        //        [self performSelector:@selector(restartNewDownloading) withObject:nil afterDelay:DOWNLOAD_FAIL_RETRY_INTERVAL];
+        if (retryTimer)
+        {
+            [retryTimer invalidate];
+            retryTimer = nil;
+        }
+        retryTimer = [NSTimer scheduledTimerWithTimeInterval:DOWNLOAD_FAIL_RETRY_INTERVAL
+                                                      target:self
+                                                    selector:@selector(restartNewDownloading)
+                                                    userInfo:nil
+                                                     repeats:NO];
     }
     else
     {
-        [[AppDelegate instance].padDownloadManager.retryCountInfo setObject:@"0" forKey:[NSString stringWithFormat:@"%@_%@",operationId,suboperationId]];
         SubdownloadItem * tempDownloadingItem = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@ and subitemId = '%@'", operationId, suboperationId]];
         tempDownloadingItem.downloadStatus = @"fail";
         [DatabaseManager update:tempDownloadingItem];
@@ -202,6 +213,19 @@
     subItem.percentage = 100;
     subItem.downloadStatus  = @"done";
     [DatabaseManager update:subItem];
+    
+    //    for (int i = 0; i < subitems.count; i++) {
+    //        SubdownloadItem *tempitem = [subitems objectAtIndex:i];
+    //        if ([tempitem.itemId isEqualToString:operationId] && [suboperationId isEqualToString:tempitem.subitemId]) {
+    //            tempitem = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@ and subitemId = '%@'", tempitem.itemId, tempitem.subitemId]];
+    //            tempitem.percentage = 100;
+    //            tempitem.downloadStatus  = @"done";
+    //            //[AppDelegate instance].currentDownloadingNum --;//0
+    //            [DatabaseManager update:tempitem];
+    //            break;
+    //        }
+    //    }
+    
     [_gmGridView reloadData];
     [[AppDelegate instance].padDownloadManager startDownloadingThreads];
     [[NSNotificationCenter defaultCenter] postNotificationName:UPDATE_DISK_STORAGE object:nil];

@@ -366,7 +366,7 @@
 
 - (void)stopDownloading
 {
-    downloadingItem = nil;
+    //downloadingItem = nil;
     [downloadingOperation pause];
     [downloadingOperation cancel];
     downloadingOperation = nil;

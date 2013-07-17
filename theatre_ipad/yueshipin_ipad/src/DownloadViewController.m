@@ -37,12 +37,13 @@
 
 @property (nonatomic, strong)NSArray *allDownloadItems;
 @property (nonatomic, strong) NSTimer * opTimer;
+@property (nonatomic, strong) NSTimer * retryTimer;
 
 - (void)deleteItemWithIndex:(NSInteger)index;
 @end
 
 @implementation DownloadViewController
-@synthesize allDownloadItems,opTimer;
+@synthesize allDownloadItems,opTimer,retryTimer;
 
 
 - (void)didReceiveMemoryWarning
@@ -264,11 +265,21 @@
         retryNum ++;
         [[AppDelegate instance].padDownloadManager.retryCountInfo setObject:[NSString stringWithFormat:@"%d",retryNum] forKey:operationId];
         //[self stopDownloading];
-        [self performSelector:@selector(restartNewDownloading) withObject:nil afterDelay:DOWNLOAD_FAIL_RETRY_INTERVAL];
+        //        [self performSelector:@selector(restartNewDownloading) withObject:nil afterDelay:DOWNLOAD_FAIL_RETRY_INTERVAL];
+        if (retryTimer)
+        {
+            [retryTimer invalidate];
+            retryTimer = nil;
+        }
+        retryTimer = [NSTimer scheduledTimerWithTimeInterval:DOWNLOAD_FAIL_RETRY_INTERVAL
+                                                      target:self
+                                                    selector:@selector(restartNewDownloading)
+                                                    userInfo:nil
+                                                     repeats:NO];
     }
     else
     {
-        [[AppDelegate instance].padDownloadManager.retryCountInfo setObject:@"0" forKey:operationId];
+        //        [[AppDelegate instance].padDownloadManager.retryCountInfo setObject:@"0" forKey:operationId];
         DownloadItem * dlItem = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@", operationId]];
         dlItem.downloadStatus = @"fail";
         [DatabaseManager update:dlItem];
