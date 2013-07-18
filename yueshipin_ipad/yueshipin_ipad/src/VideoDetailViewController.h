@@ -37,6 +37,9 @@
     NSString *umengPageName;
     int playNum;
     BOOL hasVideoUrl_;
+    NSMutableArray *tempHttpUrlArray_;
+    int sendCount_;
+    NSMutableArray *sortEpisodesArr_;
 }
 @property (strong, nonatomic)NSString *prodId;
 @property (nonatomic, strong)NSString *subname;

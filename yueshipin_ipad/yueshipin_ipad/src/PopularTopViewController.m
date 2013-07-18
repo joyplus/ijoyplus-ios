@@ -149,7 +149,7 @@
             
             [self.view addSubview:bunding_succeed_tip];
         }
-        table.frame = CGRectMake(table.frame.origin.x, table.frame.origin.y+30, table.frame.size.width, table.frame.size.height);
+        table.frame = CGRectMake(table.frame.origin.x, 113, table.frame.size.width, table.frame.size.height);
     }
     else{
         UIImageView *bunding_succeed_tip = (UIImageView *)[self.view viewWithTag:99999];
