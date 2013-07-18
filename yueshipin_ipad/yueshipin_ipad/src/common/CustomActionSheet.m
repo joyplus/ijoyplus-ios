@@ -56,7 +56,7 @@
     button1.tag = 12000;
     button1.titleLabel.font = [UIFont boldSystemFontOfSize:15];
     [button1 addTarget:self action:@selector(buttonPressd:) forControlEvents:UIControlEventTouchUpInside];
-    [button1 setTitle:@"本地播放器" forState:UIControlStateNormal];
+    [button1 setTitle:@"直接打开" forState:UIControlStateNormal];
     [button1 setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [button1 setTitleColor:[UIColor orangeColor] forState:UIControlStateHighlighted];
     [button1 setBackgroundColor:[UIColor blackColor]];
