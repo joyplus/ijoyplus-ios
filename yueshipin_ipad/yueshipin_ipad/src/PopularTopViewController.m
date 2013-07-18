@@ -194,6 +194,11 @@
     [saoyisao addTarget:self action:@selector(saoyisaoClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:saoyisao];
     [self performSelectorInBackground:@selector(transferDataFromOldDb) withObject:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(showBundingTap)
+                                                 name:@"bundingTVSucceeded"
+                                               object:nil];
 }
 
 - (void)transferDataFromOldDb

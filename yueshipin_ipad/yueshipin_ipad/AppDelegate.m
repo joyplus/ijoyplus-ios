@@ -228,6 +228,8 @@
     [self initBPush:launchOptions];
     [self monitorReachability];
     [self isParseReachable];
+    [[BundingTVManager shareInstance] connecteServer];
+    
     [Parse setApplicationId:PARSE_APP_ID clientKey:PARSE_CLIENT_KEY];
     //[application registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert|UIRemoteNotificationTypeBadge|UIRemoteNotificationTypeSound];
 //    if (application.applicationIconBadgeNumber != 0) {
@@ -466,7 +468,7 @@
 //        [installation setBadge:0];
 //        [installation saveInBackground];
 //    }
-    [[BundingTVManager shareInstance] connecteServer];
+   
     [self.sinaweibo applicationDidBecomeActive];
     [self performSelector:@selector(triggerDownload) withObject:self afterDelay:5];
     
