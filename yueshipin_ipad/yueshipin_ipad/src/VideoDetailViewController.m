@@ -710,7 +710,7 @@ NSComparator sortString = ^(id obj1, id obj2){
     NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:@"kUserId"];
     NSDictionary * data = (NSDictionary *)[[ContainerUtility sharedInstance] attributeForKey:[NSString stringWithFormat:@"%@_isBunding",userId]];
     NSNumber * isbunding = [data objectForKey:KEY_IS_BUNDING];
-    //isbunding = [NSNumber numberWithInt:1];
+    isbunding = [NSNumber numberWithInt:1];
     if ([isbunding boolValue]){
         if (![BundingTVManager shareInstance].isConnected)
         {
