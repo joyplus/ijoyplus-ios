@@ -259,7 +259,6 @@
         [self.downLoadManager resumeDownLoad];
         self.window.rootViewController = tabBarView;
     }
-    [[BundingTVManager shareInstance] connecteServer];
     [self.window makeKeyAndVisible];
     
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:
@@ -467,6 +466,7 @@
 //        [installation setBadge:0];
 //        [installation saveInBackground];
 //    }
+    [[BundingTVManager shareInstance] connecteServer];
     [self.sinaweibo applicationDidBecomeActive];
     [self performSelector:@selector(triggerDownload) withObject:self afterDelay:5];
     
