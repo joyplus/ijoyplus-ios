@@ -710,7 +710,7 @@ NSComparator sortString = ^(id obj1, id obj2){
     NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:@"kUserId"];
     NSDictionary * data = (NSDictionary *)[[ContainerUtility sharedInstance] attributeForKey:[NSString stringWithFormat:@"%@_isBunding",userId]];
     NSNumber * isbunding = [data objectForKey:KEY_IS_BUNDING];
-    isbunding = [NSNumber numberWithInt:1];
+    //isbunding = [NSNumber numberWithInt:1];
     if ([isbunding boolValue]){
         if (![BundingTVManager shareInstance].isConnected)
         {
@@ -982,7 +982,7 @@ NSComparator sortString = ^(id obj1, id obj2){
     NSNumber * tempType = [NSNumber numberWithInt:type];
     NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:@"kUserId"];
     NSNumber *cacheResult = [NSNumber numberWithInt:1];
-    subname = [NSString stringWithFormat:@"%d",playNum];
+    subname = [[episodeArray objectAtIndex:playNum] objectForKey:@"name"];
     NSString *source = [[sortEpisodesArr_ objectAtIndex:sendCount_] objectForKey:@"source"];
     NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
                           @"41", @"push_type",
