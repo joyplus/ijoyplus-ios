@@ -25,6 +25,7 @@
 @property (nonatomic, strong)NSArray *allSubdownloadItems;
 @property (nonatomic, strong)NSLock *myLock;
 @property (strong, nonatomic) NewM3u8DownloadManager *padM3u8DownloadManager;
+@property (strong, nonatomic) NSTimer * retryTimer;
 @property NSInteger retryConut;
 @property int netWorkStatus;
 @end
@@ -36,7 +37,7 @@
 @synthesize displayNoSpaceFlag;
 @synthesize allDownloadItems, allSubdownloadItems;
 @synthesize padM3u8DownloadManager;
-@synthesize netWorkStatus,retryConut,retryCountInfo;
+@synthesize netWorkStatus,retryConut,retryCountInfo,retryTimer;
 - (id)init
 {
     self = [super init];
@@ -158,14 +159,6 @@
                             //[AppDelegate instance].currentDownloadingNum --;
                         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                             NSLog(@"Download mp4 file error: %@", error);
-                            //                            if (afOperation.isDownloadingType == 1) {
-                            //                                [self downloadFailure:afOperation.operationId
-                            //                                                error:error];
-                            //                            } else {
-                            //                                [self downloadFailure:afOperation.operationId
-                            //                                       suboperationId:afOperation.suboperationId
-                            //                                                error:error];
-                            //                            }
                             [operation cancel];
                         }];
                         [DLOperation setProgressiveDownloadProgressBlock:^(NSInteger bytesRead, long long totalBytesRead, long long totalBytesExpected, long long totalBytesReadForFile, long long totalBytesExpectedToReadForFile) {
@@ -251,14 +244,24 @@
     
     if (retryNum <= DOWNLOAD_FAIL_RETRY_TIME)
     {
-        retryNum ++;
-        [retryCountInfo setObject:[NSString stringWithFormat:@"%d",retryNum] forKey:operationId];
-        //[self stopDownloading];
-        [self performSelector:@selector(restartNewDownloading) withObject:nil afterDelay:DOWNLOAD_FAIL_RETRY_INTERVAL];
+        if (retryTimer)
+        {
+            [retryTimer invalidate];
+            retryTimer = nil;
+        }
+        else
+        {
+            retryNum ++;
+            [retryCountInfo setObject:[NSString stringWithFormat:@"%d",retryNum] forKey:operationId];
+        }
+        retryTimer = [NSTimer scheduledTimerWithTimeInterval:DOWNLOAD_FAIL_RETRY_INTERVAL
+                                                      target:self
+                                                    selector:@selector(restartNewDownloading)
+                                                    userInfo:nil
+                                                     repeats:NO];
     }
     else
     {
-        [retryCountInfo setObject:@"0" forKey:operationId];
         DownloadItem * dlItem = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@", operationId]];
         dlItem.downloadStatus = @"fail";
         [DatabaseManager update:dlItem];
@@ -269,9 +272,9 @@
 
 - (void)restartNewDownloading
 {
-    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
-        //[AppDelegate instance].currentDownloadingNum = 0;
+        [retryTimer invalidate];
+        retryTimer = nil;
         [NSThread  detachNewThreadSelector:@selector(startDownloadingThreads) toTarget:[AppDelegate instance].padDownloadManager withObject:nil];
     }
 }
@@ -317,14 +320,24 @@
     
     if (retryNum <= DOWNLOAD_FAIL_RETRY_TIME)
     {
-        retryNum ++;
-        [retryCountInfo setObject:[NSString stringWithFormat:@"%d",retryNum] forKey:[NSString stringWithFormat:@"%@_%@",operationId,suboperationId]];
-        //[self stopDownloading];
-        [self performSelector:@selector(restartNewDownloading) withObject:nil afterDelay:DOWNLOAD_FAIL_RETRY_INTERVAL];
+        if (retryTimer)
+        {
+            [retryTimer invalidate];
+            retryTimer = nil;
+        }
+        else
+        {
+            retryNum ++;
+            [[AppDelegate instance].padDownloadManager.retryCountInfo setObject:[NSString stringWithFormat:@"%d",retryNum] forKey:[NSString stringWithFormat:@"%@_%@",operationId,suboperationId]];
+        }
+        retryTimer = [NSTimer scheduledTimerWithTimeInterval:DOWNLOAD_FAIL_RETRY_INTERVAL
+                                                      target:self
+                                                    selector:@selector(restartNewDownloading)
+                                                    userInfo:nil
+                                                     repeats:NO];
     }
     else
     {
-        [retryCountInfo setObject:@"0" forKey:[NSString stringWithFormat:@"%@_%@",operationId,suboperationId]];
         downloadingItem = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@ and subitemId = '%@'", operationId, suboperationId]];
         downloadingItem.downloadStatus = @"fail";
         [DatabaseManager update:downloadingItem];

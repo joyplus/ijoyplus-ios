@@ -557,6 +557,21 @@
                 return;
             }
             
+            if ([item.downloadStatus isEqualToString:@"fail"]
+                && [item.downloadType isEqualToString:@"m3u8"])
+            {
+                [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"delete from SegmentUrl WHERE itemId like '%@%%'", item.itemId]];
+                NSError *error;
+                NSFileManager *fileMgr = [NSFileManager defaultManager];
+                NSString *documentsDirectory= [NSHomeDirectory() stringByAppendingPathComponent:@"Documents"];
+                NSString *deletePath = [documentsDirectory stringByAppendingPathComponent:item.itemId];
+                [fileMgr removeItemAtPath:deletePath error:&error];
+                
+                
+                item.percentage = 0;
+                item.m3u8DownloadInfo = [NSMutableArray array];
+            }
+            
             item.downloadStatus = @"waiting";
             //[item save];
             [DatabaseManager update:item];

@@ -525,8 +525,9 @@
             }
         }
         
-        else if ([item.downloadStatus isEqualToString:@"waiting"] || [item.downloadStatus isEqualToString:@"loading"]) {
-            //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+        else if ([item.downloadStatus isEqualToString:@"waiting"]
+                 || [item.downloadStatus isEqualToString:@"loading"])
+        {
             if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
                 
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络中断，请检查您的网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
@@ -542,8 +543,6 @@
             
             UILabel *label = [progressLabelDic_ objectForKey:item.itemId];
             label.text =  [NSString stringWithFormat:@"暂停：%i%%\n ", item.percentage];
-            
-            NSLog(@"label text is %@",label.text);
             UIProgressView *progressView = [progressViewDic_ objectForKey:item.itemId];
             progressView.progress = item.percentage/100.0;
             
@@ -557,8 +556,22 @@
                 return;
             }
             
+            if ([item.downloadStatus isEqualToString:@"fail"]
+                && [item.downloadType isEqualToString:@"m3u8"])
+            {
+                [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"delete from SegmentUrl WHERE itemId like '%@%%'", item.itemId]];
+                NSError *error;
+                NSFileManager *fileMgr = [NSFileManager defaultManager];
+                NSString *documentsDirectory= [NSHomeDirectory() stringByAppendingPathComponent:@"Documents"];
+                NSString *deletePath = [documentsDirectory stringByAppendingPathComponent:item.itemId];
+                [fileMgr removeItemAtPath:deletePath error:&error];
+                
+                
+                item.percentage = 0;
+                item.m3u8DownloadInfo = [NSMutableArray array];
+            }
+            
             item.downloadStatus = @"waiting";
-            //[item save];
             [DatabaseManager update:item];
             UILabel *label = [progressLabelDic_ objectForKey:item.itemId];
             label.text = [NSString stringWithFormat:@"等待中：%i%%\n ", item.percentage];

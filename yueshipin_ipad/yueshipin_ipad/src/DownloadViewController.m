@@ -262,14 +262,15 @@
     
     if (retryNum <= DOWNLOAD_FAIL_RETRY_TIME)
     {
-        retryNum ++;
-        [[AppDelegate instance].padDownloadManager.retryCountInfo setObject:[NSString stringWithFormat:@"%d",retryNum] forKey:operationId];
-        //[self stopDownloading];
-//        [self performSelector:@selector(restartNewDownloading) withObject:nil afterDelay:DOWNLOAD_FAIL_RETRY_INTERVAL];
         if (retryTimer)
         {
             [retryTimer invalidate];
             retryTimer = nil;
+        }
+        else
+        {
+            retryNum ++;
+            [[AppDelegate instance].padDownloadManager.retryCountInfo setObject:[NSString stringWithFormat:@"%d",retryNum] forKey:operationId];
         }
         retryTimer = [NSTimer scheduledTimerWithTimeInterval:DOWNLOAD_FAIL_RETRY_INTERVAL
                                                       target:self
@@ -294,7 +295,8 @@
 {
     //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
-        [AppDelegate instance].currentDownloadingNum = 0;
+        [retryTimer invalidate];
+        retryTimer = nil;
         [NSThread  detachNewThreadSelector:@selector(startDownloadingThreads) toTarget:[AppDelegate instance].padDownloadManager withObject:nil];
     }
 }
@@ -379,6 +381,18 @@
         if ([item.downloadStatus isEqualToString:@"fail"])
         {
             [[AppDelegate instance].padDownloadManager.retryCountInfo setObject:@"0" forKey:item.itemId];
+            //删除segmentURL,更改数据库信息
+            if ([item.downloadType isEqualToString:@"m3u8"])
+            {
+                [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"delete from SegmentUrl WHERE itemId = %@", item.itemId]];
+                
+                NSFileManager *fileManager = [NSFileManager defaultManager];
+                NSString * filePath = [NSString stringWithFormat:@"%@/%@", DocumentsDirectory, item.itemId];
+                [fileManager removeItemAtPath:filePath error:nil];
+                
+                item.m3u8DownloadInfo = [NSMutableArray array];
+                item.percentage = 0;
+            }
         }
         [self getFreeDiskspacePercent];
         if (totalFreeSpace_ <= LEAST_DISK_SPACE) {

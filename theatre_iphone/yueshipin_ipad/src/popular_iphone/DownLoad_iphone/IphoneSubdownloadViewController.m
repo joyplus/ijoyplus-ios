@@ -457,6 +457,21 @@ NSComparator cmptr1 = ^(NSString *obj1, NSString * obj2){
             return;
         }
         
+        if ([downloadItem.downloadStatus isEqualToString:@"fail"]
+            && [downloadItem.downloadType isEqualToString:@"m3u8"])
+        {
+            [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"delete from SegmentUrl WHERE itemId = '%@'",downloadItem.subitemId]];
+            NSError *error;
+            NSFileManager *fileMgr = [NSFileManager defaultManager];
+            NSString *documentsDirectory= [NSHomeDirectory() stringByAppendingPathComponent:@"Documents"];
+            NSString *deleteFilePath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@/%@",downloadItem.itemId,downloadItem.subitemId]];
+            [fileMgr removeItemAtPath:deleteFilePath error:&error];
+            
+            
+            downloadItem.percentage = 0;
+            downloadItem.m3u8DownloadInfo = [NSMutableArray array];
+        }
+        
         downloadItem.downloadStatus = @"waiting";
         
         [DatabaseManager update:downloadItem];

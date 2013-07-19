@@ -172,13 +172,15 @@
     
     if (retryNum <= DOWNLOAD_FAIL_RETRY_TIME)
     {
-        retryNum ++;
-        [[AppDelegate instance].padDownloadManager.retryCountInfo setObject:[NSString stringWithFormat:@"%d",retryNum] forKey:[NSString stringWithFormat:@"%@_%@",operationId,suboperationId]];
-//        [self performSelector:@selector(restartNewDownloading) withObject:nil afterDelay:DOWNLOAD_FAIL_RETRY_INTERVAL];
         if (retryTimer)
         {
             [retryTimer invalidate];
             retryTimer = nil;
+        }
+        else
+        {
+            retryNum ++;
+            [[AppDelegate instance].padDownloadManager.retryCountInfo setObject:[NSString stringWithFormat:@"%d",retryNum] forKey:[NSString stringWithFormat:@"%@_%@",operationId,suboperationId]];
         }
         retryTimer = [NSTimer scheduledTimerWithTimeInterval:DOWNLOAD_FAIL_RETRY_INTERVAL
                                                       target:self
@@ -202,7 +204,8 @@
 {
     //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
-        [AppDelegate instance].currentDownloadingNum = 0;
+        [retryTimer invalidate];
+        retryTimer = nil;
         [NSThread  detachNewThreadSelector:@selector(startDownloadingThreads) toTarget:[AppDelegate instance].padDownloadManager withObject:nil];
     }
 }
@@ -297,6 +300,21 @@
         if ([subitem.downloadStatus isEqualToString:@"fail"])
         {
             [[AppDelegate instance].padDownloadManager.retryCountInfo setObject:@"0" forKey:[NSString stringWithFormat:@"%@_%@",subitem.itemId,subitem.subitemId]];
+            
+            //删除segmentURL,更改数据库信息
+            if ([subitem.downloadType isEqualToString:@"m3u8"])
+            {
+                NSString * sqlStr = [NSString stringWithFormat: @"delete from SegmentUrl where itemId = %@ and subitemId = '%@'", subitem.itemId,subitem.subitemId];
+                
+                NSFileManager *fileManager = [NSFileManager defaultManager];
+                NSString *filePath = [NSString stringWithFormat:@"%@/%@/%@", DocumentsDirectory, subitem.itemId, subitem.subitemId];
+                [fileManager removeItemAtPath:filePath error:nil];
+                
+                [DatabaseManager performSQLAggregation:sqlStr];
+                subitem.m3u8DownloadInfo = [NSMutableArray array];
+                subitem.percentage = 0;
+            }
+            
         }
         [self getFreeDiskspacePercent];
         if (totalFreeSpace_ <= LEAST_DISK_SPACE) {
