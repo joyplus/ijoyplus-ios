@@ -735,7 +735,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     
     [[BundingTVManager shareInstance] sendMsg:data];
     [MobClick event:KEY_PUSH_VIDEO];
-    isTVReady = NO;
+    //isTVReady = NO;
     //    [self.mPlayer pause];
     //    playButton_.hidden = NO;
     //    pauseButton_.hidden = YES;
@@ -881,7 +881,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque];
     [[UIApplication sharedApplication] setStatusBarHidden:YES];
     isPlayOnTV = NO;
-    isTVReady = NO;
+    isTVReady = YES;
     
     self.view.backgroundColor = [UIColor blackColor];
     
