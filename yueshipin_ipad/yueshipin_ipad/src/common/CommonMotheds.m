@@ -13,8 +13,8 @@
 #import "SubdownloadItem.h"
 #import "CMConstants.h"
 #import "TFHpple.h"
-
-
+#import "AFHTTPClient.h"
+#define LETV_BASEURL @"http://parseurl.yue001.com:8080/"
 #define IS_IPHONE5  ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(640, 1136), [[UIScreen mainScreen] currentMode].size) : NO)
 
 @implementation CommonMotheds
@@ -240,8 +240,23 @@
         }
     }
     return downloadURL;
-}
+} 
 
++(NSDictionary *)getLetvRealUrlWithHtml:(NSString *)url prodId:(NSString *)prodId episode:(NSString *)episode{
+    return nil;
+    NSString *urlStr = [NSString stringWithFormat:@"%@%@",@"letv/?url=",url];
+    AFHTTPClient *afHTTPClient = [[AFHTTPClient alloc] initWithBaseURL:[NSURL URLWithString:LETV_BASEURL]];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:prodId,@"id",
+                                episode,@"episode",nil];
+    [afHTTPClient getPath:urlStr parameters:parameters
+                  success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                      
+                  }
+                  failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                      
+                  }];
+
+}
 
 + (BOOL)isIphone5
 {
