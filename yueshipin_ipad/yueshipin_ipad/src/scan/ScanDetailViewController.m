@@ -41,6 +41,7 @@
     UIBarButtonItem *leftButtonItem = [[UIBarButtonItem alloc] initWithCustomView:leftButton];
     self.navigationItem.leftBarButtonItem = leftButtonItem;
     [self initLeftView];
+    [self initRightView];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(ZBarHasReader:) name:ZBarReader object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(back) name:CLOSE object:nil];
 }
@@ -77,6 +78,12 @@
     }
     
     
+}
+
+-(void)initRightView{
+    UIImageView *detail = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"ipadScanDetail"]];
+    detail.frame = CGRectMake(516+80,0 ,428, 750);
+    [self.view addSubview:detail];
 }
 -(void)back{
     [self dismissModalViewControllerAnimated:YES];

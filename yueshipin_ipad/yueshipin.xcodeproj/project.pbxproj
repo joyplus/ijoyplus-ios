@@ -321,6 +321,8 @@
 		2AC6C9D41778165F004B8908 /* libBPush-simulator.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AC6C9D31778165F004B8908 /* libBPush-simulator.a */; };
 		2ADA8E601786951E00E0AEBF /* WXShareRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ADA8E5F1786951E00E0AEBF /* WXShareRecord.m */; };
 		B3E72D02F27B43F78743B09A /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5EC20A508D204BAE89F5A027 /* libPods.a */; };
+		E7047070179A8427004AE245 /* ipadScanDetail.png in Resources */ = {isa = PBXBuildFile; fileRef = E704706E179A8427004AE245 /* ipadScanDetail.png */; };
+		E7047071179A8427004AE245 /* ipadScanDetail@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E704706F179A8427004AE245 /* ipadScanDetail@2x.png */; };
 		E71A4450172B6F0000416565 /* xinshouyindao_s@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E71A444E172B6F0000416565 /* xinshouyindao_s@2x.png */; };
 		E71A4451172B6F0000416565 /* xinshouyindao@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E71A444F172B6F0000416565 /* xinshouyindao@2x.png */; };
 		E71A4454172BC88E00416565 /* introduction_iphone5_5@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E71A4452172BC88E00416565 /* introduction_iphone5_5@2x.jpg */; };
@@ -1479,6 +1481,8 @@
 		2ADA8E5F1786951E00E0AEBF /* WXShareRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXShareRecord.m; sourceTree = "<group>"; };
 		459B84FA869C445E8C832D00 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
 		5EC20A508D204BAE89F5A027 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		E704706E179A8427004AE245 /* ipadScanDetail.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ipadScanDetail.png; sourceTree = "<group>"; };
+		E704706F179A8427004AE245 /* ipadScanDetail@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ipadScanDetail@2x.png"; sourceTree = "<group>"; };
 		E71A444E172B6F0000416565 /* xinshouyindao_s@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "xinshouyindao_s@2x.png"; path = "yueshipin_ipad/Resource_iphone/xinshouyindao_s@2x.png"; sourceTree = SOURCE_ROOT; };
 		E71A444F172B6F0000416565 /* xinshouyindao@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "xinshouyindao@2x.png"; path = "yueshipin_ipad/Resource_iphone/xinshouyindao@2x.png"; sourceTree = SOURCE_ROOT; };
 		E71A4452172BC88E00416565 /* introduction_iphone5_5@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = "introduction_iphone5_5@2x.jpg"; path = "yueshipin_ipad/Resource_iphone/introduction_iphone5_5@2x.jpg"; sourceTree = SOURCE_ROOT; };
@@ -3172,6 +3176,8 @@
 		EB14D451165B618800CB3260 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				E704706E179A8427004AE245 /* ipadScanDetail.png */,
+				E704706F179A8427004AE245 /* ipadScanDetail@2x.png */,
 				2A53B6B01797C9240076F140 /* scaning@2x.png */,
 				2A1FD856179576F60067D3B0 /* sort_iPad_s@2x.png */,
 				2A1FD857179576F60067D3B0 /* sort_iPad@2x.png */,
@@ -4978,6 +4984,8 @@
 				2A1FD859179576F60067D3B0 /* sort_iPad@2x.png in Resources */,
 				2A53B6B11797C9240076F140 /* scaning@2x.png in Resources */,
 				2ABC09681798E3E10057A1F9 /* BPushConfig.plist in Resources */,
+				E7047070179A8427004AE245 /* ipadScanDetail.png in Resources */,
+				E7047071179A8427004AE245 /* ipadScanDetail@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
