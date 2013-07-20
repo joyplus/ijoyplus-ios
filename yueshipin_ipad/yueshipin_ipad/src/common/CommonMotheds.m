@@ -14,6 +14,9 @@
 #import "CMConstants.h"
 #import "TFHpple.h"
 
+
+#define IS_IPHONE5  ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(640, 1136), [[UIScreen mainScreen] currentMode].size) : NO)
+
 @implementation CommonMotheds
 +(BOOL)isNetworkEnbled{
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
@@ -147,7 +150,9 @@
             NSMutableDictionary * playInfo = [NSMutableDictionary dictionary];
             SubdownloadItem *item = [playlists objectAtIndex:i];
             item = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@ and subitemId = '%@'", item.itemId, item.subitemId]];
-            if([item.downloadStatus isEqualToString:@"done"] || item.percentage == 100)
+            if([item.downloadStatus isEqualToString:@"done"]
+               || [item.downloadStatus isEqualToString:@"finish"]
+               || item.percentage == 100)
             {
                 NSString *filePath;
                 if ([item.downloadType isEqualToString:@"m3u8"])
@@ -221,7 +226,7 @@
         
         //        NSLog(@"%@",[dic objectForKey:@"class"]);
         //        NSLog(@"%@",[dic objectForKey:@"id"]);
-        NSLog(@"%@",[element content]);
+        //NSLog(@"%@",[element content]);
         
         if (([[dic objectForKey:@"class"] isEqualToString:@"new-dbtn"]
              && [[dic objectForKey:@"id"] isEqualToString:@"downFileButtom"]) ||
@@ -237,5 +242,10 @@
     return downloadURL;
 }
 
+
++ (BOOL)isIphone5
+{
+    return IS_IPHONE5;
+}
 
 @end

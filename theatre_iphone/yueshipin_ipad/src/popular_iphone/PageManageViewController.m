@@ -26,6 +26,8 @@
 #import "IntroductionView.h"
 #import "DatabaseManager.h"
 #import "UIUtility.h"
+#import "ContainerUtility.h"
+#import "CMConstants.h"
 #define PAGE_NUM 4
 #define TV_TYPE 9000
 #define MOVIE_TYPE 9001
@@ -33,6 +35,7 @@
 #define COMIC_TYPE  (9003)
 #define PAGESIZE 10
 #define TOP_SEGMENT_VIEW_TAG    (123456)
+#define BUNDING_VIEW_HEIGHT     (35)
 enum
 {
     TYPE_BUNDING_TV = 1,
@@ -97,9 +100,14 @@ enum
         self.tvListArr = [[NSMutableArray alloc]initWithCapacity:PAGESIZE];
         NSString *responseCode = [cacheResult objectForKey:@"res_code"];
         if(responseCode == nil){
-            NSArray *tempTopsArray = [cacheResult objectForKey:@"tops"];
+            //NSArray *tempTopsArray = [cacheResult objectForKey:@"tops"];
+            NSMutableArray *tempTopsArray = [NSMutableArray arrayWithArray:[cacheResult objectForKey:@"tops"]];
             if(tempTopsArray.count > 0){
-
+                NSString *HiddenAVS = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:HIDDEN_AMERICAN_VIDEOS];
+                if ([HiddenAVS isEqualToString:@"1"]){
+                    [tempTopsArray removeObjectAtIndex:0];
+                
+                }
                 [ self.tvListArr addObjectsFromArray:tempTopsArray];
             }
         }
@@ -117,8 +125,13 @@ enum
         self.tvListArr = [[NSMutableArray alloc]initWithCapacity:PAGESIZE];
         NSString *responseCode = [result objectForKey:@"res_code"];
         if(responseCode == nil){
-            NSArray *tempTopsArray = [result objectForKey:@"tops"];
+            NSMutableArray *tempTopsArray = [NSMutableArray arrayWithArray:[result objectForKey:@"tops"]];
+            //NSArray *tempTopsArray = [result objectForKey:@"tops"];
             if(tempTopsArray.count > 0){
+                NSString *HiddenAVS = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:HIDDEN_AMERICAN_VIDEOS];
+                if ([HiddenAVS isEqualToString:@"1"]) {
+                    [tempTopsArray removeObjectAtIndex:0];
+                }
                [[CacheUtility sharedCache] putInCache:@"tv_top_list" result:result];
                 [ self.tvListArr addObjectsFromArray:tempTopsArray];
             }
@@ -272,6 +285,7 @@ enum
         
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [self loadTable:SHOW_TYPE];
+        [pullToRefreshManager_ loadMoreCompleted];
         [UIUtility showDetailError:self.view error:error];
     }];
     
@@ -513,7 +527,7 @@ enum
     if (nil == bundingTipsView)
     {
         bundingTipsView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bunding_tv.png"]highlightedImage:[UIImage imageNamed:@"bunding_tv_s.png"]];
-        bundingTipsView.frame = CGRectMake(0, 0, 320, 31);
+        bundingTipsView.frame = CGRectMake(0, 0, 320, BUNDING_VIEW_HEIGHT);
         [self.view addSubview:bundingTipsView];
         bundingTipsView.backgroundColor = [UIColor clearColor];
         
@@ -673,15 +687,15 @@ enum
     {
         bundingTipsView.hidden = NO;
         
-        scrollRect.origin.y = 68;
-        scrollRect.size.height = kCurrentWindowHeight - 125 - 30;
-        scrollView_.contentSize = CGSizeMake(320*PAGE_NUM, kCurrentWindowHeight - 125 - 30);
+        scrollRect.origin.y = 37 + BUNDING_VIEW_HEIGHT;
+        scrollRect.size.height = kCurrentWindowHeight - 125 - BUNDING_VIEW_HEIGHT;
+        scrollView_.contentSize = CGSizeMake(320*PAGE_NUM, kCurrentWindowHeight - 125 - BUNDING_VIEW_HEIGHT);
         topRect.origin.y = 30;
         
-        movieRect.size.height = (kCurrentWindowHeight - 130 - 30);
-        tvRect.size.height = (kCurrentWindowHeight - 130 - 30);
-        showRect.size.height = (kCurrentWindowHeight - 130 - 30);
-        comicRect.size.height = (kCurrentWindowHeight - 130 - 30);
+        movieRect.size.height = (kCurrentWindowHeight - 130 - BUNDING_VIEW_HEIGHT);
+        tvRect.size.height = (kCurrentWindowHeight - 130 - BUNDING_VIEW_HEIGHT);
+        showRect.size.height = (kCurrentWindowHeight - 130 - BUNDING_VIEW_HEIGHT);
+        comicRect.size.height = (kCurrentWindowHeight - 130 - BUNDING_VIEW_HEIGHT);
         
     }
     else if (TYPE_UNBUNDING == type)
@@ -1068,6 +1082,12 @@ enum
     }    
 }
 
+-(void)reFreshViewController{
+    [self loadMovieTopsData];
+    [self loadTVTopsData];
+    [self loadComicTopsData];
+    [self loadShowTopsData];
+}
 #pragma mark -
 #pragma mark - PullRefreshManagerClinetDelegate
 -(void)pulltoReFresh{

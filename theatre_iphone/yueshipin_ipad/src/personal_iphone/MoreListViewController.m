@@ -143,6 +143,16 @@
         cell.play.hidden = NO;
         [cell.play addTarget:self action:@selector(continuePlay:) forControlEvents:UIControlEventTouchUpInside];
         cell.line.frame = CGRectMake(0,59,320, 1);
+        
+        if ([[infoDic objectForKey:@"hide"] isEqualToString:@"1"])
+        {
+            cell.play.enabled = NO;
+        }
+        else
+        {
+            cell.play.enabled = YES;
+        }
+        
         return cell;
     }
     else if (type_ == 1) {
@@ -162,6 +172,29 @@
         UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 7, 36, 45)];
         [imageView setImageWithURL:[NSURL URLWithString:[infoDic objectForKey:@"content_pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
         [cell.contentView addSubview:imageView];
+        
+        UIView *icon_offShelf = [[UIView alloc] initWithFrame:CGRectMake(15, 40, 36, 14)];
+        icon_offShelf.backgroundColor = [UIColor darkGrayColor];
+        UIImageView * offshelfImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"off_shelf_icon"]];
+        offshelfImg.frame = CGRectMake(1, 3, 8, 8);
+        offshelfImg.backgroundColor = [UIColor clearColor];
+        UILabel * lab = [[UILabel alloc] initWithFrame:CGRectMake(10, 2, 28, 10)];
+        lab.textColor = [UIColor whiteColor];
+        lab.backgroundColor = [UIColor clearColor];
+        lab.text = @"已下架";
+        lab.font = [UIFont systemFontOfSize:8];
+        [icon_offShelf addSubview:offshelfImg];
+        [icon_offShelf addSubview:lab];
+        [cell.contentView addSubview:icon_offShelf];
+        
+        if ([[infoDic objectForKey:@"hide"] isEqualToString:@"1"])
+        {
+            icon_offShelf.hidden = NO;
+        }
+        else
+        {
+            icon_offShelf.hidden = YES;
+        }
         
         UILabel *titleLab = [[UILabel alloc] initWithFrame:CGRectMake(70, 8, 170, 15)];
         titleLab.font = [UIFont systemFontOfSize:14];
@@ -344,6 +377,7 @@
         [self.tableView reloadData];
         [pullToRefreshManagerFAV_ loadMoreCompleted];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+       [pullToRefreshManagerFAV_ loadMoreCompleted];
        [UIUtility showDetailError:self.view error:error];
     }];
     
@@ -364,6 +398,8 @@
     
     if (type_ == 0) {
         NSDictionary *dic = [listArr_ objectAtIndex:indexPath.row];
+        if ([[dic objectForKey:@"hide"] isEqualToString:@"1"])
+            return;
         NSString *type = [dic objectForKey:@"prod_type"];
         if ([type isEqualToString:@"1"]) {
             IphoneMovieDetailViewController *detailViewController = [[IphoneMovieDetailViewController alloc] init];
@@ -388,6 +424,8 @@
     }
     else if (type_ == 1) {
             NSDictionary *dic = [listArr_ objectAtIndex:indexPath.row];
+            if ([[dic objectForKey:@"hide"] isEqualToString:@"1"])
+                return;
             NSString *type = [dic objectForKey:@"content_type"];
             if ([type isEqualToString:@"1"]) {
                 IphoneMovieDetailViewController *detailViewController = [[IphoneMovieDetailViewController alloc] init];

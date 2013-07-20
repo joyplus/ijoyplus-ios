@@ -20,5 +20,5 @@
 @property (strong, nonatomic) UITableView *tableList;
 @property (strong, nonatomic) PullRefreshManagerClinet *pullToRefreshManager;
 @property (strong, nonatomic) CustomNavigationButtonView *customNavigationButtonView;
-
+-(void)reFreshViewController;
 @end

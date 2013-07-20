@@ -26,7 +26,7 @@
 #import "CustomNavigationViewController.h"
 #import "IphoneAVPlayerViewController.h"
 #import "SystemMethods.h"
-
+#import "BPush.h"
 #define DAY(day)                (day * 3600 * 24)
 #define kSysMaxTimePerBgTask    (10 * 60)
 
@@ -154,6 +154,13 @@
     [WXApi registerApp:KWeChatAppID];
 }
 
+-(void)initBPush:(NSDictionary *)dictionary{
+    // 必须
+    [BPush setupChannel:dictionary];
+    // 必须。参数对象必须实现 onMethod: response:方法
+    [BPush setDelegate:self];
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     //如果是测试
@@ -181,25 +188,38 @@
     if (appKey == nil) {
         [[ContainerUtility sharedInstance] setAttribute:kDefaultAppKey forKey:kIpadAppKey];
     }
+    
     NSString *hiddenAVS = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:HIDDEN_AMERICAN_VIDEOS];
     if (hiddenAVS == nil) {
-        [[ContainerUtility sharedInstance] setAttribute:AMERICANVIDEOS forKey:HIDDEN_AMERICAN_VIDEOS];
+       if ([CHANNEL_ID isEqualToString:@""]) {
+            [[ContainerUtility sharedInstance] setAttribute:AMERICANVIDEOS forKey:HIDDEN_AMERICAN_VIDEOS];
+           
+       }
+        else{
+            [[ContainerUtility sharedInstance] setAttribute:@"0" forKey:HIDDEN_AMERICAN_VIDEOS];
+       }
+   }
+    //消息推送
+    NSString *notificationSelected = (NSString *)[[ContainerUtility sharedInstance] attributeForKey:PUSH_NotificationSelected];
+    if (notificationSelected == nil) {
+             [[ContainerUtility sharedInstance] setAttribute:@"0" forKey:PUSH_NotificationSelected];
     }
 
     playWithDownload = [NSString stringWithFormat:@"%@", [[ContainerUtility sharedInstance] attributeForKey:SHOW_PLAY_INTRO_WITH_DOWNLOAD]];
     [ActionUtility generateUserId:nil];
     [self initSinaweibo];
     [self initWeChat];
+    [self initBPush:launchOptions];
     [self monitorReachability];
     [self isParseReachable];
     [Parse setApplicationId:PARSE_APP_ID clientKey:PARSE_CLIENT_KEY];
-    [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert|UIRemoteNotificationTypeBadge|UIRemoteNotificationTypeSound];
-    if (application.applicationIconBadgeNumber != 0) {
-        application.applicationIconBadgeNumber = 0;
-        PFInstallation *installation = [PFInstallation currentInstallation];
-        [installation setBadge:0];
-        [installation saveInBackground];
-    }
+    
+//    if (application.applicationIconBadgeNumber != 0) {
+//        application.applicationIconBadgeNumber = 0;
+//        PFInstallation *installation = [PFInstallation currentInstallation];
+//        [installation setBadge:0];
+//        [installation saveInBackground];
+//    }
     self.closed = YES;
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
  
@@ -215,6 +235,9 @@
     [[BundingTVManager shareInstance] connecteServer];
     
     [self.window makeKeyAndVisible];
+
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:
+     (UIRemoteNotificationTypeAlert|UIRemoteNotificationTypeBadge|UIRemoteNotificationTypeSound)];
     
     AVAudioSession *audioSession = [AVAudioSession sharedInstance];
     NSError *setCategoryError = nil;
@@ -231,6 +254,13 @@
     
     mediaVolumeValue = [MPMusicPlayerController applicationMusicPlayer].volume;
     
+    NSDictionary *localNotif = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+    
+    if (localNotif)
+    {
+        [self showAPNSMessage:localNotif];
+    }
+    
     return YES;
 }
 
@@ -244,17 +274,19 @@
         [[AFServiceAPIClient sharedClient] setDefaultHeader:@"app_key" value:appKey];
         [[ContainerUtility sharedInstance] setAttribute:appKey forKey:kIpadAppKey];
     }
-    
-    NSString *hiddenAVS = [notification.userInfo objectForKey:HIDDEN_AMERICAN_VIDEOS];
-    if (hiddenAVS != nil && ![hiddenAVS isEqualToString:@"(null)"]) {
-        [[AFServiceAPIClient sharedClient] setDefaultHeader:@"EX_COPY_MOVIE" value:hiddenAVS];
-        [[ContainerUtility sharedInstance] setAttribute:hiddenAVS forKey:HIDDEN_AMERICAN_VIDEOS];
-    }
-    
     if ([CHANNEL_ID isEqualToString:@""]) {//参数self.showVideoSwitch只对app store生效
         self.showVideoSwitch = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:SHOW_VIDEO_SWITCH]];
         self.closeVideoMode = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:CLOSE_VIDEO_MODE]];
         self.recommendAppSwich = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:RECOMMEND_APP_SWITCH]];
+        
+        NSString *hiddenAVS = [notification.userInfo objectForKey:HIDDEN_AMERICAN_VIDEOS];
+        if (hiddenAVS != nil && ![hiddenAVS isEqualToString:@"(null)"]) {
+            if (ENVIRONMENT == 0) {
+                hiddenAVS = @"0";
+            }
+            [[AFServiceAPIClient sharedClient] setDefaultHeader:@"EX_COPY_MOVIE" value:hiddenAVS];
+            [[ContainerUtility sharedInstance] setAttribute:hiddenAVS forKey:HIDDEN_AMERICAN_VIDEOS];
+        }
     }
     if(self.showVideoSwitch == nil || [self.showVideoSwitch isEqualToString:@"(null)"]){
         self.showVideoSwitch = @"0";
@@ -265,25 +297,39 @@
     if(self.recommendAppSwich == nil || [self.recommendAppSwich isEqualToString:@"(null)"]){
         self.recommendAppSwich = @"0";
     }
+    
+    NSString *notifyS = [notification.userInfo objectForKey:NotificationSelectedValue];
+    [[ContainerUtility sharedInstance] setAttribute:notifyS forKey:PUSH_NotificationSelected];
+    
     NSString * pageNum = [notification.userInfo objectForKey:KWXCODENUM];
     [[ContainerUtility sharedInstance] setAttribute:pageNum forKey:KWXCODENUM];
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
-    [currentInstallation setDeviceTokenFromData:deviceToken];
-    NSArray *channels = [NSArray arrayWithObjects:@"", @"CHANNEL_IPHONE", nil];
-    [currentInstallation addUniqueObjectsFromArray:channels forKey:@"channels"];
-    if (application.applicationIconBadgeNumber != 0) {
-        application.applicationIconBadgeNumber = 0;
-        [currentInstallation setBadge:0];
+        NSString *notificationSelected = (NSString *)[[ContainerUtility sharedInstance] attributeForKey:PUSH_NotificationSelected];
+        if ([notificationSelected isEqualToString:@"0"]) { //baidu
+            // 必须
+            [BPush registerDeviceToken:deviceToken];
+            // 必须。可以在其它时机调用,只有在该方法返回(通过 onMethod:response:回调)绑
+            //定成功时,app 才能接收到 Push 消息。一个 app 绑定成功至少一次即可(如果 access token 变更请重新绑定)。
+            [BPush bindChannel];
+        }
+        else if ([notificationSelected isEqualToString:@"1"]){  //parse
+            PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+            [currentInstallation setDeviceTokenFromData:deviceToken];
+            NSArray *channels = [NSArray arrayWithObjects:@"", @"CHANNEL_IPHONE", nil];
+            [currentInstallation addUniqueObjectsFromArray:channels forKey:@"channels"];
+            if (application.applicationIconBadgeNumber != 0) {
+                    application.applicationIconBadgeNumber = 0;
+                    [currentInstallation setBadge:0];
+                }
+            [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                    if (succeeded)
+                        NSLog(@"Successfully subscribed to broadcast channel!");
+                    else
+                        NSLog(@"Failed to subscribe to broadcast channel; Error: %@",error);
+            }];
     }
-    [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        if (succeeded)
-            NSLog(@"Successfully subscribed to broadcast channel!");
-        else
-            NSLog(@"Failed to subscribe to broadcast channel; Error: %@",error);
-    }];
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
@@ -296,15 +342,8 @@
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
-    self.alertUserInfo = userInfo;
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-        if ([AppDelegate instance].isInPlayView) {
-            return;
-        }
-    }
-    NSString *alert = [[userInfo objectForKey:@"aps"] objectForKey:@"alert"];
-    UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil message:alert delegate:self  cancelButtonTitle:@"不了" otherButtonTitles:@"看一下", nil];
-    [alertView show];
+    [self showAPNSMessage:userInfo];
+    [BPush handleNotification:userInfo];
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -369,12 +408,12 @@
          [UIUtility showNetWorkError:rootView];
     };
     
-    if (application.applicationIconBadgeNumber != 0) {
-        application.applicationIconBadgeNumber = 0;
-        PFInstallation *installation = [PFInstallation currentInstallation];
-        [installation setBadge:0];
-        [installation saveInBackground];
-    }
+//    if (application.applicationIconBadgeNumber != 0) {
+//        application.applicationIconBadgeNumber = 0;
+//        PFInstallation *installation = [PFInstallation currentInstallation];
+//        [installation setBadge:0];
+//        [installation saveInBackground];
+//    }
     [self.sinaweibo applicationDidBecomeActive];
     [self performSelector:@selector(triggerDownload) withObject:self afterDelay:5];
     
@@ -526,11 +565,11 @@
 
 - (NSString *)getContent
 {
-    return @"        任何用户在使用今晚剧场客户端服务之前，均应仔细阅读本声明（未成年人应当在其法定监护人陪同下阅读），用户可以选择不使用今晚剧场客户端服务，一旦使用，既被视为对本声明全部内容的认可和接受。\n\n\
-1. 任何通过今晚剧场显示或下载的资源和产品均系聚合引擎技术自动搜录第三方网站所有者制作或提供的内容，今晚剧场中的所有材料、信息和产品仅按“原样”提供，我公司对其合法性、准确性、真实性、适用性、安全性等概不负责，也无法负责；并且今晚剧场自动搜录的内容不代表我公司之任何意见和主张，也不代表我公司同意或支持第三方网站上的任何内容、主张或立场。\n\n\
+    return @"        任何用户在使用今晚影视客户端服务之前，均应仔细阅读本声明（未成年人应当在其法定监护人陪同下阅读），用户可以选择不使用今晚影视客户端服务，一旦使用，既被视为对本声明全部内容的认可和接受。\n\n\
+1. 任何通过今晚影视显示或下载的资源和产品均系聚合引擎技术自动搜录第三方网站所有者制作或提供的内容，今晚影视中的所有材料、信息和产品仅按“原样”提供，我公司对其合法性、准确性、真实性、适用性、安全性等概不负责，也无法负责；并且今晚影视自动搜录的内容不代表我公司之任何意见和主张，也不代表我公司同意或支持第三方网站上的任何内容、主张或立场。\n\n\
 2. 任何第三方网站如果不希望被我公司的聚合引擎技术收录，应该及时向我公司反映。否则，我公司的聚合引擎技术将视其为可收录的资源网站。\n\n\
-3. 任何单位或者个人如认为今晚剧场客户端聚合引擎技术收录的第三方网站视频内容可能侵犯了其合法权益，请及时向我公司书面反馈，并提供身份证明、权属证明以及详情侵权情况证明。我公司在收到上述文件后，可依其合理判断，断开聚合引擎技术收录的涉嫌侵权的第三方网站内容。\n\n\
-4. 用户理解并且同意，用户通过今晚剧场所获得的材料、信息、产品以及服务完全处于用户自己的判断，并承担因使用该等内容而引起的所有风险，包括但不限于因对内容的正确性、完整性或实用性的依赖而产生的风险。用户在使用今晚剧场的过程中，因受视频或相关内容误导或欺骗而导致或可能导致的任何心理、生理上的伤害以及经济上的损失，一概与本公司无关。\n\n\
+3. 任何单位或者个人如认为今晚影视客户端聚合引擎技术收录的第三方网站视频内容可能侵犯了其合法权益，请及时向我公司书面反馈，并提供身份证明、权属证明以及详情侵权情况证明。我公司在收到上述文件后，可依其合理判断，断开聚合引擎技术收录的涉嫌侵权的第三方网站内容。\n\n\
+4. 用户理解并且同意，用户通过今晚影视所获得的材料、信息、产品以及服务完全处于用户自己的判断，并承担因使用该等内容而引起的所有风险，包括但不限于因对内容的正确性、完整性或实用性的依赖而产生的风险。用户在使用今晚影视的过程中，因受视频或相关内容误导或欺骗而导致或可能导致的任何心理、生理上的伤害以及经济上的损失，一概与本公司无关。\n\n\
 5. 用户因第三方如电信部门的通讯线路故障、技术问题、网络、电脑故障、系统不稳定性及其他各种不可抗力量原因而遭受到的一切损失，我公司不承担责任。因技术故障等不可抗时间影响到服务的正常运行的，我公司承诺在第一时间内与相关单位配合，及时处理进行修复，但用户因此而遭受的一切损失，我公司不承担责任。";
 }
 
@@ -577,8 +616,22 @@
 -(void) onResp:(BaseResp*)resp{
     if (resp.errCode == 0) {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"wechat_share_success" object:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"WXShare" object:nil];
     }
-    
+   
+}
+
+- (void)showAPNSMessage:(NSDictionary *)dic
+{
+    self.alertUserInfo = dic;
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+        if ([AppDelegate instance].isInPlayView) {
+            return;
+        }
+    }
+    NSString *alert = [[dic objectForKey:@"aps"] objectForKey:@"alert"];
+    UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil message:alert delegate:self  cancelButtonTitle:@"不了" otherButtonTitles:@"看一下", nil];
+    [alertView show];
 }
 
 #pragma mark - 
@@ -735,6 +788,19 @@
     {
         [navCtrl popViewControllerAnimated:NO];
         [navCtrl popViewControllerAnimated:NO];
+    }
+}
+
+#pragma mark - BPushDelegate
+- (void) onMethod:(NSString*)method response:(NSDictionary*)data {
+    if ([BPushRequestMethod_Bind isEqualToString:method]) {
+        NSDictionary* res = [[NSDictionary alloc] initWithDictionary:data];
+//        NSString *appid = [res valueForKey:BPushRequestAppIdKey];
+//        NSString *userid = [res valueForKey:BPushRequestUserIdKey];
+//        NSString *channelid = [res valueForKey:BPushRequestChannelIdKey];
+//        int returnCode = [[res valueForKey:BPushRequestErrorCodeKey] intValue];
+//        NSString *requestid = [res valueForKey:BPushRequestRequestIdKey];
+        NSLog(@"绑定百度消息推送返回信息：%@",res);
     }
 }
 

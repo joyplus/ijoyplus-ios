@@ -12,7 +12,7 @@
 @protocol AvVideoWebViewControllerDelegate <NSObject>
 
 - (void)playNextEpisode:(int)nextEpisodeNum;
-- (void)reshowWebView;
+- (void)reshowWebView:(BOOL)fromBaidu;
 
 @end
 
@@ -28,6 +28,7 @@
 @property (nonatomic) BOOL hasVideoUrls;
 @property (nonatomic)int currentNum;
 @property (nonatomic, strong)NSString *playTime;
+@property (nonatomic, assign)BOOL hasVideoUrl;
 @property (nonatomic, weak)id<DramaDetailViewControllerDelegate>dramaDetailViewControllerDelegate;
 
 @end

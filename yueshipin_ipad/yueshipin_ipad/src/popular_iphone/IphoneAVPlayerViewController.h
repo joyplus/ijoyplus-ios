@@ -13,7 +13,7 @@
 #import <MediaPlayer/MediaPlayer.h>
 #import "CMPopTipView.h"
 #import "BundingTVManager.h"
-@interface IphoneAVPlayerViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,BundingTVManagerDelegate,FayeClientDelegate>{
+@interface IphoneAVPlayerViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,BundingTVManagerDelegate,FayeClientDelegate,UIGestureRecognizerDelegate>{
     UIToolbar *topToolBar_;
     UIToolbar *bottomToolBar_;
     AVPlayerView *avplayerView_;
@@ -94,6 +94,8 @@
     
     AVMutableAudioMix *audioMix_;
     NSArray * localPlaylist;
+    
+    UIButton *airPlayButton_;
 }
 @property (nonatomic, strong) UIToolbar *topToolBar;
 @property (nonatomic, strong) UIToolbar *bottomToolBar;

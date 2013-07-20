@@ -11,11 +11,12 @@
 #import "MBProgressHUD.h"
 
 @interface BundingViewController ()
-
+@property (nonatomic, strong) UIButton * bundingBtn;
+@property BOOL isConnected;
 @end
 
 @implementation BundingViewController
-@synthesize strData;
+@synthesize strData,bundingBtn,isConnected;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -51,7 +52,7 @@
     [self.view addSubview:tishi];
     
 
-    UIButton * bundingBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    bundingBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     bundingBtn.frame = CGRectMake(65 , 270, 190, 55);
     [bundingBtn setBackgroundImage:[UIImage imageNamed:@"confirm_bunding.png"] forState:UIControlStateNormal];
     [bundingBtn setBackgroundImage:[UIImage imageNamed:@"confirm_bunding_f.png"] forState:UIControlStateHighlighted];
@@ -59,6 +60,7 @@
                    action:@selector(bundingBtnClick)
          forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:bundingBtn];
+    bundingBtn.enabled = NO;
     
     UIButton * unbundingBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     unbundingBtn.frame = CGRectMake(65 , 335, 190, 55);
@@ -68,6 +70,8 @@
                    action:@selector(unbundingBtnClick)
          forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:unbundingBtn];
+    
+    isConnected = NO;
     
     userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:@"kUserId"];
     
@@ -172,7 +176,8 @@
 
 - (void)unbundingBtnClick
 {
-    [self.navigationController popViewControllerAnimated:YES];
+    //[self.navigationController popViewControllerAnimated:YES];
+    [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 - (void)dismissHUDView
@@ -222,11 +227,29 @@
         }
         [self.navigationController popToRootViewControllerAnimated:YES];
     }
+    else if ([[messageDict objectForKey:@"push_type"] isEqualToString:@"33"]
+        && [[messageDict objectForKey:@"user_id"] isEqualToString:userId])
+    {
+        [MobClick event:KEY_UNBINDED];
+        //添加已绑定数据缓存
+        NSDictionary * dic = (NSDictionary *)[[ContainerUtility sharedInstance] attributeForKey:[NSString stringWithFormat:@"%@_isBunding",userId]];
+        [[ContainerUtility sharedInstance] setAttribute:[NSDictionary dictionaryWithObjectsAndKeys:[dic objectForKey:KEY_MACADDRESS],KEY_MACADDRESS,[NSNumber numberWithBool:NO],KEY_IS_BUNDING, nil]
+                                                 forKey:[NSString stringWithFormat:@"%@_isBunding",userId]];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"bundingTVSucceeded" object:nil];
+        
+        UIAlertView * alert = [[UIAlertView alloc] initWithTitle:nil
+                                                         message:@"已断开与电视端的绑定"
+                                                        delegate:nil
+                                               cancelButtonTitle:@"确定"
+                                               otherButtonTitles:nil, nil];
+        [alert show];
+    }
 }
 
 - (void)connectedToServer
 {
-    
+    isConnected = YES;
+    bundingBtn.enabled = YES;
 }
 
 - (void)disconnectedFromServer

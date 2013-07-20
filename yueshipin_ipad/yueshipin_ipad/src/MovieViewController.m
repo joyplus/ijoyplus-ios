@@ -16,7 +16,21 @@
 - (void)viewDidUnload{
     [super viewDidUnload];
 }
-
+-(void)viewDidLoad{
+    [super viewDidLoad];
+    UIButton *sortButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [sortButton addTarget:self action:@selector(sort:) forControlEvents:UIControlEventTouchUpInside];
+    sortButton.frame = CGRectMake(420, 50, 70, 27);
+    sortButton.backgroundColor = [UIColor clearColor];
+    [sortButton setBackgroundImage:[UIImage imageNamed:@"sort_iPad.png"] forState:UIControlStateNormal];
+    //[sortButton setImage:[UIImage imageNamed:@"sort_iPad_s.png"] forState:UIControlStateHighlighted];
+    [sortButton setBackgroundImage:[UIImage imageNamed:@"sort_iPad_s.png"] forState:UIControlStateSelected];
+    sortButton.adjustsImageWhenHighlighted = NO;
+    [self.view addSubview:sortButton];
+}
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

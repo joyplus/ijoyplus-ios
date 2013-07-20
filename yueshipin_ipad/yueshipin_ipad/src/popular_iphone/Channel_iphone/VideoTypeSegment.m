@@ -67,6 +67,7 @@ enum{
     for (int i = 0; i<3; i++) {
         UIImageView *fengexian = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"fengexian _shu@2x.png"]];
         fengexian.frame = CGRectMake(80*(i+1), 0, 2, 65);
+        fengexian.tag = 20000+i;
         [self addSubview:fengexian];
     }
     
@@ -102,6 +103,45 @@ enum{
     }
     [self setSelectAtIndex:index];
     [_delegate videoTypeSegmentDidSelectedAtIndex:index];
+}
+
+-(void)show{
+    [UIView beginAnimations:@"show" context:NULL];
+    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, 65);
+    UIButton *btn1 = (UIButton *)[self viewWithTag:100000];
+    btn1.frame = CGRectMake(0, 0, 81, 65);
+    UIButton *btn2 = (UIButton *)[self viewWithTag:100001];
+    btn2.frame = CGRectMake(80, 0, 81, 65);
+    UIButton *btn3 = (UIButton *)[self viewWithTag:100002];
+    btn3.frame = CGRectMake(160, 0, 81, 65);
+    UIButton *btn4 = (UIButton *)[self viewWithTag:100003];
+    btn4.frame = CGRectMake(240, 0, 81, 65);
+    
+    for (int i = 0; i<3; i++){
+       UIImageView *img = (UIImageView *)[self viewWithTag:20000+i];
+        img.frame = CGRectMake(80*(i+1), 0, 2, 65);
+    }
+    [UIView setAnimationDuration:0.2];
+    [UIView commitAnimations];
+}
+
+-(void)dissmiss{
+    [UIView beginAnimations:@"show" context:NULL];
+    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, 0);
+    UIButton *btn1 = (UIButton *)[self viewWithTag:100000];
+    btn1.frame = CGRectMake(0, 0, 81, 0);
+    UIButton *btn2 = (UIButton *)[self viewWithTag:100001];
+    btn2.frame = CGRectMake(80, 0, 81, 0);
+    UIButton *btn3 = (UIButton *)[self viewWithTag:100002];
+    btn3.frame = CGRectMake(160, 0, 81, 0);
+    UIButton *btn4 = (UIButton *)[self viewWithTag:100003];
+    btn4.frame = CGRectMake(240, 0, 81, 0);
+    for (int i = 0; i<3; i++){
+        UIImageView *img = (UIImageView *)[self viewWithTag:20000+i];
+        img.frame = CGRectMake(80*(i+1), 0, 2, 0);
+    }
+    [UIView setAnimationDuration:0.2];
+    [UIView commitAnimations];
 }
 /*
 // Only override drawRect: if you perform custom drawing.

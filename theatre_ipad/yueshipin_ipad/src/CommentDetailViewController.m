@@ -81,10 +81,12 @@
     titleLabel.text = titleContent;
     contentLabel.text = content;
     [self.parentDelegateController hideCloseBtn];
+    self.preViewController.moveToLeft = NO;
 }
 
 - (void)closeBtnClicked
 {
+    self.preViewController.moveToLeft = YES;
     [parentDelegateController showCloseBtn];
     [[AppDelegate instance].rootViewController.stackScrollViewController removeViewToViewInSlider:VideoDetailViewController.class];
 }

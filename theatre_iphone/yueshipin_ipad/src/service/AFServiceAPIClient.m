@@ -45,10 +45,8 @@
         else{
          [_sharedClient setDefaultHeader:@"client" value:@"iphone"];
         }
-        
         NSString *HiddenAVS = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:HIDDEN_AMERICAN_VIDEOS];
         [_sharedClient setDefaultHeader:@"EX_COPY_MOVIE" value:HiddenAVS];
-
         [_sharedClient setDefaultHeader:@"version" value:VERSION];
         [_sharedClient setDefaultHeader:@"Connection" value:@"keep-alive"];
     });

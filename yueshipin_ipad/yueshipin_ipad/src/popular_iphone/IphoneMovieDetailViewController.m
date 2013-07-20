@@ -26,7 +26,7 @@
 #import "UIUtility.h"
 #import "DatabaseManager.h"
 #import <Parse/Parse.h>
-
+#import "WXShareRecord.h"
 #define REVIEW_VIEW_TAG (11112)
 
 @interface IphoneMovieDetailViewController ()
@@ -88,7 +88,7 @@
     commentArray_ = [NSMutableArray arrayWithCapacity:10];
     [self loadData];
     [self loadComments];
-    
+    [self isFavority];
 //    favCount_ = [[self.infoDic objectForKey:@"favority_num" ] intValue];
 //    supportCount_ = [[self.infoDic objectForKey:@"support_num" ] intValue];
     
@@ -113,8 +113,8 @@
     [moreBtn_ setBackgroundImage:[UIImage imageNamed:@"more_off"] forState:UIControlStateSelected];
     [moreBtn_ addTarget:self action:@selector(more:) forControlEvents:UIControlEventTouchUpInside];
     
-    //pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480 tableView:self.tableView withClient:self];
-   
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveWXShareRecord) name:@"WXShare" object:nil];
+    
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -238,10 +238,6 @@
                 [commentArray_ addObjectsFromArray:comments];
                 
             }
-            else{
-                [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
-            
-            }
         }
        [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
@@ -249,11 +245,34 @@
     }];
 
 }
+
+-(void)isFavority{
+    NSString *itemId = [self.infoDic objectForKey:@"prod_id"];
+    if (itemId == nil) {
+        itemId = [self.infoDic objectForKey:@"content_id"];
+    }
+    if (itemId == nil) {
+        itemId = [self.infoDic objectForKey:@"id"];
+    }
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: itemId, @"prod_id", nil];
+    [[AFServiceAPIClient sharedClient] postPath:KPathProgramIsfavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        int responseCode = [[result objectForKey:@"flag"] intValue];
+        if(responseCode == 1){
+            isFavority_ = YES;
+        }
+        else{
+            isFavority_ = NO;
+        }
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
+    }];
+    
+}
 - (void)loadTable {
     
     [self.tableView reloadData];
-    [pullToRefreshManager_ tableViewReloadFinished];
-    
+   
 }
 
 - (void)viewDidUnload{
@@ -353,12 +372,24 @@
                 if (titleStr == nil) {
                         titleStr = [self.infoDic objectForKey:@"name"];
                 }
-                UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 14, 170, 18)];
+                UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 14, 150, 18)];
                 titleLabel.font = [UIFont systemFontOfSize:15];
                 titleLabel.textColor = [UIColor grayColor];
                 titleLabel.backgroundColor = [UIColor clearColor];
                 titleLabel.text = titleStr;
                 [cell addSubview:titleLabel];
+                
+                UILabel *scoreLabel = [[UILabel alloc] initWithFrame:CGRectMake(270, 14, 25, 18)];
+                scoreLabel.font = [UIFont systemFontOfSize:15];
+                scoreLabel.textColor = [UIColor orangeColor];
+                scoreLabel.backgroundColor = [UIColor clearColor];
+                scoreLabel.textAlignment = NSTextAlignmentRight;
+                scoreLabel.text = [self.infoDic objectForKey:@"score"];
+                [cell addSubview:scoreLabel];
+                
+                UIImageView *logo = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"list_numeral_watercress.png"]];
+                logo.frame = CGRectMake(298, 16, 14, 14);
+                [cell addSubview:logo];
                 
                 NSString *directors = [self.infoDic objectForKey:@"directors"];
                 if (directors == nil) {
@@ -446,6 +477,13 @@
                 addFav.tag = 10002;
                 [addFav setImage:[UIImage imageNamed:@"icon_shoucang.png"] forState:UIControlStateNormal];
                 [addFav setImage:[UIImage imageNamed:@"icon_shoucang_s.png"] forState:UIControlStateHighlighted];
+                [addFav setImage:[UIImage imageNamed:@"icon_shoucang1"] forState:UIControlStateSelected];
+                if (isFavority_) {
+                    addFav.selected = YES;
+                }
+                else{
+                    addFav.selected = NO;
+                }
                 if (favCount_ <1000) {
                     [addFav setTitle:[NSString stringWithFormat:@"(%d)",favCount_]  forState:UIControlStateNormal];
                     [expectbtn setTitle:[NSString stringWithFormat:@"(%d)",favCount_] forState:UIControlStateNormal];
@@ -505,6 +543,7 @@
                     [downLoad setBackgroundImage:[UIImage imageNamed:@"cache_no.png"] forState:UIControlStateDisabled];
                     downLoad.enabled = NO;
                     isEnableReportBtn = NO;
+                    haveVideoUrl_ = NO;
                 }
                 else{
                     [downLoad setBackgroundImage:[UIImage imageNamed:@"download_video.png"] forState:UIControlStateNormal];
@@ -523,7 +562,7 @@
                 if (isLoaded_) {
                     [cell addSubview:expectbtn];
                     
-                    if ([CommonMotheds getOnlineConfigValue] != 2){
+                    if ([CommonMotheds getOnlineConfigValue] == 0){
                       [cell addSubview:downLoad];
                     }
                 }
@@ -831,20 +870,39 @@
         NSString *responseCode = [result objectForKey:@"res_code"];
         
         if([responseCode isEqualToString:kSuccessResCode]){
+             isFavority_ = YES; 
             [[NSNotificationCenter defaultCenter] postNotificationName:@"REFRESH_FAV"object:nil];
             favCount_++;
             [self showOpSuccessModalView:1.5 with:type];
             [self.tableView reloadData];
             
-        } else {
-            [self showOpFailureModalView:1.5 with:type];
         }
-        
+//        else {
+//            [self showOpFailureModalView:1.5 with:type];
+//        }
+      
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [self showOpFailureModalView:1.5 with:type];
     }];
 }
 
+-(void)Unfavority{
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: prodId_, @"prod_id", nil];
+    [[AFServiceAPIClient sharedClient] postPath:kPathProgramUnfavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        if([responseCode isEqualToString:kSuccessResCode]){
+            isFavority_ = NO;
+            favCount_--;
+            [self.tableView reloadData];
+            [self showOpSuccessModalView:1.5 with:5];
+        }
+        
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        
+    }];
+    
+    
+}
 -(void)action:(id)sender {
     if (![self checkNetWork]) {
         [UIUtility showNetWorkError:self.view];
@@ -853,13 +911,33 @@
     UIButton *button = (UIButton *)sender;
     switch (button.tag) {
         case 10001:{
-            [self playVideo:0];
+            
+            if ([source_ isEqualToString:@"baidu_wangpan"]) {
+                if ([DatabaseManager isWXSharedProdId:prodId_]) {
+                    [self playVideo:0];
+                }
+                else{
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"亲，通过微信分享后才能观看该影片哦。" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+                    alert.tag = 30000;
+                    [alert show];
+                
+                }
+            }
+            else{
+              [self playVideo:0];
+            }
+
             break;
         }
         case 10002:{
             //电影不需要注册消息推送
 //            [self SubscribingToChannels];
-            [self addVideotoFav:ADDFAV];
+            if (isFavority_) {
+                [self Unfavority];
+            }
+            else{
+                [self addVideotoFav:ADDFAV];
+            }
             
             break;
         }
@@ -892,7 +970,6 @@
             button.adjustsImageWhenHighlighted = NO;
             
             NSString *url = [self getDownloadUrl];
-//            NSString *url = @"http://v.youku.com/player/getM3U8/vid/127814846/type/flv/ts/%7Bnow_date%7D/useKeyframe/0/v.m3u8";
             if (url == nil || [url isEqualToString:@""]) {
                 NSLog(@"Get the download url is failed");
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"暂无下载地址" delegate:self cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
@@ -916,7 +993,7 @@
             if (imgUrl == nil) {
                 imgUrl = [self.infoDic objectForKey:@"poster"];
             }
-            NSArray *infoArr = [NSArray arrayWithObjects:prodId,name,imgUrl,@"1",[NSNumber numberWithInt:0], nil];
+            NSArray *infoArr = [NSArray arrayWithObjects:prodId,name,imgUrl,@"1",[NSNumber numberWithInt:0], [self.infoDic objectForKey:@"sources"], nil];
             
             CheckDownloadUrls *check = [[CheckDownloadUrls alloc] init];
             check.downloadInfoArr = infoArr;
@@ -1084,6 +1161,7 @@
 - (NSString *)parseDownloadUrl:(NSDictionary *)tempVideo
 {
     NSString *videoUrl;
+    source_ = [tempVideo objectForKey:@"source"];
     NSArray *urlArray =  [tempVideo objectForKey:@"urls"];
     for(NSDictionary *url in urlArray){
         if([GAO_QING isEqualToString:[url objectForKey:@"type"]]&&[@"mp4" isEqualToString:[url objectForKey:@"file"]]){
@@ -1161,25 +1239,43 @@
     
 }
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    
-    
+-(void)saveWXShareRecord{
+    WXShareRecord *wxShare = [[WXShareRecord alloc] init];
+    wxShare.prodId = prodId_;
+    [DatabaseManager save:wxShare];
 }
 
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if (alertView.tag == 20000) {
+        if (buttonIndex == 1) {
+            [self wechatShare:WXSceneSession];
+            [MobClick event:@"ue_wechat_friend_share"];
+        }
+        else if (buttonIndex == 2){
+            [self wechatShare:WXSceneTimeline];
+            [MobClick event:@"ue_wechat_social_share"];
+        }
+    }
+    else if(alertView.tag  == 30000){
+        if (buttonIndex == 1) {
+            if ([WXApi isWXAppInstalled]) {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"分享到：" message:nil delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"微信好友",@"微信朋友圈", nil];
+                alert.tag = 20000;
+                [alert show];
+            }
+            else{
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"亲，你还没有安装微信，请安装后再试。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+                [alert show];
+            }
+            
+        }
+        
+    }
     
-    [pullToRefreshManager_ tableViewReleased];
-}
-
-- (void)MNMBottomPullToRefreshManagerClientReloadTable {
-    return;
-    [CommonMotheds showNetworkDisAbledAlert:self.view];
-    [self loadComments];
-
 }
 
 #pragma mark -
-#pragma mark - FilmReviewViewCellDelegate 
+#pragma mark - FilmReviewViewCellDelegate
 
 - (void)filmReviewTaped:(NSString *)title content:(NSString *)content
 {
@@ -1230,4 +1326,7 @@
     }];
 }
 
+-(void)dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 @end

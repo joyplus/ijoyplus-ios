@@ -79,6 +79,8 @@ NSString *const kPathProgramFavority = @"/joyplus-service/index.php/program/favo
 
 NSString *const kPathProgramUnfavority = @"/joyplus-service/index.php/program/unfavority";
 
+NSString *const KPathProgramIsfavority = @"/joyplus-service/index.php/program/is_favority";
+
 NSString *const kPathProgramComment = @"/joyplus-service/index.php/program/comment";
 
 NSString *const kPathProgramComments = @"/joyplus-service/index.php/program/comments";

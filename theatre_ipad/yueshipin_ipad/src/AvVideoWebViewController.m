@@ -17,7 +17,7 @@
 @property (nonatomic)BOOL appeared;
 @property (nonatomic, strong)NSMutableArray *subnameArray;
 
-- (void)addWebView;
+- (void)addWebView:(BOOL)fromBaidu;
 - (void)removeWebView;
 
 @end
@@ -166,7 +166,7 @@
         }
         else
         {
-            [self addWebView];
+            [self addWebView:NO];
         }
     }
 }
@@ -224,7 +224,11 @@
         subname = [subnameArray objectAtIndex:currentNum];
     }
     NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: userId, @"userid", self.prodId, @"prod_id", [video objectForKey:@"name"], @"prod_name", subname, @"prod_subname", [NSNumber numberWithInt:self.type], @"prod_type", @"2", @"play_type", [NSNumber numberWithInt:0], @"playback_time", [NSNumber numberWithInt:0], @"duration", [videoHttpUrlArray objectAtIndex:self.currentNum], @"video_url", nil];
+    NSNumber *duration = [NSNumber numberWithInt:0];
+    if (!self.hasVideoUrl) {
+        duration = [NSNumber numberWithInt:-2];
+    }
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: userId, @"userid", self.prodId, @"prod_id", [video objectForKey:@"name"], @"prod_name", subname, @"prod_subname", [NSNumber numberWithInt:self.type], @"prod_type", @"2", @"play_type", [NSNumber numberWithInt:0], @"playback_time", duration, @"duration", [videoHttpUrlArray objectAtIndex:self.currentNum], @"video_url", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathAddPlayHistory parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         [[CacheUtility sharedCache] removeObjectForKey:WATCH_RECORD_CACHE_KEY];
         [[NSNotificationCenter defaultCenter] postNotificationName:WATCH_HISTORY_REFRESH object:nil];
@@ -244,7 +248,7 @@
     }
 }
 
-- (void)addWebView
+- (void)addWebView:(BOOL)fromBaidu
 {
     CGRect bound = [UIScreen mainScreen].bounds;
 	webView = [[UIWebView alloc]initWithFrame:CGRectMake(0, 0, bound.size.height, bound.size.width)];
@@ -252,9 +256,16 @@
     webView.scalesPageToFit = YES;
     [self hideGradientBackground:webView];
     if (videoHttpUrlArray.count > 0 && currentNum < videoHttpUrlArray.count) {
-        NSURL *url = [NSURL URLWithString:[videoHttpUrlArray objectAtIndex:currentNum]];
-        NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
-        [webView loadRequest:requestObj];
+        if (fromBaidu) {
+            NSString *boundle = [[NSBundle mainBundle] resourcePath];
+            webView.scrollView.scrollEnabled = NO;
+            webView.backgroundColor = [UIColor colorWithRed:218/255.0 green:218/255.0 blue:218/255.0 alpha:1];
+            [webView loadHTMLString:[NSString stringWithFormat:@"<body bgcolor='#dadada'><img src='404.jpg'/></body>"] baseURL:[NSURL fileURLWithPath:boundle]];
+        } else {
+            NSURL *url = [NSURL URLWithString:[videoHttpUrlArray objectAtIndex:currentNum]];
+            NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
+            [webView loadRequest:requestObj];
+        }
     }
     [webView setScalesPageToFit:YES];
     [self.view addSubview:webView];
@@ -267,9 +278,9 @@
     webView = nil;
 }
 
-- (void)reshowWebView
+- (void)reshowWebView:(BOOL)fromBaidu
 {
-    [self addWebView];
+    [self addWebView:fromBaidu];
 }
 
 @end

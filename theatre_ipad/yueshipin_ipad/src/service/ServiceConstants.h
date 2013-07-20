@@ -76,6 +76,9 @@ extern NSString *const kPathCommentView;
 extern NSString *const kPathProgramFavority;
 
 extern NSString *const kPathProgramUnfavority;
+
+extern NSString *const KPathProgramIsfavority;
+
 extern NSString *const kPathProgramComment;
 
 extern NSString *const kPathProgramComments;

@@ -74,4 +74,5 @@
 @property (strong, nonatomic)EGORefreshTableHeaderView *refreshHeaderViewForTvList;
 
 @property (strong, nonatomic) PullRefreshManagerClinet *pullToRefreshManager;
+-(void)reFreshViewController;
 @end

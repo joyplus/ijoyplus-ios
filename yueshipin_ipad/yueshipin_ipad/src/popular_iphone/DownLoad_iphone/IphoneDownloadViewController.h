@@ -22,6 +22,9 @@
     float totalFreeSpace_;
     DownLoadManager *downLoadManager_;
     UIImageView *noItemView_;
+    BOOL isItunesFile;
+    UIView * innerView;
+    UILabel *spaceInfoLabel;
 }
 @property (nonatomic, strong)UIBarButtonItem *editButtonItem;
 @property (nonatomic, strong)UIBarButtonItem *doneButtonItem;

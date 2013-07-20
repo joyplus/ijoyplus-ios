@@ -8,12 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "IphoneVideoViewController.h"
-#import "MNMBottomPullToRefreshManager.h"
 #import "FeedBackView.h"
 #import "FilmReviewDetailView.h"
 #import "FilmReviewViewCell.h"
 
-@interface TVDetailViewController :IphoneVideoViewController<MNMBottomPullToRefreshManagerClient,FeedBackViewDelegate,FilmReviewViewCellDelegate>{
+@interface TVDetailViewController :IphoneVideoViewController<FeedBackViewDelegate,FilmReviewViewCellDelegate>{
 
     NSDictionary *videoInfo_;
     int videoType_;
@@ -29,7 +28,6 @@
     UIImageView *summaryBg_;
     UILabel *summaryLabel_;
     UIButton *moreBtn_;
-    MNMBottomPullToRefreshManager *pullToRefreshManager_;
     
     UIScrollView *scrollViewUp_;
     UIScrollView *scrollViewDown_;
@@ -46,6 +44,7 @@
     UIButton *preDL_;
     BOOL isDownLoad_;
     BOOL isloaded_;
+    BOOL isFavority_;
     
     NSArray *arrReviewData_;
 }

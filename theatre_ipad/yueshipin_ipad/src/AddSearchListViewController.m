@@ -448,7 +448,7 @@
 
 #pragma mark -
 #pragma mark - PullRefreshManagerClinetDelegate
-- (void)MNMBottomPullToRefreshManagerClientReloadTable {
+- (void)pulltoLoadMore{
     if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
         [UIUtility showNetWorkError:self.view];
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:2.0f];

@@ -7,21 +7,26 @@
 //
 
 #import "SegmentControlView.h"
+#import "CMConstants.h"
+#import "ContainerUtility.h"
 
 #define MOVIE_ALL_TYPE  [NSArray arrayWithObjects:@"全部",@"动作",@"恐怖",@"惊悚",@"爱情",@"悬疑",@"伦理",@"剧情",@"喜剧",@"科幻",@"战争",@"冒险",@"音乐",@"动画",@"运动",@"奇幻",@"传记",@"古装",@"犯罪",@"武侠",@"其他", nil]
-#define  MOVIE_ALL_AREA  [NSArray arrayWithObjects:@"全部",@"美国",@"内地",@"香港",@"台湾",@"日本",@"韩国",@"欧洲",@"东南亚",@"其他",nil]
+//#define  MOVIE_ALL_AREA  [NSArray arrayWithObjects:@"全部",@"美国",@"内地",@"香港",@"台湾",@"日本",@"韩国",@"欧洲",@"东南亚",@"其他",nil]
 
 #define  TV_ALL_TYPE  [NSArray arrayWithObjects:@"全部",@"剧情",@"情感",@"偶像",@"伦理",@"喜剧",@"犯罪",@"战争",@"古装",@"动作",@"奇幻",@"经典",@"乡村",@"商战",@"历史",@"情景",@"TVB",@"其他", nil]
-#define  TV_ALL_AREA   [NSArray arrayWithObjects:@"全部",@"美国",@"香港",@"台湾",@"韩国",@"日本",@"内地",@"其他",nil]
+//#define  TV_ALL_AREA   [NSArray arrayWithObjects:@"全部",@"美国",@"香港",@"台湾",@"韩国",@"日本",@"内地",@"其他",nil]
 
 #define  COMIC_ALL_TYPE  [NSArray arrayWithObjects:@"全部",@"情感",@"科幻",@"热血",@"推理",@"搞笑",@"冒险",@"萝莉",@"校园",@"动作",@"机战",@"运动",@"耽美",@"战争",@"少年",@"少女",@"社会",@"原创",@"亲子",@"益智",@"励志" ,@"百合",@"其他",nil]
-#define  COMIC_ALL_AREA  [NSArray arrayWithObjects:@"全部",@"日本",@"欧美",@"国产",@"其他",nil]
+//#define  COMIC_ALL_AREA  [NSArray arrayWithObjects:@"全部",@"日本",@"欧美",@"国产",@"其他",nil]
 
 #define  SHOW_ALL_TYPE  [NSArray arrayWithObjects:@"全部",@"综艺",@"选秀",@"情感",@"访谈",@"播报",@"旅游",@"音乐",@"美食",@"纪实",@"曲艺",@"生活",@"游戏",@"互动",@"财经",@"求职",@"其他", nil]
-#define  SHOW_ALL_AREA  [NSArray arrayWithObjects:@"全部",@"港台",@"内地",@"日韩",@"欧美",@"其他",nil]
+//#define  SHOW_ALL_AREA  [NSArray arrayWithObjects:@"全部",@"港台",@"内地",@"日韩",@"欧美",@"其他",nil]
 
-#define  MOVIE_YEAR  [NSArray arrayWithObjects:@"全部",@"2013",@"2012",@"2011",@"2010",@"2009",@"2008",@"2007",@"2006",@"2005",@"其他",nil]
-
+static NSMutableArray *MOVIE_YEAR = nil;
+static NSArray *MOVIE_ALL_AREA = nil;
+static NSArray *TV_ALL_AREA = nil;
+static NSArray *COMIC_ALL_AREA = nil;
+static NSArray *SHOW_ALL_AREA = nil;
 @implementation SegmentControlView
 @synthesize seg = _seg;
 @synthesize movieLabelArr = _movieLabelArr;
@@ -30,15 +35,63 @@
 @synthesize showLabelArr = _showLabelArr;
 @synthesize delegate = _delegate;
 @synthesize segControlBg = _segControlBg;
+
+-(void)initVideoTagArr{
+    
+    //在线参数；
+    NSString *HiddenAVS = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:HIDDEN_AMERICAN_VIDEOS];
+    if ([HiddenAVS isEqualToString:@"0"]){
+        MOVIE_ALL_AREA = [NSArray arrayWithObjects:@"全部",@"美国",@"内地",@"香港",@"台湾",@"日本",@"韩国",@"欧洲",@"东南亚",@"其他",nil];
+        TV_ALL_AREA = [NSArray arrayWithObjects:@"全部",@"美国",@"香港",@"台湾",@"韩国",@"日本",@"内地",@"其他",nil];
+        COMIC_ALL_AREA = [NSArray arrayWithObjects:@"全部",@"日本",@"欧美",@"国产",@"其他",nil];
+        SHOW_ALL_AREA = [NSArray arrayWithObjects:@"全部",@"港台",@"内地",@"日韩",@"欧美",@"其他",nil];
+    }
+    else{
+        MOVIE_ALL_AREA = [NSArray arrayWithObjects:@"全部",@"内地",@"香港",@"台湾",@"日本",@"韩国",@"欧洲",@"东南亚",@"其他",nil];
+        TV_ALL_AREA = [NSArray arrayWithObjects:@"全部",@"香港",@"台湾",@"韩国",@"日本",@"内地",@"其他",nil];
+        COMIC_ALL_AREA = [NSArray arrayWithObjects:@"全部",@"日本",@"国产",@"其他",nil];
+        SHOW_ALL_AREA = [NSArray arrayWithObjects:@"全部",@"港台",@"内地",@"日韩",@"其他",nil];
+    }
+    
+    
+    MOVIE_YEAR = [NSMutableArray arrayWithObject:@"全部"];
+    //实例化一个NSDateFormatter对象
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    //设定时间格式,这里可以设置成自己需要的格式
+    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    //用[NSDate date]可以获取系统当前时间
+    NSString *year = [[dateFormatter stringFromDate:[NSDate date]] substringToIndex:4];
+    
+    for (int i = 0; i < 9; i++) {
+        int year_num = [year intValue]-i;
+        NSString *yearStr = [NSString stringWithFormat:@"%d",year_num];
+        [MOVIE_YEAR addObject:yearStr];
+    }
+    [MOVIE_YEAR addObject:@"其他"];
+}
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
-        _movieLabelArr = [NSArray arrayWithObjects:@"全部",@"美国",@"动作",@"科幻",@"爱情",@"更多",nil];
-        _tvLabelArr = [NSArray arrayWithObjects:@"全部",@"美国",@"韩国",@"日本",@"香港",@"更多",nil];
-        _comicLabelArr = [NSArray arrayWithObjects:@"全部",@"日本",@"欧美",@"国产",@"热血",@"更多",nil];
+        
+        [self initVideoTagArr];
+        
+         NSString *HiddenAVS = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:HIDDEN_AMERICAN_VIDEOS];
+        if ([HiddenAVS isEqualToString:@"0"]) {
+            _movieLabelArr = [NSArray arrayWithObjects:@"全部",@"美国",@"动作",@"科幻",@"爱情",@"更多",nil];
+            _tvLabelArr = [NSArray arrayWithObjects:@"全部",@"美国",@"韩国",@"日本",@"香港",@"更多",nil];
+            _comicLabelArr = [NSArray arrayWithObjects:@"全部",@"日本",@"欧美",@"国产",@"热血",@"更多",nil];
+          
+        }
+        else{
+            _movieLabelArr = [NSArray arrayWithObjects:@"全部",@"内地",@"动作",@"科幻",@"爱情",@"更多",nil];
+            _tvLabelArr = [NSArray arrayWithObjects:@"全部",@"内地",@"韩国",@"日本",@"香港",@"更多",nil];
+            _comicLabelArr = [NSArray arrayWithObjects:@"全部",@"日本",@"推理",@"国产",@"热血",@"更多",nil];
+            
+        }
         _showLabelArr = [NSArray arrayWithObjects:@"全部",@"综艺",@"选秀",@"情感",@"访谈",@"更多",nil];
+    
         PreKey_ = @"全部";
         UIView *segmentBg = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 42)];
         segmentBg.backgroundColor = [UIColor colorWithRed:65/255.0 green:65/255.0 blue:65/255.0 alpha:1];
@@ -136,7 +189,7 @@
     }
     UIButton *moreBtn = (UIButton *)[_segControlBg viewWithTag:105];
     moreBtn.selected = NO;
-    [_delegate didTapOnSegmentView];
+    [_delegate didTapOnSegmentViewButton:moreBtn];
     
     NSArray *arr = nil;
     switch (videoType_) {
@@ -175,17 +228,14 @@
             oneBtn.enabled = YES;
             
         }
-        [_delegate moreSelectWithType:videoType_ withCurrentKey:PreKey_];
+        [_delegate moreSelectWithType:videoType_ withCurrentKey:PreKey_ moreButton:btn];
     }
     else{
     
-        [_delegate didTapOnSegmentView];
+        [_delegate didTapOnSegmentViewButton:btn];
     }
     
   
-}
--(void)tapOnSelf{
-    [_delegate didTapOnSegmentView];
 }
 
 +(NSString *)getKeyByString:(NSString *)str{
@@ -220,37 +270,9 @@
         // Initialization code
         UIImageView *bgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, -5, 320, self.frame.size.height+5)];
         bgView.image = [[UIImage imageNamed:@"gengduo_bg"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 5, 0, 40)];
+        bgView.tag = 30000;
         [self addSubview:bgView];
         
-        UILabel *typelabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 7, 50, 20)];
-        typelabel.text = @"类型:";
-        typelabel.font = [UIFont systemFontOfSize:15];
-        typelabel.textColor = [UIColor whiteColor];
-        typelabel.backgroundColor = [UIColor clearColor];
-        [self addSubview:typelabel];
-        
-        UILabel *arealabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 43, 50, 20)];
-        arealabel.text = @"地区:";
-        arealabel.font = [UIFont systemFontOfSize:15];
-        arealabel.textColor = [UIColor whiteColor];
-        arealabel.backgroundColor = [UIColor clearColor];
-        [self addSubview:arealabel];
-        
-        UILabel *yearlabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 79, 50, 20)];
-        yearlabel.text = @"年份:";
-        yearlabel.font = [UIFont systemFontOfSize:15];
-        yearlabel.textColor = [UIColor whiteColor];
-        yearlabel.backgroundColor = [UIColor clearColor];
-        [self addSubview:yearlabel];
-
-        for ( int i = 0; i < 3; i++) {
-            UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-            btn.frame = CGRectMake(302, 12+36*i, 9, 14);
-            [btn setBackgroundImage:[UIImage imageNamed:@"jiantou_gengduo.png"] forState:UIControlStateNormal];
-            [btn setBackgroundImage:[UIImage imageNamed:@"jiantou_gengduo.png"] forState:UIControlStateHighlighted];
-            [self addSubview:btn];
-        }
-    
         _parametersDic = [NSMutableDictionary dictionaryWithCapacity:5];
         [_parametersDic setObject:@"" forKey:@"sub_type"];
         [_parametersDic setObject:@"" forKey:@"area"];
@@ -259,14 +281,50 @@
     return self;
 }
 
+-(void)setStaticBg{
+    UIImageView *bg = (UIImageView *)[self viewWithTag:30000];
+    bg.frame = CGRectMake(0, -5, 320, self.frame.size.height+5);
+    
+    UILabel *typelabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 7, 50, 20)];
+    typelabel.text = @"类型:";
+    typelabel.font = [UIFont systemFontOfSize:15];
+    typelabel.textColor = [UIColor whiteColor];
+    typelabel.backgroundColor = [UIColor clearColor];
+    [self addSubview:typelabel];
+    
+    UILabel *arealabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 43, 50, 20)];
+    arealabel.text = @"地区:";
+    arealabel.font = [UIFont systemFontOfSize:15];
+    arealabel.textColor = [UIColor whiteColor];
+    arealabel.backgroundColor = [UIColor clearColor];
+    [self addSubview:arealabel];
+    
+    UILabel *yearlabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 79, 50, 20)];
+    yearlabel.text = @"年份:";
+    yearlabel.font = [UIFont systemFontOfSize:15];
+    yearlabel.textColor = [UIColor whiteColor];
+    yearlabel.backgroundColor = [UIColor clearColor];
+    [self addSubview:yearlabel];
+    
+    for ( int i = 0; i < 3; i++) {
+        UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+        btn.frame = CGRectMake(302, 12+36*i, 9, 14);
+        [btn setBackgroundImage:[UIImage imageNamed:@"jiantou_gengduo.png"] forState:UIControlStateNormal];
+        [btn setBackgroundImage:[UIImage imageNamed:@"jiantou_gengduo.png"] forState:UIControlStateHighlighted];
+        [self addSubview:btn];
+    }
+
+}
 -(void)setViewWithType:(int)type{
     _videoType = type;
-    
+    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, 108);
     for (UIView *view in [self subviews]) {
-        if ([view isKindOfClass:[UIScrollView class]]) {
-            [view removeFromSuperview];
+        if (view.tag == 30000) {
+            continue;
         }
+        [view removeFromSuperview];
     }
+    [self setStaticBg];
     switch (type) {
         case TYPE_MOVIE:{
             [self setScrollViewWithItems:MOVIE_ALL_TYPE atPosition:0];
@@ -438,5 +496,21 @@
         
     }
 
+}
+
+-(void)dismissWithDuration:(float)duration{
+    [UIView beginAnimations:@"dismiss" context:NULL];
+    [UIView setAnimationDuration:duration];
+    UIImageView *bg = (UIImageView *)[self viewWithTag:30000];
+    bg.frame = CGRectMake(0, -5, 320, 0);
+    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, 0);
+    [UIView commitAnimations];
+    
+    for (UIView *view in [self subviews]) {
+        if (view.tag == 30000) {
+            continue;
+        }
+        [view removeFromSuperview];
+    }
 }
 @end

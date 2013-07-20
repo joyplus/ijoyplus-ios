@@ -31,6 +31,9 @@
 #import "FeedbackViewController.h"
 #import "Harpy.h"
 #import "IntroductionView.h"
+
+#define templateReviewURL  @"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=APP_ID"
+
 @interface IphoneSettingViewController ()
 
 @end
@@ -114,8 +117,10 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     networkSet.on = [[defaults objectForKey:@"isSupport3GDownload"] boolValue];
 
-    [networkImg addSubview:networkSet];
-    [scrollView addSubview:networkImg];
+    if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"0"]){
+        [networkImg addSubview:networkSet];
+        [scrollView addSubview:networkImg];
+    }
    
     UIButton *clearCache = [UIButton buttonWithType:UIButtonTypeCustom];
     clearCache.frame = CGRectMake(10, 140, 300, 35);
@@ -126,30 +131,15 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
     [scrollView addSubview:clearCache];
 
     UIButton *feedBack = [UIButton buttonWithType:UIButtonTypeCustom];
-    feedBack.frame = CGRectMake(10, 185, 300, 35);
+    feedBack.frame = CGRectMake(10, 173, 300, 35);
    // [feedBack setTitle:@"意见反馈" forState:UIControlStateNormal];
     [feedBack setBackgroundImage:[UIImage imageNamed:@"my_setting_other.png"] forState:UIControlStateNormal];
     [feedBack setBackgroundImage:[UIImage imageNamed:@"my_setting_other_s.png"] forState:UIControlStateHighlighted];
     [feedBack addTarget:self action:@selector(feedBack:) forControlEvents:UIControlEventTouchUpInside];
     [scrollView addSubview:feedBack];
     
-    UIButton *suggest = [UIButton buttonWithType:UIButtonTypeCustom];
-    suggest.frame = CGRectMake(10, 230, 300, 35);
-    //[suggest setTitle:@"免责声明" forState:UIControlStateNormal];
-    [suggest setBackgroundImage:[UIImage imageNamed:@"my_setting_other4.png"] forState:UIControlStateNormal];
-    [suggest setBackgroundImage:[UIImage imageNamed:@"my_setting_other4_s.png"] forState:UIControlStateHighlighted];
-    [suggest addTarget:self action:@selector(suggest:) forControlEvents:UIControlEventTouchUpInside];
-    [scrollView addSubview:suggest];
-    
-    UIButton *careUs = [UIButton buttonWithType:UIButtonTypeCustom];
-    careUs.frame = CGRectMake(10, 275, 300, 35);
-    [careUs setBackgroundImage:[UIImage imageNamed:@"my_setting_other3.png"] forState:UIControlStateNormal];
-    [careUs setBackgroundImage:[UIImage imageNamed:@"my_setting_other3_s.png"] forState:UIControlStateHighlighted];
-    [careUs addTarget:self action:@selector(careUs:) forControlEvents:UIControlEventTouchUpInside];
-    [scrollView addSubview:careUs];
-    
     UIButton *aboutUs = [UIButton buttonWithType:UIButtonTypeCustom];
-    aboutUs.frame = CGRectMake(10, 410, 300, 35);
+    aboutUs.frame = CGRectMake(10, 353, 300, 35);
     //[aboutUs setTitle:@"关于我们" forState:UIControlStateNormal];
     [aboutUs setBackgroundImage:[UIImage imageNamed:@"my_setting_other2.png"] forState:UIControlStateNormal];
     [aboutUs setBackgroundImage:[UIImage imageNamed:@"my_setting_other2_s.png"] forState:UIControlStateHighlighted];
@@ -157,26 +147,63 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
     [scrollView addSubview:aboutUs];
     
     UIButton *update = [UIButton buttonWithType:UIButtonTypeCustom];
-    update.frame = CGRectMake(10, 320, 300, 35);
+    update.frame = CGRectMake(10, 239, 300, 35);
     [update setBackgroundImage:[UIImage imageNamed:@"iphoneCheckUpdate.png"] forState:UIControlStateNormal];
     [update setBackgroundImage:[UIImage imageNamed:@"iphoneCheckUpdatePress.png"] forState:UIControlStateHighlighted];
     [update addTarget:self action:@selector(update:) forControlEvents:UIControlEventTouchUpInside];
     [scrollView addSubview:update];
     
     UIButton *xinshouyindao = [UIButton buttonWithType:UIButtonTypeCustom];
-    xinshouyindao.frame = CGRectMake(10, 365, 300, 35);
+    xinshouyindao.frame = CGRectMake(10, 272, 300, 35);
     [xinshouyindao setBackgroundImage:[UIImage imageNamed:@"xinshouyindao.png"] forState:UIControlStateNormal];
     [xinshouyindao setBackgroundImage:[UIImage imageNamed:@"xinshouyindao_s.png"] forState:UIControlStateHighlighted];
     [xinshouyindao addTarget:self action:@selector(xinshouyindao) forControlEvents:UIControlEventTouchUpInside];
     [scrollView addSubview:xinshouyindao];
-	
-    if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"0"]) 
+    
+    UIButton *pingfen = [UIButton buttonWithType:UIButtonTypeCustom];
+    pingfen.frame = CGRectMake(10, 305, 300, 35);
+    [pingfen setBackgroundImage:[UIImage imageNamed:@"pingfen.png"] forState:UIControlStateNormal];
+    [pingfen setBackgroundImage:[UIImage imageNamed:@"pingfen_s.png"] forState:UIControlStateHighlighted];
+    [pingfen addTarget:self action:@selector(pingfen) forControlEvents:UIControlEventTouchUpInside];
+    [scrollView addSubview:pingfen];
+    
+    UIButton *careUs = [UIButton buttonWithType:UIButtonTypeCustom];
+    careUs.frame = CGRectMake(10, 206, 300, 35);
+    [careUs setBackgroundImage:[UIImage imageNamed:@"my_setting_other3.png"] forState:UIControlStateNormal];
+    [careUs setBackgroundImage:[UIImage imageNamed:@"my_setting_other3_s.png"] forState:UIControlStateHighlighted];
+    [careUs addTarget:self action:@selector(careUs:) forControlEvents:UIControlEventTouchUpInside];
+    [scrollView addSubview:careUs];
+    
+    UIButton *suggest = [UIButton buttonWithType:UIButtonTypeCustom];
+    suggest.frame = CGRectMake(10, 386, 300, 35);
+    //[suggest setTitle:@"免责声明" forState:UIControlStateNormal];
+    [suggest setBackgroundImage:[UIImage imageNamed:@"my_setting_other4.png"] forState:UIControlStateNormal];
+    [suggest setBackgroundImage:[UIImage imageNamed:@"my_setting_other4_s.png"] forState:UIControlStateHighlighted];
+    [suggest addTarget:self action:@selector(suggest:) forControlEvents:UIControlEventTouchUpInside];
+    [scrollView addSubview:suggest];
+
+    UIButton *version = [UIButton buttonWithType:UIButtonTypeCustom];
+    version.frame = CGRectMake(10, 419, 300, 35);
+    //[suggest setTitle:@"免责声明" forState:UIControlStateNormal];
+    [version setBackgroundImage:[UIImage imageNamed:@"my_setting_version.png"] forState:UIControlStateNormal];
+    [version setBackgroundImage:[UIImage imageNamed:@"my_setting_version.png"] forState:UIControlStateHighlighted];
+    [scrollView addSubview:version];
+    
+    NSString *bundleVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleVersionKey];
+    UILabel *versionLabel = [[UILabel alloc] initWithFrame:CGRectMake(150, 1, 150, 30)];
+    versionLabel.backgroundColor = [UIColor clearColor];
+    versionLabel.font = [UIFont systemFontOfSize:14];
+    versionLabel.text = [NSString stringWithFormat:@"v%@",bundleVersion];
+    versionLabel.textColor = [UIColor grayColor];
+    [version addSubview:versionLabel];
+    
+    if ([[AppDelegate instance].recommendAppSwich isEqualToString:@"0"]) 
     {
-        UIImageView *jinpin = [[UIImageView alloc] initWithFrame:CGRectMake(15, 465, 55, 13)];
+        UIImageView *jinpin = [[UIImageView alloc] initWithFrame:CGRectMake(15, 468, 55, 13)];
         jinpin.image = [UIImage imageNamed:@"jingpintuijian.png"];
         [scrollView addSubview:jinpin];
         
-        _mGridView = [[UMUFPGridView alloc] initWithFrame:CGRectMake(12, 495,296,260) appkey:umengAppKey slotId:nil currentViewController:self];
+        _mGridView = [[UMUFPGridView alloc] initWithFrame:CGRectMake(12, 488,296,260) appkey:umengAppKey slotId:nil currentViewController:self];
         [_mGridView setBackgroundColor:[UIColor colorWithRed:120.0/255 green:120.0/255 blue:120.0/255 alpha:0.2]];
         _mGridView.datasource = self;
         _mGridView.delegate = self;
@@ -324,6 +351,12 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
     IntroductionView *inView = [[IntroductionView alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height)];
     [inView show];
 }
+
+-(void)pingfen{
+    NSString *reviewURL = [templateReviewURL stringByReplacingOccurrencesOfString:@"APP_ID" withString:[NSString stringWithFormat:@"%d", APPIRATER_APP_ID]];
+	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:reviewURL]];
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

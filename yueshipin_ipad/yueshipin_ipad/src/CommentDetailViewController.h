@@ -13,4 +13,5 @@
 @property (nonatomic, strong)NSString *titleContent;
 @property (nonatomic, strong)NSString *content;
 @property (nonatomic, strong)id<DramaDetailViewControllerDelegate>parentDelegateController;
+@property (nonatomic, strong)VideoDetailViewController *preViewController;
 @end

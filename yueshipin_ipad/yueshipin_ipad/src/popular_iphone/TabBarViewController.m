@@ -62,10 +62,10 @@
         [(UITabBarItem *)[self.tabBar.items objectAtIndex:0] setTitle:PINDAO];
         [(UITabBarItem *)[self.tabBar.items objectAtIndex:0] setTitlePositionAdjustment:UIOffsetMake(0, -3)];
         
-        [(UITabBarItem *)[self.tabBar.items objectAtIndex:2] setImage:[UIImage imageNamed:@"icon_tab1.png" ]];
+        [(UITabBarItem *)[self.tabBar.items objectAtIndex:2] setImage:[UIImage imageNamed:@"icon_tab2.png" ]];
         [(UITabBarItem *)[self.tabBar.items objectAtIndex:2] setTitle:YUEDAN];
         [(UITabBarItem *)[self.tabBar.items objectAtIndex:2] setTitlePositionAdjustment:UIOffsetMake(0, -3)];
-        [(UITabBarItem *)[self.tabBar.items objectAtIndex:1] setImage:[UIImage imageNamed:@"icon_tab2.png" ]];
+        [(UITabBarItem *)[self.tabBar.items objectAtIndex:1] setImage:[UIImage imageNamed:@"icon_tab1.png" ]];
         [(UITabBarItem *)[self.tabBar.items objectAtIndex:1] setTitle:YUEBANG];
         [(UITabBarItem *)[self.tabBar.items objectAtIndex:1] setTitlePositionAdjustment:UIOffsetMake(0, -3)];
         [(UITabBarItem *)[self.tabBar.items objectAtIndex:4] setImage:[UIImage imageNamed:@"icon_tab4.png" ]];
@@ -84,6 +84,33 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setBadgeValue) name:@"SET_WARING_NUM" object:nil];
     }
     return self;
+}
+
+- (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item{
+    int index = [self.tabBar.items indexOfObject:item];
+    if (index == self.selectedIndex) {
+        UINavigationController *nav = [self.viewControllers objectAtIndex:index];
+        UIViewController *tempViewComtroller = [nav.viewControllers objectAtIndex:0];
+        switch (index) {
+                case 0:{
+                        ChannelViewController *channelview = (ChannelViewController *)tempViewComtroller;
+                        [channelview reFreshViewController];
+                        break;
+                    }
+                case 1:{
+                         PageManageViewController *pagemanager = (PageManageViewController *)tempViewComtroller;
+                         [pagemanager reFreshViewController];
+                        break;
+                    }
+                case 2:{
+                        allListViewController *alllist = (allListViewController *)tempViewComtroller;
+                        [alllist reFreshViewController];
+                        break;
+                    }
+                default:
+                    break;
+            }
+        }
 }
 
 -(void)setBadgeValue{

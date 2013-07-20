@@ -49,9 +49,13 @@
 
 #define kIpadAppKey @"kIpadAppkey"
 #define KWXCODENUM  @"weixinImageNum"
+
+#define NotificationSelectedValue @"pushNotificationSelectedValue"
+#define PUSH_NotificationSelected @"PushNotificationSelected"
+
 #define HIDDEN_AMERICAN_VIDEOS @"HiddenAmericanVideos"
 #define LOCAL_KEYS_NUMBER 10
-#define MAX_DOWNLOADING_THREADS 1
+#define MAX_DOWNLOADING_THREADS 2
 #define umengAppKey @"5188664c56240b42b7010a45"
 
 #define YOU_KU @"youku"
@@ -95,11 +99,9 @@
 
 #define degreesToRadian(x) (3.14159265358979323846 * x/ 180.0)
 
-#define APPIRATER_APP_ID				646683195
+#define APPIRATER_APP_ID				663195915
 
 #define WATCH_RECORD_CACHE_KEY @"watch_record2"
-
-#define AMERICANVIDEOS @"1"
 
 #define SHOW_MENU_INTRO @"show_menu_intro"
 #define WEIBO_INTRO @"weibbo_intro"

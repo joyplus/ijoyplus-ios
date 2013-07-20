@@ -409,6 +409,7 @@
         [pullToRefreshManager_ loadMoreCompleted];
         
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        [pullToRefreshManager_ loadMoreCompleted];
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
     }];
 }
@@ -480,6 +481,17 @@
             [playButton setBackgroundImage:[UIImage imageNamed:@"replay"] forState:UIControlStateNormal];
             [playButton setBackgroundImage:[UIImage imageNamed:@"replay_pressed"] forState:UIControlStateHighlighted];
         }
+        
+        [playButton setBackgroundImage:[UIImage imageNamed:@"off_shelf.png"] forState:UIControlStateDisabled];
+        if ([[item objectForKey:@"hide"] isEqualToString:@"1"])
+        {
+            playButton.enabled = NO;
+        }
+        else
+        {
+            playButton.enabled = YES;
+        }
+        
         playButton.frame = CGRectMake(345, (size.height + 40 - 49)/2.0, 52, 49);
     }
     return cell;
@@ -627,6 +639,10 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if(indexPath.row < sortedwatchRecordArray.count){
         NSDictionary *item =  [sortedwatchRecordArray objectAtIndex:indexPath.row];
+        
+        if ([[item objectForKey:@"hide"] isEqualToString:@"1"])
+            return;
+        
         NSString *prodType = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]];
         if([prodType isEqualToString:@"1"]){
             MovieDetailViewController *viewController = [[MovieDetailViewController alloc] initWithNibName:@"MovieDetailViewController" bundle:nil];

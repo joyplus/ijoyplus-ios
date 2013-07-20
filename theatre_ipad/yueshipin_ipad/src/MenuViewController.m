@@ -125,14 +125,10 @@
 
 - (void)initMenuIcons
 {
-    if([[AppDelegate instance].showVideoSwitch isEqualToString:@"0"] && [[AppDelegate instance].recommendAppSwich isEqualToString:@"0"]){
+    if([[AppDelegate instance].recommendAppSwich isEqualToString:@"0"]){
         menuIconArray = [NSArray arrayWithObjects:@"popular_top", @"popular_list", @"movie_icon", @"drama_icon", @"comic_icon", @"show_icon", @"search_icon", @"personal_icon", @"download_icon", @"recommend_icon", @"", @"setting_icon", nil];
-    } else if(![[AppDelegate instance].showVideoSwitch isEqualToString:@"0"] && [[AppDelegate instance].recommendAppSwich isEqualToString:@"0"]){
-        menuIconArray = [NSArray arrayWithObjects:@"popular_top", @"popular_list", @"movie_icon", @"drama_icon", @"comic_icon", @"show_icon", @"search_icon", @"personal_icon", @"", @"recommend_icon", @"", @"setting_icon", nil];
-    } else if([[AppDelegate instance].showVideoSwitch isEqualToString:@"0"] && ![[AppDelegate instance].recommendAppSwich isEqualToString:@"0"]){
+    } else{
         menuIconArray = [NSArray arrayWithObjects:@"popular_top", @"popular_list", @"movie_icon", @"drama_icon", @"comic_icon", @"show_icon", @"search_icon", @"personal_icon", @"download_icon", @"", @"", @"setting_icon", nil];
-    } else {
-        menuIconArray = [NSArray arrayWithObjects:@"popular_top", @"popular_list", @"movie_icon", @"drama_icon", @"comic_icon", @"show_icon", @"search_icon", @"personal_icon", @"", @"", @"", @"setting_icon", nil];
     }
 }
 
@@ -311,11 +307,7 @@
     } else if(selectedIndex == 7){
         return personalViewController;
     } else if(selectedIndex == 8){
-        if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"0"]) {
-            return downloadViewController;
-        } else {
-            return nil;
-        }
+        return downloadViewController;
     } else if(selectedIndex == 9){
         if ([[AppDelegate instance].recommendAppSwich isEqualToString:@"0"]) {
             return appViewController;
@@ -333,9 +325,6 @@
 {
     selectedIndex = indexPath.row;
     if(selectedIndex == 10){
-        return;
-    }
-    if (selectedIndex == 8 && ![[AppDelegate instance].showVideoSwitch isEqualToString:@"0"]) {
         return;
     }
     if (selectedIndex == 9 && ![[AppDelegate instance].recommendAppSwich isEqualToString:@"0"]) {

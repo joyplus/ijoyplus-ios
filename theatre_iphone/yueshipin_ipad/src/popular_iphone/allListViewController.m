@@ -29,7 +29,7 @@
 #define MOVIE_TYPE 9001
 #define TV_TYPE 9000
 #define BUNDING_BUTTON_TAG 19999
-#define BUNDING_HEIGHT 30
+#define BUNDING_HEIGHT 35
 enum
 {
     TYPE_BUNDING_TV = 1,
@@ -75,7 +75,14 @@ enum
     MBProgressHUD *tempHUD;
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"top_list"];
     if(cacheResult != nil){
-        [self parseTopsListData:cacheResult];
+        self.listArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
+        NSString *responseCode = [cacheResult objectForKey:@"res_code"];
+        if(responseCode == nil){
+            NSArray *tempTopsArray = [cacheResult objectForKey:@"tops"];
+            if(tempTopsArray.count > 0){
+                [ self.listArray addObjectsFromArray:tempTopsArray];
+            }
+        }
     } else {
         if(tempHUD == nil){
             tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
@@ -314,6 +321,7 @@ enum
         [self loadMoreCompleted];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [UIUtility showDetailError:self.view error:error];
+        [pullToRefreshManager_ refreshCompleted];
     }];
     
 }
@@ -336,7 +344,7 @@ enum
     UIButton *btn = (UIButton *)[self.view viewWithTag:BUNDING_BUTTON_TAG];
     if (btn == nil) {
         btn = [UIButton buttonWithType:UIButtonTypeCustom];
-        btn.frame = CGRectMake(0, 0, 320, BUNDING_HEIGHT+1);
+        btn.frame = CGRectMake(0, 0, 320, BUNDING_HEIGHT);
         [btn setBackgroundImage:[UIImage imageNamed:@"bunding_tv.png"] forState:UIControlStateNormal];
         [btn setBackgroundImage:[UIImage imageNamed:@"bunding_tv_s.png"] forState:UIControlStateHighlighted];
         [btn addTarget:self action:@selector(pushView) forControlEvents:UIControlEventTouchUpInside];
@@ -346,6 +354,10 @@ enum
     btn.hidden = NO;
     
     self.tableList.frame = CGRectMake(0, BUNDING_HEIGHT, 320, kCurrentWindowHeight-92-BUNDING_HEIGHT);
+}
+
+-(void)reFreshViewController{
+    [self pulltoReFresh];
 }
 
 -(void)dismissBundingView{

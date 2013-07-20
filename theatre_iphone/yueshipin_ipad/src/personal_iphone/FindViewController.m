@@ -185,7 +185,7 @@
      [tableList_ reloadData];
      [pullRefreshManager_ loadMoreCompleted];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-       
+    [pullRefreshManager_ loadMoreCompleted];
     }];
 
 

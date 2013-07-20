@@ -32,8 +32,9 @@
         self.imageView = [[UIImageView alloc] initWithFrame:CGRectMake(7, 18, 72, 101)];
         [self addSubview:self.imageView];
         
-        self.label = [[UILabel alloc] initWithFrame:CGRectMake(105, 24, 169, 15)];
+        self.label = [[UILabel alloc] initWithFrame:CGRectMake(105, 24, 169, 18)];
         self.label.backgroundColor = [UIColor clearColor];
+        self.label.font = [UIFont systemFontOfSize:15];
         self.label.textColor = [UIColor colorWithRed:110.0/255 green:110.0/255 blue:110.0/255 alpha:1.0];
         [self addSubview:self.label];
         

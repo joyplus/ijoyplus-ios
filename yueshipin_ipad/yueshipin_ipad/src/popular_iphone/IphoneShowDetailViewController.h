@@ -8,8 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "IphoneVideoViewController.h"
-#import "MNMBottomPullToRefreshManager.h"
-@interface IphoneShowDetailViewController : IphoneVideoViewController<MNMBottomPullToRefreshManagerClient>{
+#import "PullRefreshManagerClinet.h"
+@interface IphoneShowDetailViewController : IphoneVideoViewController<PullRefreshManagerClinetDelegate>{
   
     NSDictionary *videoInfo_;
     int videoType_;
@@ -25,8 +25,9 @@
     UIImageView *summaryBg_;
     UILabel *summaryLabel_;
     UIButton *moreBtn_;
-    MNMBottomPullToRefreshManager *pullToRefreshManager_;
+    PullRefreshManagerClinet *pullToRefreshManager_;
     BOOL isloaded_ ;
+    BOOL isFavority_; 
 }
 @property (nonatomic, strong) NSDictionary *videoInfo;
 @property (nonatomic, assign) int videoType;
@@ -38,5 +39,5 @@
 @property (nonatomic, strong) UIImageView *summaryBg;
 @property (nonatomic, strong) UILabel *summaryLabel;
 @property (nonatomic, strong) UIButton *moreBtn;
-@property (strong, nonatomic) MNMBottomPullToRefreshManager *pullToRefreshManager;
+@property (strong, nonatomic) PullRefreshManagerClinet *pullToRefreshManager;
 @end
