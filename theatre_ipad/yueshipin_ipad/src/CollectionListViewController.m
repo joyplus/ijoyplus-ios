@@ -187,6 +187,21 @@
             contentImage.tag = 1001;
             [cell.contentView addSubview:contentImage];
             
+            UIView *icon_offShelf = [[UIView alloc] initWithFrame:CGRectMake(4, contentImage.frame.origin.y + contentImage.frame.size.height - 14, NORMAL_VIDEO_WIDTH, 14)];
+            icon_offShelf.backgroundColor = [UIColor darkGrayColor];
+            UIImageView * offshelfImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"off_shelf_icon"]];
+            offshelfImg.frame = CGRectMake(10, 2, 10, 10);
+            offshelfImg.backgroundColor = [UIColor clearColor];
+            UILabel * lab = [[UILabel alloc] initWithFrame:CGRectMake(24, 2, 46, 10)];
+            lab.textColor = [UIColor whiteColor];
+            lab.backgroundColor = [UIColor clearColor];
+            lab.text = @"已下架";
+            lab.font = [UIFont systemFontOfSize:10];
+            [icon_offShelf addSubview:offshelfImg];
+            [icon_offShelf addSubview:lab];
+            [cell.contentView addSubview:icon_offShelf];
+            icon_offShelf.hidden = YES;
+            icon_offShelf.tag = 1002;
             
             UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(contentImage.frame.origin.x + contentImage.frame.size.width + 20, contentImage.frame.origin.y, 250, 30)];
             nameLabel.font = CMConstants.titleFont;
@@ -327,6 +342,15 @@
         UILabel *collectionNumberLabel = (UILabel *)[cell viewWithTag:7001];
         collectionNumberLabel.text = [NSString stringWithFormat:@"%@", [item objectForKey:@"favority_num"]];
         
+        UIView * offShelf = [cell.contentView viewWithTag:1002];
+        if ([[item objectForKey:@"hide"] isEqualToString:@"1"])
+        {
+            offShelf.hidden = NO;
+        }
+        else
+        {
+            offShelf.hidden = YES;
+        }
         
         return cell;
     } else {
@@ -379,6 +403,7 @@
 
 - (void)unSubscribingToChannels:(NSString *)Id
 {
+    return;
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     
     NSArray *channels = [NSArray arrayWithObjects:[NSString stringWithFormat:@"CHANNEL_PROD_%@",Id], nil];
@@ -413,6 +438,10 @@
     if(videoArray.count > 0) {
         [table deselectRowAtIndexPath:indexPath animated:YES];
         NSDictionary *item = [videoArray objectAtIndex:indexPath.row];
+        
+        if ([[item objectForKey:@"hide"] isEqualToString:@"1"])
+            return;
+        
         NSString *type = [NSString stringWithFormat:@"%@", [item objectForKey:@"content_type"]];
         NSString *prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"content_id"]];
         if([type isEqualToString:@"1"]){
@@ -481,7 +510,9 @@
         else{
             pullToRefreshManager_.canLoadMore = YES;
         }
+        [pullToRefreshManager_ loadMoreCompleted];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        [pullToRefreshManager_ loadMoreCompleted];
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
     }];
 }

@@ -22,6 +22,8 @@
     int showPageNumber;
     BOOL btnAdded;
     UIScrollView *showListView;
+    BOOL isFavority_;
+    int collectioNum;
 }
 
 @end
@@ -113,11 +115,11 @@
     //    self.actorName3Label.textColor = CMConstants.grayColor;
     self.playLabel.frame = CGRectMake(270, 170, 80, 15);
     self.playLabel.textColor = CMConstants.grayColor;
-    self.playTimeLabel.frame = CGRectMake(310, 170, 100, 15);
+    self.playTimeLabel.frame = CGRectMake(310, 170, 170, 15);
     self.playTimeLabel.textColor = CMConstants.grayColor;
     self.regionLabel.frame = CGRectMake(270, 200, 50, 15);
     self.regionLabel.textColor = CMConstants.grayColor;
-    self.regionNameLabel.frame = CGRectMake(310, 200, 100, 15);
+    self.regionNameLabel.frame = CGRectMake(310, 200, 170, 15);
     self.regionNameLabel.textColor = CMConstants.grayColor;
     
     self.playBtn.frame = CGRectMake(265, 280, 100, 50);
@@ -136,7 +138,7 @@
     [self.expectbtn setTitleEdgeInsets:UIEdgeInsetsMake(4, 10, 0, 5)];
     self.expectbtn.titleLabel.font = [UIFont systemFontOfSize:12];
     [self.expectbtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-    [self.expectbtn setTitleColor:CMConstants.yellowColor forState:UIControlStateNormal];
+    [self.expectbtn setTitleColor:[UIColor colorWithRed:1 green:119.0f/255.0f blue:0 alpha:1] forState:UIControlStateNormal];
     [self.expectbtn addTarget:self action:@selector(expectVideo) forControlEvents:UIControlEventTouchUpInside];
     [self.bgScrollView addSubview:self.expectbtn];
     self.expectbtn.hidden = YES;
@@ -159,6 +161,7 @@
     self.collectionBtn.frame = CGRectMake(260 + 120, 340, 44, 44);
     [self.collectionBtn setBackgroundImage:[UIImage imageNamed:@"collection"] forState:UIControlStateNormal];
     [self.collectionBtn setBackgroundImage:[UIImage imageNamed:@"collection_pressed"] forState:UIControlStateHighlighted];
+    [self.collectionBtn setBackgroundImage:[UIImage imageNamed:@"collection_pressed"] forState:UIControlStateSelected];
     [self.collectionBtn addTarget:self action:@selector(collectionBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
     self.shareBtn.frame = CGRectMake(260 + 180, 340, 44, 44);
@@ -193,7 +196,7 @@
     tapGesture.numberOfTapsRequired = 1;
     tapGesture.numberOfTouchesRequired = 1;
     [self.introContentTextView addGestureRecognizer:tapGesture];
-       
+    
     introBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [introBtn setBackgroundImage:[UIImage imageNamed:@"more"] forState:UIControlStateNormal];
     introBtn.frame = CGRectMake(LEFT_WIDTH + 415, self.introContentTextView.frame.origin.y + 90, 14, 9);
@@ -218,6 +221,7 @@
     if(video == nil){
         [self retrieveData];
     }
+    [self isFavority];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -311,6 +315,26 @@
     }
 }
 
+-(void)isFavority{
+    
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:self.prodId, @"prod_id", nil];
+    [[AFServiceAPIClient sharedClient] postPath:KPathProgramIsfavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        int responseCode = [[result objectForKey:@"flag"] intValue];
+        if(responseCode == 1){
+            isFavority_ = YES;
+            self.collectionBtn.selected = YES;
+        }
+        else{
+            isFavority_ = NO;
+            self.collectionBtn.selected = NO;
+        }
+    }
+                                        failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+                                            
+                                        }];
+    
+}
+
 - (void)showValues
 {
     NSString *url = [video objectForKey:@"ipad_poster"];
@@ -350,7 +374,7 @@
     } else {
         self.dingNumberLabel.text = [NSString stringWithFormat:@"顶(%i)", dingNum];
     }
-    int collectioNum = [[video objectForKey:@"favority_num"] intValue];
+    collectioNum = [[video objectForKey:@"favority_num"] intValue];
     if (collectioNum >= 1000) {
         self.collectionNumberLabel.text = [NSString stringWithFormat:@"收藏(%.1fK)", collectioNum/1000.0];
         [self.expectbtn setTitle:[NSString stringWithFormat:@"(%.1fK)", collectioNum/1000.0] forState:UIControlStateNormal];
@@ -358,15 +382,15 @@
         [self.expectbtn setTitle:[NSString stringWithFormat:@"(%i)", collectioNum] forState:UIControlStateNormal];
         self.collectionNumberLabel.text = [NSString stringWithFormat:@"收藏(%i)", collectioNum];
     }
-
+    
     //在弹出窗口判断视频是否可以下载
-//    if(self.mp4DownloadUrls.count > 0 || self.m3u8DownloadUrls.count > 0){
-//        NSLog(@"mp4 count: %i", self.mp4DownloadUrls.count);
-//        NSLog(@"m3u8 count: %i", self.m3u8DownloadUrls.count);
-//    } else {
-//        [self.downloadBtn setEnabled:NO];
-//        [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"no_download"] forState:UIControlStateDisabled];
-//    }
+    //    if(self.mp4DownloadUrls.count > 0 || self.m3u8DownloadUrls.count > 0){
+    //        NSLog(@"mp4 count: %i", self.mp4DownloadUrls.count);
+    //        NSLog(@"m3u8 count: %i", self.m3u8DownloadUrls.count);
+    //    } else {
+    //        [self.downloadBtn setEnabled:NO];
+    //        [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"no_download"] forState:UIControlStateDisabled];
+    //    }
     
     self.introContentTextView.textColor = CMConstants.grayColor;
     self.introContentTextView.text = [video objectForKey:@"summary"];
@@ -379,86 +403,86 @@
 - (void)repositElements:(int)increasePositionY
 {
     int positionY = DEFAULT_POSOTION_Y + increasePositionY + 25;
-        //if(episodeArray.count > 5)
-        {
-            self.previousShowBtn.frame = CGRectMake(LEFT_WIDTH - 22,  positionY, 64, 308.5);
-            self.nextShowBtn.frame = CGRectMake(LEFT_WIDTH + 388,  positionY, 64, 308.5);
-            [self.previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left"] forState:UIControlStateNormal];
-            [self.previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left_pressed"] forState:UIControlStateHighlighted];
-            [self.previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left_disabled"] forState:UIControlStateDisabled];
-            [self.previousShowBtn addTarget:self action:@selector(nextShowBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-            self.previousShowBtn.tag = 9001;
-            
-            [self.nextShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_right"] forState:UIControlStateNormal];
-            [self.nextShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_right_pressed"] forState:UIControlStateHighlighted];
-            [self.nextShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_right_disabled"] forState:UIControlStateDisabled];
-            [self.nextShowBtn addTarget:self action:@selector(nextShowBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-            self.nextShowBtn.tag = 9002;
-        }
-        showListView.center = CGPointMake(showListView.center.x, positionY + showListView.frame.size.height/2);
-        if(!btnAdded){
-            btnAdded = YES;
-            if(episodeArray.count > 5){
-                showListView.frame = CGRectMake(LEFT_WIDTH + 47, positionY, 336.5, 308.5);
-                showListView.contentSize = CGSizeMake(ceil(episodeArray.count/5.0) * 336.5, showListView.frame.size.height);
-                for (int i = 0; i < episodeArray.count; i++) {
-                    btnAdded = YES;
-                    int pageNum = floor(i/5.0);
-                    NSDictionary *item = [episodeArray objectAtIndex:i];
-                    UIButton *nameBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-                    [nameBtn.titleLabel setLineBreakMode:NSLineBreakByTruncatingTail];
-                    nameBtn.tag = i + 1;
-                    [nameBtn setFrame:CGRectMake(floor(pageNum*showListView.frame.size.width), floor((i%5) * (54.5 + 6) + 6), showListView.frame.size.width, 54.5)];
-                    NSString *name = [NSString stringWithFormat:@"%@", [item objectForKey:@"name"]];
-                    if ([item objectForKey:@"name"] == nil) {
-                        name = @"";
-                    }
-                    [nameBtn setTitle:name forState:UIControlStateNormal];
-                    nameBtn.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
-                    nameBtn.titleLabel.numberOfLines = 2;
-                    [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show"] forState:UIControlStateNormal];
-                    [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show_pressed"] forState:UIControlStateHighlighted];
-                    nameBtn.titleLabel.font = [UIFont systemFontOfSize:14];
-                    [nameBtn setTitleColor:[UIColor colorWithRed:138.0/255.0 green:138.0/255.0 blue:138.0/255.0 alpha:1] forState:UIControlStateNormal];
-                    [nameBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-                    [nameBtn addTarget:self action:@selector(nameBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-                    nameBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-                    [nameBtn setContentEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
-                    [showListView addSubview:nameBtn];
+    //if(episodeArray.count > 5)
+    {
+        self.previousShowBtn.frame = CGRectMake(LEFT_WIDTH - 22,  positionY, 64, 308.5);
+        self.nextShowBtn.frame = CGRectMake(LEFT_WIDTH + 388,  positionY, 64, 308.5);
+        [self.previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left"] forState:UIControlStateNormal];
+        [self.previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left_pressed"] forState:UIControlStateHighlighted];
+        [self.previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left_disabled"] forState:UIControlStateDisabled];
+        [self.previousShowBtn addTarget:self action:@selector(nextShowBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+        self.previousShowBtn.tag = 9001;
+        
+        [self.nextShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_right"] forState:UIControlStateNormal];
+        [self.nextShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_right_pressed"] forState:UIControlStateHighlighted];
+        [self.nextShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_right_disabled"] forState:UIControlStateDisabled];
+        [self.nextShowBtn addTarget:self action:@selector(nextShowBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+        self.nextShowBtn.tag = 9002;
+    }
+    showListView.center = CGPointMake(showListView.center.x, positionY + showListView.frame.size.height/2);
+    if(!btnAdded){
+        btnAdded = YES;
+        if(episodeArray.count > 5){
+            showListView.frame = CGRectMake(LEFT_WIDTH + 47, positionY, 336.5, 308.5);
+            showListView.contentSize = CGSizeMake(ceil(episodeArray.count/5.0) * 336.5, showListView.frame.size.height);
+            for (int i = 0; i < episodeArray.count; i++) {
+                btnAdded = YES;
+                int pageNum = floor(i/5.0);
+                NSDictionary *item = [episodeArray objectAtIndex:i];
+                UIButton *nameBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+                //[nameBtn.titleLabel setLineBreakMode:NSLineBreakByTruncatingTail];
+                nameBtn.tag = i + 1;
+                [nameBtn setFrame:CGRectMake(floor(pageNum*showListView.frame.size.width), floor((i%5) * (54.5 + 6) + 6), showListView.frame.size.width, 54.5)];
+                NSString *name = [NSString stringWithFormat:@"%@", [item objectForKey:@"name"]];
+                if ([item objectForKey:@"name"] == nil) {
+                    name = @"";
                 }
-            } else {
-                
-                showListView.frame = CGRectMake(LEFT_WIDTH + 47, positionY, 336.5, 308.5);
-                showListView.contentSize = CGSizeMake(ceil(episodeArray.count/5.0) * 336.5, showListView.frame.size.height);
-                for(int i = 0; i < episodeArray.count; i++){
-                    NSDictionary *item = [episodeArray objectAtIndex:i];
-                    UIButton *nameBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-                    nameBtn.tag = i + 1;
-                    nameBtn.frame = CGRectMake(0, i * (54.5 + 6) + 6, showListView.frame.size.width, 54.5);
-                    NSString *name = [NSString stringWithFormat:@"%@", [item objectForKey:@"name"]];
-                    if ([item objectForKey:@"name"] == nil) {
-                        name = @"";
-                    }
-                    [nameBtn.titleLabel setLineBreakMode:NSLineBreakByTruncatingTail];
-                    [nameBtn setTitle:name forState:UIControlStateNormal];
-                    [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show"] forState:UIControlStateNormal];
-                    [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show_pressed"] forState:UIControlStateHighlighted];
-                    nameBtn.titleLabel.font = [UIFont systemFontOfSize:14];
-                    [nameBtn setTitleColor:[UIColor colorWithRed:138.0/255.0 green:138.0/255.0 blue:138.0/255.0 alpha:1] forState:UIControlStateNormal];
-                    [nameBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-                    [nameBtn addTarget:self action:@selector(nameBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-                    nameBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-                    [nameBtn setContentEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
-                    [showListView addSubview:nameBtn];
-                }
-                [self.previousShowBtn setEnabled:NO];
-                [self.nextShowBtn setEnabled:NO];
+                [nameBtn setTitle:name forState:UIControlStateNormal];
+                nameBtn.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
+                nameBtn.titleLabel.numberOfLines = 2;
+                [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show"] forState:UIControlStateNormal];
+                [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show_pressed"] forState:UIControlStateHighlighted];
+                nameBtn.titleLabel.font = [UIFont systemFontOfSize:14];
+                [nameBtn setTitleColor:[UIColor colorWithRed:138.0/255.0 green:138.0/255.0 blue:138.0/255.0 alpha:1] forState:UIControlStateNormal];
+                [nameBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+                [nameBtn addTarget:self action:@selector(nameBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+                nameBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+                [nameBtn setContentEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
+                [showListView addSubview:nameBtn];
             }
+        } else {
+            
+            showListView.frame = CGRectMake(LEFT_WIDTH + 47, positionY, 336.5, 308.5);
+            showListView.contentSize = CGSizeMake(ceil(episodeArray.count/5.0) * 336.5, showListView.frame.size.height);
+            for(int i = 0; i < episodeArray.count; i++){
+                NSDictionary *item = [episodeArray objectAtIndex:i];
+                UIButton *nameBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+                nameBtn.tag = i + 1;
+                nameBtn.frame = CGRectMake(0, i * (54.5 + 6) + 6, showListView.frame.size.width, 54.5);
+                NSString *name = [NSString stringWithFormat:@"%@", [item objectForKey:@"name"]];
+                if ([item objectForKey:@"name"] == nil) {
+                    name = @"";
+                }
+                [nameBtn.titleLabel setLineBreakMode:NSLineBreakByTruncatingTail];
+                [nameBtn setTitle:name forState:UIControlStateNormal];
+                [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show"] forState:UIControlStateNormal];
+                [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show_pressed"] forState:UIControlStateHighlighted];
+                nameBtn.titleLabel.font = [UIFont systemFontOfSize:14];
+                [nameBtn setTitleColor:[UIColor colorWithRed:138.0/255.0 green:138.0/255.0 blue:138.0/255.0 alpha:1] forState:UIControlStateNormal];
+                [nameBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+                [nameBtn addTarget:self action:@selector(nameBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+                nameBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+                [nameBtn setContentEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
+                [showListView addSubview:nameBtn];
+            }
+            [self.previousShowBtn setEnabled:NO];
+            [self.nextShowBtn setEnabled:NO];
         }
-        positionY = showListView.frame.origin.y + showListView.frame.size.height;
-    self.commentImage.frame = CGRectMake(LEFT_WIDTH, positionY + 20, 41, 18);
+    }
+    positionY = showListView.frame.origin.y + showListView.frame.size.height;
+    self.commentImage.frame = CGRectMake(LEFT_WIDTH, positionY + 30, 41, 18);
     self.commentImage.image = [UIImage imageNamed:@"comment_title"];
-   
+    
     if(commentListViewController == nil){
         commentListViewController = [[CommentListViewController alloc]initWithStyle:UITableViewStylePlain];
         commentListViewController.parentDelegate = self;
@@ -469,7 +493,7 @@
         [self.bgScrollView addSubview:commentListViewController.view];
     }
     [commentListViewController.tableView reloadData];
-    commentListViewController.view.frame = CGRectMake(LEFT_WIDTH, positionY + 48, 430, commentListViewController.tableHeight);
+    commentListViewController.view.frame = CGRectMake(LEFT_WIDTH, positionY + 60, 430, commentListViewController.tableHeight);
     
     [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height+commentListViewController.tableHeight+5 * 30 + increasePositionY)];
     //    commentListViewController.view.frame = CGRectMake(LEFT_WIDTH, positionY + 70, 425, commentListViewController.tableHeight);
@@ -599,7 +623,7 @@
         NSString *responseCode = [result objectForKey:@"res_code"];
         if([responseCode isEqualToString:kSuccessResCode]){
             [[NSNotificationCenter defaultCenter] postNotificationName:SEARCH_LIST_VIEW_REFRESH object:nil];
-//          [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
+            //          [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
             [[AppDelegate instance].rootViewController showSuccessModalView:1.5];
             int dingNum = [[video objectForKey:@"support_num"] intValue] + 1;
             if (dingNum >= 1000) {
@@ -617,13 +641,13 @@
 
 - (void)expectVideo
 {
-    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    // Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         [UIUtility showNetWorkError:self.view];
         return;
     }
-    
-//    [self SubscribingToChannels];
+    //综艺不需要注册消息推送
+    //    [self SubscribingToChannels];
     
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.prodId, @"prod_id", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
@@ -631,7 +655,7 @@
         if([responseCode isEqualToString:kSuccessResCode]){
             [[NSNotificationCenter defaultCenter] postNotificationName:SEARCH_LIST_VIEW_REFRESH object:nil];
             [[AppDelegate instance].rootViewController showSuccessModalView:1.5];
-            int collectioNum = [[video objectForKey:@"favority_num"] intValue] + 1;
+            collectioNum++;
             if (collectioNum >= 1000) {
                 self.collectionNumberLabel.text = [NSString stringWithFormat:@"收藏(%.1fK)", collectioNum/1000.0];
                 [self.expectbtn setTitle:[NSString stringWithFormat:@"(%.1fK)", collectioNum/1000.0] forState:UIControlStateNormal];
@@ -654,17 +678,28 @@
         [UIUtility showNetWorkError:self.view];
         return;
     }
+    //综艺不需要注册消息推送
+    //    [self SubscribingToChannels];
+    if (isFavority_) {
+        [self unFavority];
+    }
+    else{
+        [self addtoFavority];
+    }
     
-//    [self SubscribingToChannels];
     
+}
+
+-(void)addtoFavority{
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.prodId, @"prod_id", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if([responseCode isEqualToString:kSuccessResCode]){
             [[NSNotificationCenter defaultCenter] postNotificationName:SEARCH_LIST_VIEW_REFRESH object:nil];
-//          [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
-            [[AppDelegate instance].rootViewController showSuccessModalView:1.5];
-            int collectioNum = [[video objectForKey:@"favority_num"] intValue] + 1;
+            //          [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
+            [[AppDelegate instance].rootViewController showCollectSucceed];
+            collectioNum++;
+            isFavority_ = YES;
             if (collectioNum >= 1000) {
                 self.collectionNumberLabel.text = [NSString stringWithFormat:@"收藏(%.1fK)", collectioNum/1000.0];
                 [self.expectbtn setTitle:[NSString stringWithFormat:@"(%.1fK)", collectioNum/1000.0] forState:UIControlStateNormal];
@@ -672,18 +707,48 @@
                 [self.expectbtn setTitle:[NSString stringWithFormat:@"(%i)", collectioNum] forState:UIControlStateNormal];
                 self.collectionNumberLabel.text = [NSString stringWithFormat:@"收藏(%i)", collectioNum];
             }
-        } else {
-            [[AppDelegate instance].rootViewController showModalView:[UIImage imageNamed:@"collected"] closeTime:1.5];
+            [self changeCollectionBtnState];
         }
+        //        else {
+        //            [[AppDelegate instance].rootViewController showModalView:[UIImage imageNamed:@"collected"] closeTime:1.5];
+        //        }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [UIUtility showDetailError:self.view error:error];
     }];
 }
 
-
+-(void)unFavority{
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.prodId, @"prod_id", nil];
+    [[AFServiceAPIClient sharedClient] postPath:kPathProgramUnfavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        if([responseCode isEqualToString:kSuccessResCode]){
+            [[AppDelegate instance].rootViewController showCancelCollectSucceed];
+            isFavority_ = NO;
+            collectioNum--;
+            if (collectioNum >= 1000) {
+                self.collectionNumberLabel.text = [NSString stringWithFormat:@"收藏(%.1fK)", collectioNum/1000.0];
+                [self.expectbtn setTitle:[NSString stringWithFormat:@"(%.1fK)", collectioNum/1000.0] forState:UIControlStateNormal];
+            } else {
+                [self.expectbtn setTitle:[NSString stringWithFormat:@"(%i)", collectioNum] forState:UIControlStateNormal];
+                self.collectionNumberLabel.text = [NSString stringWithFormat:@"收藏(%i)", collectioNum];
+            }
+            [self changeCollectionBtnState];
+        }
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        [UIUtility showDetailError:self.view error:error];
+    }];
+}
+-(void)changeCollectionBtnState{
+    if (isFavority_) {
+        self.collectionBtn.selected = YES;
+    }
+    else{
+        self.collectionBtn.selected = NO;
+    }
+}
 - (void)downloadBtnClicked
 {
-    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    // Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         [UIUtility showNetWorkError:self.view];
         return;
@@ -747,28 +812,30 @@
     
     if ([self.downloadSource isEqualToString:@"baidu_wangpan"])
     {
-        self.mp4DownloadUrls = [self tureWangpanDownloadURL:self.mp4DownloadUrls];
+        self.downloadUrls = [self tureWangpanDownloadURL:self.downloadUrls];
     }
     
     NSMutableArray *tempArray = [[NSMutableArray alloc]initWithCapacity:5];
     
-    [tempArray addObjectsFromArray:self.mp4DownloadUrls];
-    [tempArray addObjectsFromArray:self.m3u8DownloadUrls];
+    [tempArray addObjectsFromArray:self.downloadUrls];
+    //[tempArray addObjectsFromArray:self.mp4DownloadUrls];
+    //[tempArray addObjectsFromArray:self.m3u8DownloadUrls];
     subitem.urlArray = tempArray;
     subitem.downloadURLSource = self.downloadSource;
     
     if(subitem.urlArray.count > 0){
-        if (self.mp4DownloadUrls.count > 0) {
-            subitem.downloadType = @"mp4";
-            subitem.fileName = [NSString stringWithFormat:@"%@_%@.mp4", self.prodId, subitem.subitemId];
-        } else if(self.m3u8DownloadUrls.count > 0){
-            subitem.downloadType = @"m3u8";
-        }
-        subitem.mp4SourceNum = self.mp4DownloadUrls.count;
+        //        if (self.mp4DownloadUrls.count > 0) {
+        //            subitem.downloadType = @"mp4";
+        //            subitem.fileName = [NSString stringWithFormat:@"%@_%@.mp4", self.prodId, subitem.subitemId];
+        //        } else if(self.m3u8DownloadUrls.count > 0){
+        //            subitem.downloadType = @"m3u8";
+        //        }
+        //        subitem.mp4SourceNum = self.mp4DownloadUrls.count;
+        subitem.fileName = [NSString stringWithFormat:@"%@_%@.mp4", self.prodId, subitem.subitemId];
         [DatabaseManager save:subitem];
         DownloadUrlFinder *finder = [[DownloadUrlFinder alloc]init];
         finder.item = subitem;
-        //finder.mp4DownloadUrlNum = self.mp4DownloadUrls.count;
+        //finder.mp4DownloadUrlNum = self.mp4DownloadUrls;
         [finder setupWorkingUrl];
         [self updateBadgeIcon];
         return YES;

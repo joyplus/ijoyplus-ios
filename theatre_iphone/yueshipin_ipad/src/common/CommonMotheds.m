@@ -14,7 +14,15 @@
 #import "CMConstants.h"
 #import "TFHpple.h"
 
+#define IS_IPHONE5  ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(640, 1136), [[UIScreen mainScreen] currentMode].size) : NO)
+
 @implementation CommonMotheds
+
++ (BOOL)isIphone5
+{
+    return IS_IPHONE5;
+}
+
 +(BOOL)isNetworkEnbled{
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([hostReach currentReachabilityStatus]  != NotReachable){
@@ -100,7 +108,9 @@
             DownloadItem *item = [playlists objectAtIndex:0];
             item = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class
                                                                queryString:[NSString stringWithFormat:@"where itemId = %@", item.itemId]];
-            if([item.downloadStatus isEqualToString:@"done"] || item.percentage == 100)
+            if([item.downloadStatus isEqualToString:@"done"]
+               || [item.downloadStatus isEqualToString:@"finish"]
+               || item.percentage == 100)
             {
                 NSString *filePath;
                 if ([item.downloadType isEqualToString:@"m3u8"])

@@ -21,6 +21,7 @@
     NSString *webUrlSource_;
     BOOL isPlayFromRecord_;
     NSDictionary *continuePlayInfo_;
+    BOOL hasVideoUrl_;
 }
 @property (nonatomic, strong) NSArray *episodesArr;
 @property (nonatomic, assign) int playNum;
@@ -34,7 +35,7 @@
 @property (nonatomic, strong) NSMutableArray *subnameArray;
 @property (nonatomic, assign) BOOL isPlayFromRecord;
 @property (nonatomic, strong) NSDictionary *continuePlayInfo;
-
+@property (nonatomic, assign) BOOL hasVideoUrl;
 -(void)initWebView;
 
 @end

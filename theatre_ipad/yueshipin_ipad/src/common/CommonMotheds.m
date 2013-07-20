@@ -147,7 +147,9 @@
             NSMutableDictionary * playInfo = [NSMutableDictionary dictionary];
             SubdownloadItem *item = [playlists objectAtIndex:i];
             item = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@ and subitemId = '%@'", item.itemId, item.subitemId]];
-            if([item.downloadStatus isEqualToString:@"done"] || item.percentage == 100)
+            if([item.downloadStatus isEqualToString:@"done"]
+               || [item.downloadStatus isEqualToString:@"finish"]
+               || item.percentage == 100)
             {
                 NSString *filePath;
                 if ([item.downloadType isEqualToString:@"m3u8"])

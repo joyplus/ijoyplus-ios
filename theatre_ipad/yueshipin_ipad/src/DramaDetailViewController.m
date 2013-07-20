@@ -29,6 +29,8 @@
     UIScrollView *episodeView;
     int episodePageNumber;
     int increasePositionY;
+    BOOL isFavority_;
+    int collectioNum;
 }
 
 @property (nonatomic, strong) UIScrollView *pageTabScrollView;
@@ -135,11 +137,11 @@
     self.actorName1Label.textColor = CMConstants.grayColor;
     self.playLabel.frame = CGRectMake(270, 195, 50, 15);
     self.playLabel.textColor = CMConstants.grayColor;
-    self.playTimeLabel.frame = CGRectMake(315, 195, 100, 15);
+    self.playTimeLabel.frame = CGRectMake(315, 195, 170, 15);
     self.playTimeLabel.textColor = CMConstants.grayColor;
     self.regionLabel.frame = CGRectMake(270, 225, 50, 15);
     self.regionLabel.textColor = CMConstants.grayColor;
-    self.regionNameLabel.frame = CGRectMake(315, 225, 100, 15);
+    self.regionNameLabel.frame = CGRectMake(315, 225, 170, 15);
     self.regionNameLabel.textColor = CMConstants.grayColor;
     
     self.playBtn.frame = CGRectMake(265, 280, 100, 50);
@@ -158,7 +160,7 @@
     [self.expectbtn setTitleEdgeInsets:UIEdgeInsetsMake(4, 10, 0, 5)];
     self.expectbtn.titleLabel.font = [UIFont systemFontOfSize:12];
     [self.expectbtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-    [self.expectbtn setTitleColor:CMConstants.yellowColor forState:UIControlStateNormal];
+    [self.expectbtn setTitleColor:[UIColor colorWithRed:1 green:119.0f/255.0f blue:0 alpha:1] forState:UIControlStateNormal];
     [self.expectbtn addTarget:self action:@selector(expectVideo) forControlEvents:UIControlEventTouchUpInside];
     [self.bgScrollView addSubview:self.expectbtn];
     self.expectbtn.hidden = YES;
@@ -181,6 +183,7 @@
     self.collectionBtn.frame = CGRectMake(260 + 120, 340, 44, 44);
     [self.collectionBtn setBackgroundImage:[UIImage imageNamed:@"collection"] forState:UIControlStateNormal];
     [self.collectionBtn setBackgroundImage:[UIImage imageNamed:@"collection_pressed"] forState:UIControlStateHighlighted];
+    [self.collectionBtn setBackgroundImage:[UIImage imageNamed:@"collection_pressed"] forState:UIControlStateSelected];
     [self.collectionBtn addTarget:self action:@selector(collectionBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
     self.shareBtn.frame = CGRectMake(260 + 180, 340, 44, 44);
@@ -291,6 +294,7 @@
     if(video == nil){
         [self retrieveData];
     }
+    [self isFavority];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -302,7 +306,6 @@
 - (void)changePlayingEpisodeBtn:(int)currentNum
 {
     [self clearLastBtnImage];
-    NSLog(@"当前播放集数:%d",currentNum+1);
     [[CacheUtility sharedCache]putInCache:[NSString stringWithFormat:@"drama_epi_%@", self.prodId] result:[NSNumber numberWithInt:currentNum+1]];
     UIButton *btn = (UIButton *)[episodeView viewWithTag:currentNum+1];
     [btn setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
@@ -389,6 +392,26 @@
     }
 }
 
+-(void)isFavority{
+    
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:self.prodId, @"prod_id", nil];
+    [[AFServiceAPIClient sharedClient] postPath:KPathProgramIsfavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        int responseCode = [[result objectForKey:@"flag"] intValue];
+        if(responseCode == 1){
+            isFavority_ = YES;
+            self.collectionBtn.selected = YES;
+        }
+        else{
+            isFavority_ = NO;
+            self.collectionBtn.selected = NO;
+        }
+        
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        
+    }];
+    
+}
+
 - (void)showValues
 {
     NSString *url = [video objectForKey:@"ipad_poster"];
@@ -399,7 +422,7 @@
     
     self.titleLabel.text = [video objectForKey:@"name"];
     self.scoreLabel.text = [NSString stringWithFormat:@"%@ 分", [video objectForKey:@"score"]];
-    self.scoreLabel.textColor = CMConstants.yellowColor;//[UIColor colorWithRed:1 green:167.0/255.0 blue:41.0/255.0 alpha:1];
+    self.scoreLabel.textColor = [UIColor colorWithRed:1 green:167.0/255.0 blue:41.0/255.0 alpha:1];
     NSString *stars = [video objectForKey:@"stars"];
     CGRect starRect = self.actorName1Label.frame;
     CGSize starSize = [stars drawInRect:CGRectMake(0, 0, starRect.size.width,CGFLOAT_MAX) withFont:self.actorName1Label.font];
@@ -445,7 +468,7 @@
     } else {
         self.dingNumberLabel.text = [NSString stringWithFormat:@"顶(%i)", dingNum];
     }
-    int collectioNum = [[video objectForKey:@"favority_num"] intValue];
+    collectioNum = [[video objectForKey:@"favority_num"] intValue];
     if (collectioNum >= 1000) {
         self.collectionNumberLabel.text = [NSString stringWithFormat:@"收藏(%.1fK)", collectioNum/1000.0];
         [self.expectbtn setTitle:[NSString stringWithFormat:@"(%.1fK)", collectioNum/1000.0] forState:UIControlStateNormal];
@@ -471,7 +494,7 @@
 //    } else {
 //        episodePageNumber--;
 //    }
-//    
+//
 //    [self setControlButtonDisplay];
 //    [episodeView setContentOffset:CGPointMake(430*episodePageNumber, 0)];
 //}
@@ -627,52 +650,52 @@
             }
         }
     }
-
-//    if(nextBtn == nil){
-//        nextBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-//        [nextBtn setTitle:[NSString stringWithFormat:@"后%i集", (int)fmin(20, totalEpisodeNumber - (episodePageNumber+1)*20)] forState:UIControlStateNormal];
-//        [nextBtn setImageEdgeInsets:UIEdgeInsetsMake(0, 60, 0, 5)];
-//        [nextBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 15)];
-//        nextBtn.titleLabel.font = [UIFont systemFontOfSize:13];
-//        [nextBtn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
-//        [nextBtn setTitleColor:CMConstants.yellowColor forState:UIControlStateHighlighted];
-//        [nextBtn setImage:[UIImage imageNamed:@"right"] forState:UIControlStateNormal];
-//        [nextBtn setImage:[UIImage imageNamed:@"right_pressed"] forState:UIControlStateNormal];
-//        [nextBtn addTarget:self action:@selector(next20Epi:) forControlEvents:UIControlEventTouchUpInside];
-//        nextBtn.tag = 9011;
-//        [self.bgScrollView addSubview:nextBtn];
-//    }
-//    
-//    if(previousBtn == nil){
-//        previousBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-//        [previousBtn setTitle:@"前20集" forState:UIControlStateNormal];
-//        [previousBtn setImage:[UIImage imageNamed:@"left"] forState:UIControlStateNormal];
-//        [previousBtn setImage:[UIImage imageNamed:@"left_pressed"] forState:UIControlStateHighlighted];
-//        previousBtn.titleLabel.font = [UIFont systemFontOfSize:13];
-//        [previousBtn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
-//        [previousBtn setTitleColor:CMConstants.yellowColor forState:UIControlStateHighlighted];
-//        [previousBtn setImageEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 60)];
-//        [previousBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
-//        [previousBtn addTarget:self action:@selector(next20Epi:) forControlEvents:UIControlEventTouchUpInside];
-//        previousBtn.tag = 9012;
-//        [previousBtn setHidden:YES];
-//        [self.bgScrollView addSubview:previousBtn];
-//    }
-//    if(totalEpisodeNumber <= EPISODE_NUMBER_IN_ROW * 4){
-//        [nextBtn setHidden:YES];
-//        [previousBtn setHidden:YES];
-//    }
+    
+    //    if(nextBtn == nil){
+    //        nextBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    //        [nextBtn setTitle:[NSString stringWithFormat:@"后%i集", (int)fmin(20, totalEpisodeNumber - (episodePageNumber+1)*20)] forState:UIControlStateNormal];
+    //        [nextBtn setImageEdgeInsets:UIEdgeInsetsMake(0, 60, 0, 5)];
+    //        [nextBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 15)];
+    //        nextBtn.titleLabel.font = [UIFont systemFontOfSize:13];
+    //        [nextBtn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
+    //        [nextBtn setTitleColor:CMConstants.yellowColor forState:UIControlStateHighlighted];
+    //        [nextBtn setImage:[UIImage imageNamed:@"right"] forState:UIControlStateNormal];
+    //        [nextBtn setImage:[UIImage imageNamed:@"right_pressed"] forState:UIControlStateNormal];
+    //        [nextBtn addTarget:self action:@selector(next20Epi:) forControlEvents:UIControlEventTouchUpInside];
+    //        nextBtn.tag = 9011;
+    //        [self.bgScrollView addSubview:nextBtn];
+    //    }
+    //
+    //    if(previousBtn == nil){
+    //        previousBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    //        [previousBtn setTitle:@"前20集" forState:UIControlStateNormal];
+    //        [previousBtn setImage:[UIImage imageNamed:@"left"] forState:UIControlStateNormal];
+    //        [previousBtn setImage:[UIImage imageNamed:@"left_pressed"] forState:UIControlStateHighlighted];
+    //        previousBtn.titleLabel.font = [UIFont systemFontOfSize:13];
+    //        [previousBtn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
+    //        [previousBtn setTitleColor:CMConstants.yellowColor forState:UIControlStateHighlighted];
+    //        [previousBtn setImageEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 60)];
+    //        [previousBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
+    //        [previousBtn addTarget:self action:@selector(next20Epi:) forControlEvents:UIControlEventTouchUpInside];
+    //        previousBtn.tag = 9012;
+    //        [previousBtn setHidden:YES];
+    //        [self.bgScrollView addSubview:previousBtn];
+    //    }
+    //    if(totalEpisodeNumber <= EPISODE_NUMBER_IN_ROW * 4){
+    //        [nextBtn setHidden:YES];
+    //        [previousBtn setHidden:YES];
+    //    }
     
     CGFloat y = episodeView.frame.origin.y + episodeView.frame.size.height;
-   
+    
     if (0 == y)
     {
         y = self.shareLabel.frame.origin.y + self.shareLabel.frame.size.height;
     }
-//    nextBtn.frame = CGRectMake(LEFT_WIDTH + 350, y , 80, 30);
-//    previousBtn.frame = CGRectMake(LEFT_WIDTH, y, 80, 30);
-//    
-//    y = previousBtn.frame.origin.y + previousBtn.frame.size.height;
+    //    nextBtn.frame = CGRectMake(LEFT_WIDTH + 350, y , 80, 30);
+    //    previousBtn.frame = CGRectMake(LEFT_WIDTH, y, 80, 30);
+    //
+    //    y = previousBtn.frame.origin.y + previousBtn.frame.size.height;
     self.introImage.frame = CGRectMake(LEFT_WIDTH, y + 20, 42, 18);
     self.introImage.image = [UIImage imageNamed:@"brief_title"];
     
@@ -769,21 +792,17 @@
         [lastbtn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
         [lastbtn setBackgroundImage:[UIImage imageNamed:@"drama"] forState:UIControlStateNormal];
     }
-    
-    
     /*
-    id lastNumObj = [[CacheUtility sharedCache]loadFromCache:[NSString stringWithFormat:@"drama_epi_%@", self.prodId]];
-    int lastNum = -1;
-    if(lastNumObj != nil){
-        lastNum = [lastNumObj integerValue];
-    }
-    
-    if (lastNum > 0 && lastNum <= episodeArray.count) {
-        NSLog(@"上次播放集数:%d",lastNum+1);
-        UIButton *lastbtn = (UIButton *)[episodeView viewWithTag:lastNum];
-        [lastbtn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
-        [lastbtn setBackgroundImage:[UIImage imageNamed:@"drama"] forState:UIControlStateNormal];
-    }
+     id lastNumObj = [[CacheUtility sharedCache]loadFromCache:[NSString stringWithFormat:@"drama_epi_%@", self.prodId]];
+     int lastNum = -1;
+     if(lastNumObj != nil){
+     lastNum = [lastNumObj integerValue];
+     }
+     if (lastNum > 0 && lastNum <= episodeArray.count) {
+     UIButton *lastbtn = (UIButton *)[episodeView viewWithTag:lastNum];
+     [lastbtn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
+     [lastbtn setBackgroundImage:[UIImage imageNamed:@"drama"] forState:UIControlStateNormal];
+     }
      */
 }
 
@@ -851,7 +870,6 @@
     }
     
     //[self SubscribingToChannels];
-    
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.prodId, @"prod_id", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
@@ -859,7 +877,7 @@
             [self SubscribingToChannels];
             [[NSNotificationCenter defaultCenter] postNotificationName:SEARCH_LIST_VIEW_REFRESH object:nil];
             [[AppDelegate instance].rootViewController showSuccessModalView:1.5];
-            int collectioNum = [[video objectForKey:@"favority_num"] intValue] + 1;
+            collectioNum++;
             if (collectioNum >= 1000) {
                 self.collectionNumberLabel.text = [NSString stringWithFormat:@"收藏(%.1fK)", collectioNum/1000.0];
                 [self.expectbtn setTitle:[NSString stringWithFormat:@"(%.1fK)", collectioNum/1000.0] forState:UIControlStateNormal];
@@ -877,6 +895,7 @@
 
 - (void)SubscribingToChannels
 {
+    return;
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     
     NSArray *channels = [NSArray arrayWithObjects:[NSString stringWithFormat:@"CHANNEL_PROD_%@",self.prodId], nil];
@@ -905,15 +924,24 @@
     
     //[self SubscribingToChannels];
     
+    if (isFavority_) {
+        [self unFavority];
+    }
+    else{
+        [self addtoFavority];
+    }
+}
+
+-(void)addtoFavority{
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.prodId, @"prod_id", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if([responseCode isEqualToString:kSuccessResCode]){
             [self SubscribingToChannels];
             [[NSNotificationCenter defaultCenter] postNotificationName:SEARCH_LIST_VIEW_REFRESH object:nil];
-            //            [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
-            [[AppDelegate instance].rootViewController showSuccessModalView:1.5];
-            int collectioNum = [[video objectForKey:@"favority_num"] intValue] + 1;
+            [[AppDelegate instance].rootViewController showCollectSucceed];
+            isFavority_ = YES;
+            collectioNum++;
             if (collectioNum >= 1000) {
                 self.collectionNumberLabel.text = [NSString stringWithFormat:@"收藏(%.1fK)", collectioNum/1000.0];
                 [self.expectbtn setTitle:[NSString stringWithFormat:@"(%.1fK)", collectioNum/1000.0] forState:UIControlStateNormal];
@@ -921,12 +949,44 @@
                 [self.expectbtn setTitle:[NSString stringWithFormat:@"(%i)", collectioNum] forState:UIControlStateNormal];
                 self.collectionNumberLabel.text = [NSString stringWithFormat:@"收藏(%i)", collectioNum];
             }
-        } else {
-            [[AppDelegate instance].rootViewController showModalView:[UIImage imageNamed:@"collected"] closeTime:1.5];
+            [self changeCollectionBtnState];
+        }
+        //        else {
+        //            [[AppDelegate instance].rootViewController showModalView:[UIImage imageNamed:@"expect_succeed"] closeTime:1.5];
+        //        }
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        [UIUtility showDetailError:self.view error:error];
+    }];
+}
+
+-(void)unFavority{
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.prodId, @"prod_id", nil];
+    [[AFServiceAPIClient sharedClient] postPath:kPathProgramUnfavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        if([responseCode isEqualToString:kSuccessResCode]){
+            [[AppDelegate instance].rootViewController showCancelCollectSucceed];
+            isFavority_ = NO;
+            collectioNum--;
+            if (collectioNum >= 1000) {
+                self.collectionNumberLabel.text = [NSString stringWithFormat:@"收藏(%.1fK)", collectioNum/1000.0];
+                [self.expectbtn setTitle:[NSString stringWithFormat:@"(%.1fK)", collectioNum/1000.0] forState:UIControlStateNormal];
+            } else {
+                [self.expectbtn setTitle:[NSString stringWithFormat:@"(%i)", collectioNum] forState:UIControlStateNormal];
+                self.collectionNumberLabel.text = [NSString stringWithFormat:@"收藏(%i)", collectioNum];
+            }
+            [self changeCollectionBtnState];
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [UIUtility showDetailError:self.view error:error];
     }];
+}
+-(void)changeCollectionBtnState{
+    if (isFavority_) {
+        self.collectionBtn.selected = YES;
+    }
+    else{
+        self.collectionBtn.selected = NO;
+    }
 }
 
 - (void)downloadBtnClicked
@@ -994,30 +1054,33 @@
     subitem.subitemId = [NSString stringWithFormat:@"%i", num];
     subitem.downloadStatus = @"waiting";
     [self getDownloadUrls:num-1];
-    
+    //百度网盘
     if ([self.downloadSource isEqualToString:@"baidu_wangpan"])
     {
-        self.mp4DownloadUrls = [self tureWangpanDownloadURL:self.mp4DownloadUrls];
+        self.downloadUrls = [self tureWangpanDownloadURL:self.downloadUrls];
     }
     
     NSMutableArray *tempArray = [[NSMutableArray alloc]initWithCapacity:5];
     
-    [tempArray addObjectsFromArray:self.mp4DownloadUrls];
-    [tempArray addObjectsFromArray:self.m3u8DownloadUrls];
+    [tempArray addObjectsFromArray:self.downloadUrls];
+    //[tempArray addObjectsFromArray:self.mp4DownloadUrls];
+    //[tempArray addObjectsFromArray:self.m3u8DownloadUrls];
     subitem.urlArray = tempArray;
     subitem.downloadURLSource = self.downloadSource;
-    if(subitem.urlArray.count > 0){
-        if (self.mp4DownloadUrls.count > 0) {
-            subitem.downloadType = @"mp4";
-            subitem.fileName = [NSString stringWithFormat:@"%@_%i.mp4", self.prodId, num];
-        } else if(self.m3u8DownloadUrls.count > 0){
-            subitem.downloadType = @"m3u8";
-        }
-        subitem.mp4SourceNum = self.mp4DownloadUrls.count;
+    if(subitem.urlArray.count > 0)
+    {
+        //        if (self.mp4DownloadUrls.count > 0) {
+        //            subitem.downloadType = @"mp4";
+        //            subitem.fileName = [NSString stringWithFormat:@"%@_%i.mp4", self.prodId, num];
+        //        } else if(self.m3u8DownloadUrls.count > 0){
+        //            subitem.downloadType = @"m3u8";
+        //        }
+        //        subitem.mp4SourceNum = self.mp4DownloadUrls.count;
+        subitem.fileName = [NSString stringWithFormat:@"%@_%i.mp4", self.prodId, num];
         [DatabaseManager save:subitem];
         DownloadUrlFinder *finder = [[DownloadUrlFinder alloc]init];
         finder.item = subitem;
-        //finder.mp4DownloadUrlNum = self.mp4DownloadUrls.count;
+        //finder.mp4DownloadUrlNum = self.mp4DownloadUrls;
         [finder setupWorkingUrl];
         [self updateBadgeIcon];
         return YES;

@@ -15,7 +15,8 @@
 
 @interface VideoTypeSegment : UIView
 @property (nonatomic, weak) id <VideoTypeSegmentDelegate>delegate;
-
+-(void)show;
+-(void)dissmiss;
 -(void)setSelectAtIndex:(int)index;
 @end
 

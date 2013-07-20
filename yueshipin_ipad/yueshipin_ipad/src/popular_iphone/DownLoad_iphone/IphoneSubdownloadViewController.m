@@ -149,16 +149,18 @@
 }
 
 
-- (void)reFreshProgress:(double)progress withId:(NSString *)itemId inClass:(NSString *)className{
+- (void)reFreshProgress:(DownloadItem *)item withId:(NSString *)itemId inClass:(NSString *)className{
     if ([className isEqualToString:@"IphoneSubdownloadViewController"]) {
          SubdownloadItem *subDownloadItem = [self getDownloadItemById:itemId];
         if ([subDownloadItem.downloadStatus isEqualToString:@"loading"]) {
-            float value = (float)progress;
+            float value = (float)(item.percentage/100.0f);
             int num = [self getTagNum:itemId];
             UIProgressView *progressView = [progressViewDic_ objectForKey:[NSString stringWithFormat:@"%d",num]];
             [progressView setProgress:value];
             int progressValue = (int)(100*value);
+            subDownloadItem.duration = item.duration;
             subDownloadItem.percentage = progressValue;
+            subDownloadItem.m3u8DownloadInfo = item.m3u8DownloadInfo;
             UILabel *label = [progressLabelDic_ objectForKey:[NSString stringWithFormat:@"%d",num]];
             label.text = [NSString stringWithFormat:@"下载中：%i%%\n ",progressValue];
         }
@@ -204,6 +206,10 @@
     [self reloadDataSource];
 }
 -(void)back:(id)sender{
+    for (DownloadItem * item in itemArr_)
+    {
+        [DatabaseManager update:item];
+    }
     [self.navigationController popViewControllerAnimated:YES];
 }
 
@@ -354,6 +360,7 @@
     if (position >= [itemArr_ count]) {
         return;
     }
+    
     SubdownloadItem *downloadItem = [itemArr_ objectAtIndex:position];
     if ([downloadItem.downloadStatus isEqualToString:@"finish"]) {
         NSString *fileName = [downloadItem.subitemId stringByAppendingString:@".mp4"];
@@ -450,6 +457,22 @@
             return;
         }
         
+        if ([downloadItem.downloadStatus isEqualToString:@"fail"]
+            && [downloadItem.downloadType isEqualToString:@"m3u8"])
+        {
+            [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"delete from SegmentUrl WHERE itemId = '%@'",downloadItem.subitemId]];
+            NSError *error;
+            NSFileManager *fileMgr = [NSFileManager defaultManager];
+            NSString *documentsDirectory= [NSHomeDirectory() stringByAppendingPathComponent:@"Documents"];
+            NSString *deleteFilePath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@/%@",downloadItem.itemId,downloadItem.subitemId]];
+            [fileMgr removeItemAtPath:deleteFilePath error:&error];
+            
+            
+            downloadItem.percentage = 0;
+            downloadItem.m3u8DownloadInfo = [NSMutableArray array];
+        }
+        
+        
         downloadItem.downloadStatus = @"waiting";
         
         [DatabaseManager update:downloadItem];
@@ -461,7 +484,6 @@
         progressView.progress = downloadItem.percentage/100.0;
         
         [DownLoadManager continueDownload:downloadItem.subitemId];
-        
     }
 
 
@@ -489,12 +511,11 @@
 
 - (void)deleteItemWithIndex:(NSInteger)index
 {
-   
-     NSString *query = [NSString stringWithFormat:@"WHERE itemId ='%@'",prodId_];
 //    
 //    NSArray *arr = [DatabaseManager findByCriteria:[SubdownloadItem class] queryString:query];
     
     SubdownloadItem *item = [itemArr_ objectAtIndex:index];
+    NSString *query = [NSString stringWithFormat:@"WHERE itemId ='%@'",prodId_];
     NSString *itemId = item.subitemId;
     [DownLoadManager stopAndClear:itemId];
     
@@ -510,8 +531,8 @@
     
     NSArray *fileList = [fileMgr contentsOfDirectoryAtPath:documentsDirectory error:&error];
     
-    if ([item.fileName hasSuffix:@"m3u8"]) {
-        NSString *deleteFilePath = [documentsDirectory stringByAppendingPathComponent:item.itemId];
+    if ([item.downloadType isEqualToString:@"m3u8"]) {
+        NSString *deleteFilePath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@/%@",item.itemId,item.subitemId]];
         [fileMgr removeItemAtPath:deleteFilePath error:&error];
     }
     else{
@@ -523,7 +544,7 @@
         }
     }
     
-    [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"delete from SegmentUrl WHERE itemId = '%@'",prodId_]];
+    [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"delete from SegmentUrl WHERE itemId = '%@'",item.subitemId]];
     
     [DatabaseManager deleteObject:item];
     [itemArr_ removeObjectAtIndex:index];
@@ -539,6 +560,17 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:@"DELETE_ALL_SUBITEMS_MSG" object:nil];
     }
     [[DownLoadManager defaultDownLoadManager]waringPlus];
+}
+
+-(void)DownLoadManagerUpdateIsDownloadingNumberwithId:(NSString *)itemId
+                                               number:(int)num
+                                              inClass:(NSString*)className
+{
+    if ([className isEqualToString:@"IphoneSubdownloadViewController"])
+    {
+        SubdownloadItem *subDownloadItem = [self getDownloadItemById:itemId];
+        subDownloadItem.isDownloadingNum = num;
+    }
 }
 
 #pragma mark -

@@ -13,6 +13,7 @@
 #import "AVPlayerViewController.h"
 #import "AFDownloadRequestOperation.h"
 #import "SegmentUrl.h"
+#import "CommonMotheds.h"
 
 @interface SubdownloadViewController ()<SubdownloadingDelegate, GMGridViewDataSource, GMGridViewActionDelegate,UIAlertViewDelegate>{
     UIButton *closeBtn;
@@ -27,7 +28,11 @@
     UIButton *doneBtn;;
     BOOL displayNoSpaceFlag;
     __gm_weak GMGridView *_gmGridView;
+    NSInteger retryConut;
 }
+
+@property (nonatomic,strong) NSTimer * opTimer;
+@property (nonatomic, strong) NSTimer * retryTimer;
 
 - (void)deleteItemWithIndex:(NSInteger)index;
 
@@ -36,6 +41,8 @@
 @implementation SubdownloadViewController
 @synthesize itemId;
 @synthesize parentDelegate;
+@synthesize opTimer;
+@synthesize retryTimer;
 
 - (void)didReceiveMemoryWarning
 {
@@ -54,6 +61,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    retryConut = 0;
     [self.view addGestureRecognizer:self.swipeRecognizer];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshDownloadView) name:@"updateDownloadView" object:nil];
     [self reloadSubitems];
@@ -149,32 +157,78 @@
 - (void)downloadFailure:(NSString *)operationId suboperationId:(NSString *)suboperationId error:(NSError *)error
 {
     NSLog(@"error in SubdownloadViewController");
-    [[AppDelegate instance].padDownloadManager stopDownloading];
-    [self performSelector:@selector(restartNewDownloading) withObject:nil afterDelay:10];
+    if (![CommonMotheds isNetworkEnbled])
+    {
+        NSLog(@"网络异常");
+        return;
+    }
+    
+    NSInteger retryNum = 0;
+    NSString * numberStr = [[AppDelegate instance].padDownloadManager.retryCountInfo objectForKey:[NSString stringWithFormat:@"%@_%@",operationId,suboperationId]];
+    if (numberStr)
+    {
+        retryNum = [numberStr intValue];
+    }
+    
+    if (retryNum <= DOWNLOAD_FAIL_RETRY_TIME)
+    {
+        if (retryTimer)
+        {
+            [retryTimer invalidate];
+            retryTimer = nil;
+        }
+        else
+        {
+            retryNum ++;
+            [[AppDelegate instance].padDownloadManager.retryCountInfo setObject:[NSString stringWithFormat:@"%d",retryNum] forKey:[NSString stringWithFormat:@"%@_%@",operationId,suboperationId]];
+        }
+        retryTimer = [NSTimer scheduledTimerWithTimeInterval:DOWNLOAD_FAIL_RETRY_INTERVAL
+                                                      target:self
+                                                    selector:@selector(restartNewDownloading)
+                                                    userInfo:nil
+                                                     repeats:NO];
+    }
+    else
+    {
+        SubdownloadItem * tempDownloadingItem = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@ and subitemId = '%@'", operationId, suboperationId]];
+        tempDownloadingItem.downloadStatus = @"fail";
+        [DatabaseManager update:tempDownloadingItem];
+        [[AppDelegate instance].padDownloadManager stopDownloading];
+        [[AppDelegate instance].padDownloadManager startDownloadingThreads];
+        
+        [_gmGridView reloadData];
+    }
 }
 
 - (void)restartNewDownloading
 {
     //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
-        [AppDelegate instance].currentDownloadingNum = 0;
+        [retryTimer invalidate];
+        retryTimer = nil;
         [NSThread  detachNewThreadSelector:@selector(startDownloadingThreads) toTarget:[AppDelegate instance].padDownloadManager withObject:nil];
     }
 }
 
 - (void)downloadSuccess:(NSString *)operationId suboperationId:(NSString *)suboperationId
 {
-    for (int i = 0; i < subitems.count; i++) {
-        SubdownloadItem *tempitem = [subitems objectAtIndex:i];
-        if ([tempitem.itemId isEqualToString:operationId] && [suboperationId isEqualToString:tempitem.subitemId]) {
-            tempitem = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@ and subitemId = '%@'", tempitem.itemId, tempitem.subitemId]];
-            tempitem.percentage = 100;
-            tempitem.downloadStatus  = @"done";
-            [AppDelegate instance].currentDownloadingNum = 0;
-            [DatabaseManager update:tempitem];
-            break;
-        }
-    }
+    SubdownloadItem * subItem = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@ and subitemId = '%@'", operationId, suboperationId]];
+    subItem.percentage = 100;
+    subItem.downloadStatus  = @"done";
+    [DatabaseManager update:subItem];
+    
+//    for (int i = 0; i < subitems.count; i++) {
+//        SubdownloadItem *tempitem = [subitems objectAtIndex:i];
+//        if ([tempitem.itemId isEqualToString:operationId] && [suboperationId isEqualToString:tempitem.subitemId]) {
+//            tempitem = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@ and subitemId = '%@'", tempitem.itemId, tempitem.subitemId]];
+//            tempitem.percentage = 100;
+//            tempitem.downloadStatus  = @"done";
+//            //[AppDelegate instance].currentDownloadingNum --;//0
+//            [DatabaseManager update:tempitem];
+//            break;
+//        }
+//    }
+    
     [_gmGridView reloadData];
     [[AppDelegate instance].padDownloadManager startDownloadingThreads];
     [[NSNotificationCenter defaultCenter] postNotificationName:UPDATE_DISK_STORAGE object:nil];
@@ -182,6 +236,7 @@
 
 - (void)updateProgress:(NSString *)operationId suboperationId:(NSString *)suboperationId progress:(float)progress
 {
+    [[AppDelegate instance].padDownloadManager.retryCountInfo setObject:@"0" forKey:[NSString stringWithFormat:@"%@_%@",operationId,suboperationId]];
     for (int i = 0; i < subitems.count; i++) {
         SubdownloadItem *tempitem = [subitems objectAtIndex:i];
         if ([tempitem.itemId isEqualToString:operationId] && [suboperationId isEqualToString:tempitem.subitemId]) {
@@ -235,12 +290,32 @@
     if([subitem.downloadStatus isEqualToString:@"start"] || [subitem.downloadStatus isEqualToString:@"waiting"]){
         if ([subitem.downloadStatus isEqualToString:@"start"]) {
             [[AppDelegate instance].padDownloadManager stopDownloading];
-            [AppDelegate instance].currentDownloadingNum = 0;
+            //[AppDelegate instance].currentDownloadingNum --;//0
         }
         progressLabel.text = [NSString stringWithFormat:@"暂停：%i%%", (int)(progressView.progress*100)];
         subitem.downloadStatus = @"stop";
         [DatabaseManager update:subitem];
-    } else {
+    } else if([subitem.downloadStatus isEqualToString:@"stop"] || [subitem.downloadStatus isEqualToString:@"fail"])
+    {
+        if ([subitem.downloadStatus isEqualToString:@"fail"])
+        {
+            [[AppDelegate instance].padDownloadManager.retryCountInfo setObject:@"0" forKey:[NSString stringWithFormat:@"%@_%@",subitem.itemId,subitem.subitemId]];
+            
+            //删除segmentURL,更改数据库信息
+            if ([subitem.downloadType isEqualToString:@"m3u8"])
+            {
+                NSString * sqlStr = [NSString stringWithFormat: @"delete from SegmentUrl where itemId = %@ and subitemId = '%@'", subitem.itemId,subitem.subitemId];
+                
+                NSFileManager *fileManager = [NSFileManager defaultManager];
+                NSString *filePath = [NSString stringWithFormat:@"%@/%@/%@", DocumentsDirectory, subitem.itemId, subitem.subitemId];
+                [fileManager removeItemAtPath:filePath error:nil];
+                
+                [DatabaseManager performSQLAggregation:sqlStr];
+                subitem.m3u8DownloadInfo = [NSMutableArray array];
+                subitem.percentage = 0;
+            }
+            
+        }
         [self getFreeDiskspacePercent];
         if (totalFreeSpace_ <= LEAST_DISK_SPACE) {
             [UIUtility showNoSpace:self.view];
@@ -250,7 +325,19 @@
         subitem.downloadStatus = @"waiting";
         [DatabaseManager update:subitem];
     }
-    [[AppDelegate instance].padDownloadManager startDownloadingThreads];
+    
+    if (opTimer)
+    {
+        [opTimer invalidate];
+        opTimer = nil;
+    }
+    
+    opTimer = [NSTimer scheduledTimerWithTimeInterval:1.f
+                                               target:[AppDelegate instance].padDownloadManager
+                                             selector:@selector(startDownloadingThreads)
+                                             userInfo:nil
+                                              repeats:NO];
+    //[[AppDelegate instance].padDownloadManager startDownloadingThreads];
     [_gmGridView reloadData];
 }
 
@@ -324,7 +411,11 @@
     } else if([item.downloadStatus isEqualToString:@"error"]){
         progressLabel.frame = CGRectMake(13, 117, 98, 25);
         progressLabel.text = @"下载片源失效";
-    } 
+    }else if ([item.downloadStatus isEqualToString:@"fail"]){
+        progressLabel.frame = CGRectMake(13, 117, 98, 25);
+        progressLabel.text = @"下载失败";
+    }
+    
     progressLabel.textAlignment = NSTextAlignmentCenter;
     progressLabel.shadowColor = [UIColor blackColor];
     progressLabel.shadowOffset = CGSizeMake(1, 1);
@@ -482,7 +573,7 @@
     [self removeLastPlaytime:item];
     [DatabaseManager deleteObject:item];
     [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"delete from SubdownloadItem WHERE itemId = '%@' and subitemId = '%@'", item.itemId, item.subitemId]];
-    double result = [DatabaseManager performSQLAggregation: [NSString stringWithFormat: @"delete from SegmentUrl WHERE itemId = '%@'", item.itemId]];
+    double result = [DatabaseManager performSQLAggregation: [NSString stringWithFormat: @"delete from SegmentUrl WHERE itemId = '%@' and subitemId = '%@'", item.itemId,item.subitemId]];
     NSLog(@"result = %f", result);
     
     NSFileManager *fileManager = [NSFileManager defaultManager];

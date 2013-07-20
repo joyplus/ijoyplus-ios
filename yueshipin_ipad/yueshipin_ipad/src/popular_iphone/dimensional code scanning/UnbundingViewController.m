@@ -64,13 +64,13 @@
         [[BundingTVManager shareInstance] connecteServer];
     }
     
-    [BundingTVManager shareInstance].sendClient.delegate = self;
+    //[BundingTVManager shareInstance].sendClient.delegate = self;
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    [BundingTVManager shareInstance].sendClient.delegate = (id)[BundingTVManager shareInstance];
+    //[BundingTVManager shareInstance].sendClient.delegate = (id)[BundingTVManager shareInstance];
     
 }
 
@@ -138,25 +138,6 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:@"bundingTVSucceeded" object:nil];
         
         [self.navigationController popViewControllerAnimated:YES];
-        
-//        if (nil == HUDView)
-//        {
-//            HUDView = [[MBProgressHUD alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, kFullWindowHeight)];
-//            HUDView.center = self.view.center;
-//            HUDView.backgroundColor = [UIColor colorWithRed:0.25 green:0.25 blue:0.25 alpha:0.5];
-//            HUDView.userInteractionEnabled = YES;
-//            HUDView.labelText = @"绑定中...";
-//            HUDView.labelFont = [UIFont systemFontOfSize:12];
-//            HUDView.opacity = 0;
-//        }
-//        [HUDView show:YES];
-//        [[AppDelegate instance].tabBarView.view addSubview:HUDView];
-//        
-//        timer = [NSTimer scheduledTimerWithTimeInterval:KEY_MAX_RESPOND_TIME
-//                                                 target:self
-//                                               selector:@selector(dismissHUDView)
-//                                               userInfo:nil
-//                                                repeats:NO];
     }
          
 }
@@ -176,7 +157,7 @@
 - (void)disconnectedFromServer
 {
     [[BundingTVManager shareInstance] reconnectToServer];
-    [BundingTVManager shareInstance].sendClient.delegate = self;
+    //[BundingTVManager shareInstance].sendClient.delegate = self;
 }
 
 - (void)socketDidSendMessage:(ZTWebSocket *)aWebSocket

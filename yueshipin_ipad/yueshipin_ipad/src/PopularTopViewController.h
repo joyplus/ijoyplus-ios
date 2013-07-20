@@ -10,7 +10,7 @@
 #import "MenuViewController.h"
 #import "EGORefreshTableHeaderView.h"
 #import "PullRefreshManagerClinet.h"
-@interface PopularTopViewController : SlideBaseViewController<UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate, MNMBottomPullToRefreshManagerClient, EGORefreshTableHeaderDelegate,PullRefreshManagerClinetDelegate, UIGestureRecognizerDelegate>
+@interface PopularTopViewController : SlideBaseViewController<UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate, EGORefreshTableHeaderDelegate,PullRefreshManagerClinetDelegate, UIGestureRecognizerDelegate>
 
 - (id)initWithFrame:(CGRect)frame;
 

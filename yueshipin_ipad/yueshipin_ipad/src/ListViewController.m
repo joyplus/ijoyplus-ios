@@ -379,9 +379,6 @@
 }
 
 #pragma mark -
-#pragma mark MNMBottomPullToRefreshManagerClient
-
-#pragma mark -
 #pragma mark - UIScrollviewDelegate
 - (void) scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {
@@ -424,6 +421,7 @@
         }
         [pullToRefreshManager_ loadMoreCompleted];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        [pullToRefreshManager_ loadMoreCompleted];
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
         [UIUtility showDetailError:self.view error:error];
     }];

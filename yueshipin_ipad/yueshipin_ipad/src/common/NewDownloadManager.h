@@ -13,6 +13,7 @@
 
 @property (nonatomic, weak)id<DownloadingDelegate>delegate;
 @property (nonatomic, weak)id<SubdownloadingDelegate>subdelegate;
+@property (strong, nonatomic) NSMutableDictionary * retryCountInfo;
 + (int)downloadingTaskCount;
 - (void)startDownloadingThreads;
 - (void)stopDownloading;

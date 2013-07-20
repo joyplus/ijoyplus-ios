@@ -28,18 +28,24 @@
 - (void)showCloseBtn;;
 @end
 
-@interface VideoDetailViewController : SlideBaseViewController  <SinaWeiboDelegate, SinaWeiboRequestDelegate, VideoDetailViewControllerDelegate, UIAlertViewDelegate,  DramaDetailViewControllerDelegate>{
+@interface VideoDetailViewController : SlideBaseViewController  <SinaWeiboDelegate, SinaWeiboRequestDelegate, VideoDetailViewControllerDelegate, UIAlertViewDelegate,  DramaDetailViewControllerDelegate,UIActionSheetDelegate>{
     SinaWeibo *_sinaweibo;
     NSDictionary *video;
     NSArray *topics;
     NSInteger willPlayIndex;
     NSArray *episodeArray;
     NSString *umengPageName;
+    int playNum;
+    BOOL hasVideoUrl_;
+    NSMutableArray *tempHttpUrlArray_;
+    int sendCount_;
+    NSMutableArray *sortEpisodesArr_;
 }
 @property (strong, nonatomic)NSString *prodId;
 @property (nonatomic, strong)NSString *subname;
 @property (assign, nonatomic)int type;
 @property (strong, nonatomic)SlideBaseViewController *fromViewController;
+@property (strong, nonatomic)NSMutableArray *downloadUrls;
 @property (strong, nonatomic)NSMutableArray *mp4DownloadUrls;
 @property (strong, nonatomic)NSMutableArray *m3u8DownloadUrls;
 @property (strong, nonatomic)NSString *downloadSource;

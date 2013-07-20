@@ -93,7 +93,7 @@
     commentArray_ = [NSMutableArray arrayWithCapacity:10];
     [self loadData];
     [self loadComments];
-    
+    [self isFavority];
     favCount_ = [[self.infoDic objectForKey:@"favority_num" ] intValue];
     supportCount_ = [[self.infoDic objectForKey:@"support_num" ] intValue];
     
@@ -119,8 +119,6 @@
     [moreBtn_ setBackgroundImage:[UIImage imageNamed:@"more_off"] forState:UIControlStateSelected];
     [moreBtn_ addTarget:self action:@selector(more:) forControlEvents:UIControlEventTouchUpInside];
     
-     //pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:self.tableView withClient:self];
-
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshRecord) name:WATCH_HISTORY_REFRESH object:nil];
     
 }
@@ -238,11 +236,11 @@
 }
 
 NSComparator cmptr = ^(id obj1, id obj2){
-    if ([obj1 integerValue] > [obj2 integerValue]) {
+    if ([obj1 floatValue] > [obj2 floatValue]) {
         return (NSComparisonResult)NSOrderedDescending;
     }
     
-    if ([obj1 integerValue] < [obj2 integerValue]) {
+    if ([obj1 floatValue] < [obj2 floatValue]) {
         return (NSComparisonResult)NSOrderedAscending;
     }
     return (NSComparisonResult)NSOrderedSame;
@@ -268,9 +266,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
                 [commentArray_ addObjectsFromArray:comments];
                 
             }
-            else{
-              [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
-            }
+            
         }
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
@@ -278,9 +274,34 @@ NSComparator cmptr = ^(id obj1, id obj2){
     }];
     
 }
+
+-(void)isFavority{
+    NSString *itemId = [self.infoDic objectForKey:@"prod_id"];
+    if (itemId == nil) {
+        itemId = [self.infoDic objectForKey:@"content_id"];
+    }
+    if (itemId == nil) {
+        itemId = [self.infoDic objectForKey:@"id"];
+    }
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: itemId, @"prod_id", nil];
+    [[AFServiceAPIClient sharedClient] postPath:KPathProgramIsfavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        int responseCode = [[result objectForKey:@"flag"] intValue];
+        if(responseCode == 1){
+            isFavority_ = YES;
+        }
+        else{
+            isFavority_ = NO;
+        }
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
+    }];
+    
+}
+
 - (void)loadTable {
     [self.tableView reloadData];
-    [pullToRefreshManager_ tableViewReloadFinished];
+
 }
 
 - (void)viewDidUnload{
@@ -434,12 +455,24 @@ NSComparator cmptr = ^(id obj1, id obj2){
                 if (titleStr == nil) {
                     titleStr = [self.infoDic objectForKey:@"name"];
                 }
-                UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 14, 170, 18)];
+                UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 14, 150, 18)];
                 titleLabel.font = [UIFont systemFontOfSize:15];
                 titleLabel.textColor = [UIColor grayColor];
                 titleLabel.backgroundColor = [UIColor clearColor];
                 titleLabel.text = titleStr;
                 [cell addSubview:titleLabel];
+                
+                UILabel *scoreLabel = [[UILabel alloc] initWithFrame:CGRectMake(270, 14, 25, 18)];
+                scoreLabel.font = [UIFont systemFontOfSize:15];
+                scoreLabel.textColor = [UIColor orangeColor];
+                scoreLabel.textAlignment = NSTextAlignmentRight;
+                scoreLabel.backgroundColor = [UIColor clearColor];
+                scoreLabel.text = [self.infoDic objectForKey:@"score"];
+                [cell addSubview:scoreLabel];
+                
+                UIImageView *logo = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"list_numeral_watercress.png"]];
+                logo.frame = CGRectMake(298, 16, 14, 14);
+                [cell addSubview:logo];
                 
                 UILabel *actorsLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 39, 200, 15)];
                 actorsLabel.font = [UIFont systemFontOfSize:12];
@@ -502,6 +535,13 @@ NSComparator cmptr = ^(id obj1, id obj2){
                 addFav.tag = 10002;
                 [addFav setImage:[UIImage imageNamed:@"icon_shoucang.png"] forState:UIControlStateNormal];
                 [addFav setImage:[UIImage imageNamed:@"icon_shoucang_s.png"] forState:UIControlStateHighlighted];
+                [addFav setImage:[UIImage imageNamed:@"icon_shoucang1"] forState:UIControlStateSelected];
+                if (isFavority_) {
+                    addFav.selected = YES;
+                }
+                else{
+                    addFav.selected = NO;
+                }
                 if (favCount_ <1000) {
                     [addFav setTitle:[NSString stringWithFormat:@"(%d)",favCount_]  forState:UIControlStateNormal];
                     [expectbtn setTitle:[NSString stringWithFormat:@"想 看(%d)",favCount_] forState:UIControlStateNormal];
@@ -584,7 +624,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
                 [downLoad addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
                 downLoad.titleLabel.font = [UIFont systemFontOfSize:14];
                 if (isloaded_) {
-                    if ([CommonMotheds getOnlineConfigValue] != 2) {
+                    if ([CommonMotheds getOnlineConfigValue] == 0) {
                         [cell addSubview:downLoad];
                     }
                      [cell addSubview:expectbtn];
@@ -916,19 +956,40 @@ NSComparator cmptr = ^(id obj1, id obj2){
         NSString *responseCode = [result objectForKey:@"res_code"];
         
         if([responseCode isEqualToString:kSuccessResCode]){
-            [self SubscribingToChannels];
+            isFavority_ = YES; 
+            //[self SubscribingToChannels];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"REFRESH_FAV"object:nil];
             favCount_++;
             [self showOpSuccessModalView:1.5 with:type];
             [self.tableView reloadData];
             
-        } else {
-            [self showOpFailureModalView:1.5 with:type];
         }
+//        else {
+//            [self showOpFailureModalView:1.5 with:type];
+//        }
         
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [self showOpFailureModalView:1.5 with:type];
     }];
+}
+
+
+-(void)Unfavority{
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: prodId_, @"prod_id", nil];
+    [[AFServiceAPIClient sharedClient] postPath:kPathProgramUnfavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        if([responseCode isEqualToString:kSuccessResCode]){
+            isFavority_ = NO;
+            favCount_--;
+            [self.tableView reloadData];
+            [self showOpSuccessModalView:1.5 with:5];
+        }
+        
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        
+    }];
+    
+    
 }
 
 -(void)action:(id)sender {
@@ -941,11 +1002,17 @@ NSComparator cmptr = ^(id obj1, id obj2){
     switch (button.tag) {
         case 10001:{
             [self playVideo:curSelectedNum];
+            haveVideoUrl_ = [self isDownloadUrlEnable:curSelectedNum];
             break;
         }
         case 10002:{
             //[self SubscribingToChannels];
-            [self addVideotoFav:ADDFAV];
+            if (isFavority_) {
+                [self Unfavority];
+            }
+            else{
+                [self addVideotoFav:ADDFAV];
+            }
             break;
         }
         case 10003:{
@@ -1068,7 +1135,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
     if (imgUrl == nil) {
         imgUrl = [self.infoDic objectForKey:@"poster"];
     }
-    NSArray *infoArr = [NSArray arrayWithObjects:prodId,name,imgUrl,@"2",[NSString stringWithFormat:@"%d",num],nil];
+    NSArray *infoArr = [NSArray arrayWithObjects:prodId,name,imgUrl,@"2",[NSString stringWithFormat:@"%d",num],[self.infoDic objectForKey:@"sources"],nil];
     CheckDownloadUrls *check = [[CheckDownloadUrls alloc] init];
     check.downloadInfoArr = infoArr;
     check.oneEsp = [self checkDownloadUrls:[episodesArr_ objectAtIndex:num]];
@@ -1803,21 +1870,9 @@ NSComparator cmptr = ^(id obj1, id obj2){
         }
 
     }
-    
-    [pullToRefreshManager_ tableViewReleased];
-    
-    
 
 }
 
-
-
-- (void)MNMBottomPullToRefreshManagerClientReloadTable {
-    return;
-     [CommonMotheds showNetworkDisAbledAlert:self.view];
-    [self loadComments];
-    
-}
 
 #pragma mark -
 #pragma mark - FilmReviewViewCellDelegate

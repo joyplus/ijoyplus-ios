@@ -21,6 +21,9 @@
     int pageSize;
     BOOL _reloading;
     NSString *umengPageName;
+ @private
+    BOOL sortedByScore_;
+    
 }
 @property (nonatomic, strong) NSArray *hightLightCategoryArray;
 @property (nonatomic, strong) NSArray *regionCategoryArray;

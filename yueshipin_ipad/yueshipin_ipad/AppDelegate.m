@@ -28,7 +28,7 @@
 #import "IphoneAVPlayerViewController.h"
 #import "SystemMethods.h"
 #import "AFDownloadRequestOperation.h"
-
+#import "BPush.h"
 #define DAY(day)        (day * 3600 * 24)
 
 @interface AppDelegate ()
@@ -71,6 +71,7 @@
 @synthesize httpServer;
 @synthesize adViewController;
 @synthesize advUrl, advTargetUrl,bgTask;
+@synthesize curDownloadingTask;
 
 + (AppDelegate *) instance {
 	return (AppDelegate *) [[UIApplication sharedApplication] delegate];
@@ -157,9 +158,17 @@
     [WXApi registerApp:KWeChatAppID];
 }
 
+-(void)initBPush:(NSDictionary *)dictionary{
+    // 必须
+    [BPush setupChannel:dictionary];
+    // 必须。参数对象必须实现 onMethod: response:方法
+    [BPush setDelegate:self];
+
+}
 - (void)initDownloadManager
 {
     padDownloadManager = [[NewDownloadManager alloc]init];
+    curDownloadingTask = [[NSMutableArray alloc] init];
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -196,23 +205,39 @@
     
     NSString *hiddenAVS = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:HIDDEN_AMERICAN_VIDEOS];
     if (hiddenAVS == nil) {
-        [[ContainerUtility sharedInstance] setAttribute:AMERICANVIDEOS forKey:HIDDEN_AMERICAN_VIDEOS];
+        if ([CHANNEL_ID isEqualToString:@""]) {
+             [[ContainerUtility sharedInstance] setAttribute:AMERICANVIDEOS forKey:HIDDEN_AMERICAN_VIDEOS];
+        }
+        else{
+             [[ContainerUtility sharedInstance] setAttribute:@"0" forKey:HIDDEN_AMERICAN_VIDEOS];
+        }
+    
     }
+    
+    //消息推送
+    NSString *notificationSelected = (NSString *)[[ContainerUtility sharedInstance] attributeForKey:PUSH_NotificationSelected];
+    if (notificationSelected == nil) {
+         [[ContainerUtility sharedInstance] setAttribute:@"0" forKey:PUSH_NotificationSelected];
+    }
+    
     
     playWithDownload = [NSString stringWithFormat:@"%@", [[ContainerUtility sharedInstance] attributeForKey:SHOW_PLAY_INTRO_WITH_DOWNLOAD]];
     [ActionUtility generateUserId:nil];
     [self initSinaweibo];
     [self initWeChat];
+    [self initBPush:launchOptions];
     [self monitorReachability];
     [self isParseReachable];
+    [[BundingTVManager shareInstance] connecteServer];
+    
     [Parse setApplicationId:PARSE_APP_ID clientKey:PARSE_CLIENT_KEY];
-    [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert|UIRemoteNotificationTypeBadge|UIRemoteNotificationTypeSound];
-    if (application.applicationIconBadgeNumber != 0) {
-        application.applicationIconBadgeNumber = 0;
-        PFInstallation *installation = [PFInstallation currentInstallation];
-        [installation setBadge:0];
-        [installation saveInBackground];
-    }
+    //[application registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert|UIRemoteNotificationTypeBadge|UIRemoteNotificationTypeSound];
+//    if (application.applicationIconBadgeNumber != 0) {
+//        application.applicationIconBadgeNumber = 0;
+//        PFInstallation *installation = [PFInstallation currentInstallation];
+//        [installation setBadge:0];
+//        [installation saveInBackground];
+//    }
     self.closed = YES;
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
  
@@ -235,10 +260,11 @@
         self.downLoadManager = [DownLoadManager defaultDownLoadManager];
         [self.downLoadManager resumeDownLoad];
         self.window.rootViewController = tabBarView;
-        [[BundingTVManager shareInstance] connecteServer];
     }
-    
     [self.window makeKeyAndVisible];
+    
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:
+     (UIRemoteNotificationTypeAlert|UIRemoteNotificationTypeBadge|UIRemoteNotificationTypeSound)];
     
     AVAudioSession *audioSession = [AVAudioSession sharedInstance];
     NSError *setCategoryError = nil;
@@ -254,6 +280,13 @@
     }
     
     mediaVolumeValue = [MPMusicPlayerController applicationMusicPlayer].volume;
+    
+    NSDictionary *localNotif = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+    
+    if (localNotif)
+    {
+        [self showAPNSMessage:localNotif];
+    }    
     return YES;
 }
 
@@ -279,18 +312,22 @@
         [[ContainerUtility sharedInstance] setAttribute:appKey forKey:kIpadAppKey];
     }
     
-    NSString *hiddenAVS = [notification.userInfo objectForKey:HIDDEN_AMERICAN_VIDEOS];
-    if (hiddenAVS != nil && ![hiddenAVS isEqualToString:@"(null)"]) {
-         [[AFServiceAPIClient sharedClient] setDefaultHeader:@"EX_COPY_MOVIE" value:hiddenAVS];
-         [[ContainerUtility sharedInstance] setAttribute:hiddenAVS forKey:HIDDEN_AMERICAN_VIDEOS];
-    }
-    
     if ([CHANNEL_ID isEqualToString:@""]) {//参数self.showVideoSwitch只对app store生效
         self.recommendAppSwich = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:RECOMMEND_APP_SWITCH]];
         self.showVideoSwitch = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:SHOW_VIDEO_SWITCH]];
         self.closeVideoMode = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:CLOSE_VIDEO_MODE]];
+        
+        NSString *hiddenAVS = [notification.userInfo objectForKey:HIDDEN_AMERICAN_VIDEOS];
+        if (hiddenAVS != nil && ![hiddenAVS isEqualToString:@"(null)"]) {
+            if (ENVIRONMENT == 0) {
+                hiddenAVS = @"0";
+            }
+            [[AFServiceAPIClient sharedClient] setDefaultHeader:@"EX_COPY_MOVIE" value:hiddenAVS];
+            [[ContainerUtility sharedInstance] setAttribute:hiddenAVS forKey:HIDDEN_AMERICAN_VIDEOS];
+        }
     }
     self.advUrl = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:ADV_PAHT]];
+//    self.advUrl = @"http://g.hiphotos.baidu.com/album/w%3D230/sign=7f271f7883025aafd33279c8cbecab8d/060828381f30e92416adc5894d086e061d95f779.jpg";
     self.advTargetUrl = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:ADV_TARGET_PATH]];
     [self downloadAdvImage];
     
@@ -303,27 +340,42 @@
     if(self.recommendAppSwich == nil || [self.recommendAppSwich isEqualToString:@"(null)"]){
         self.recommendAppSwich = @"0";
     }
+ 
+     NSString *notifyS = [notification.userInfo objectForKey:NotificationSelectedValue];
+     [[ContainerUtility sharedInstance] setAttribute:notifyS forKey:PUSH_NotificationSelected];
+    
     NSString * pageNum = [notification.userInfo objectForKey:KWXCODENUM];
     [[ContainerUtility sharedInstance] setAttribute:pageNum forKey:KWXCODENUM];
     [[ContainerUtility sharedInstance] setAttribute:self.showVideoSwitch forKey:SHOW_VIDEO_SWITCH];
+    [[ContainerUtility sharedInstance] setAttribute:self.recommendAppSwich forKey:RECOMMEND_APP_SWITCH];
     [[NSNotificationCenter defaultCenter] postNotificationName:RELOAD_MENU_ITEM object:nil];
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
-    [currentInstallation setDeviceTokenFromData:deviceToken];
-    NSArray *channels = [NSArray arrayWithObjects:@"", @"CHANNEL_IOS", @"CHANNEL_IOS1", nil];
-    [currentInstallation addUniqueObjectsFromArray:channels forKey:@"channels"];
-    if (application.applicationIconBadgeNumber != 0) {
-        application.applicationIconBadgeNumber = 0;
-        [currentInstallation setBadge:0];
+    NSString *notificationSelected = (NSString *)[[ContainerUtility sharedInstance] attributeForKey:PUSH_NotificationSelected];
+    if ([notificationSelected isEqualToString:@"0"]) { //baidu
+        // 必须
+        [BPush registerDeviceToken:deviceToken];
+        // 必须。可以在其它时机调用,只有在该方法返回(通过 onMethod:response:回调)绑
+        //定成功时,app 才能接收到 Push 消息。一个 app 绑定成功至少一次即可(如果 access token 变更请重新绑定)。
+        [BPush bindChannel];
     }
-    [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        if (succeeded)
-            NSLog(@"Successfully subscribed to broadcast channel!");
-        else
-            NSLog(@"Failed to subscribe to broadcast channel; Error: %@",error);
-    }];
+    else if ([notificationSelected isEqualToString:@"1"]){  //parse
+        PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+        [currentInstallation setDeviceTokenFromData:deviceToken];
+        NSArray *channels = [NSArray arrayWithObjects:@"", @"CHANNEL_IOS", @"CHANNEL_IOS1", nil];
+        [currentInstallation addUniqueObjectsFromArray:channels forKey:@"channels"];
+        if (application.applicationIconBadgeNumber != 0) {
+            application.applicationIconBadgeNumber = 0;
+            [currentInstallation setBadge:0];
+        }
+        [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            if (succeeded)
+                NSLog(@"Successfully subscribed to broadcast channel!");
+            else
+                NSLog(@"Failed to subscribe to broadcast channel; Error: %@",error);
+        }];
+    }
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
@@ -336,15 +388,8 @@
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
-    self.alertUserInfo = userInfo;
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-        if ([AppDelegate instance].isInPlayView) {
-            return;
-        }
-    }
-    NSString *alert = [[userInfo objectForKey:@"aps"] objectForKey:@"alert"];
-    UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil message:alert delegate:self  cancelButtonTitle:@"不了" otherButtonTitles:@"看一下", nil];
-    [alertView show];
+    [self showAPNSMessage:userInfo];
+    [BPush handleNotification:userInfo];
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -417,12 +462,13 @@
 //         [UIUtility showNetWorkError:rootView];
 //    };
     
-    if (application.applicationIconBadgeNumber != 0) {
-        application.applicationIconBadgeNumber = 0;
-        PFInstallation *installation = [PFInstallation currentInstallation];
-        [installation setBadge:0];
-        [installation saveInBackground];
-    }
+//    if (application.applicationIconBadgeNumber != 0) {
+//        application.applicationIconBadgeNumber = 0;
+//        PFInstallation *installation = [PFInstallation currentInstallation];
+//        [installation setBadge:0];
+//        [installation saveInBackground];
+//    }
+   
     [self.sinaweibo applicationDidBecomeActive];
     [self performSelector:@selector(triggerDownload) withObject:self afterDelay:5];
     
@@ -630,8 +676,23 @@
 -(void) onResp:(BaseResp*)resp{
     if (resp.errCode == 0) {
          [[NSNotificationCenter defaultCenter] postNotificationName:@"wechat_share_success" object:nil];
+         [[NSNotificationCenter defaultCenter] postNotificationName:@"WXShare" object:nil];
     }
+    
 
+}
+
+- (void)showAPNSMessage:(NSDictionary *)dic
+{
+    self.alertUserInfo = dic;
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+        if ([AppDelegate instance].isInPlayView) {
+            return;
+        }
+    }
+    NSString *alert = [[dic objectForKey:@"aps"] objectForKey:@"alert"];
+    UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil message:alert delegate:self  cancelButtonTitle:@"不了" otherButtonTitles:@"看一下", nil];
+    [alertView show];
 }
 
 #pragma mark -
@@ -840,6 +901,20 @@
     }
 }
 
+#pragma mark - BPushDelegate
+- (void) onMethod:(NSString*)method response:(NSDictionary*)data {
+    if ([BPushRequestMethod_Bind isEqualToString:method]) {
+        NSDictionary* res = [[NSDictionary alloc] initWithDictionary:data];
+//        NSString *appid = [res valueForKey:BPushRequestAppIdKey];
+//        NSString *userid = [res valueForKey:BPushRequestUserIdKey];
+//        NSString *channelid = [res valueForKey:BPushRequestChannelIdKey];
+//        int returnCode = [[res valueForKey:BPushRequestErrorCodeKey] intValue];
+//        NSString *requestid = [res valueForKey:BPushRequestRequestIdKey];
+        NSLog(@"绑定百度消息推送返回信息：%@",res);
+    }
+}
+
+
 #pragma mark - RespForWXRootViewControllerDelegate
 - (void)removeRespForWXRootView
 {
@@ -909,7 +984,7 @@
     [downloadingOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSLog(@"Successfully downloaded file to %@", filePath);
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"Error: %@", error);
+        NSLog(@"Download Ad Error: %@", error);
         self.advUrl = nil;
         [operation cancel];
     }];

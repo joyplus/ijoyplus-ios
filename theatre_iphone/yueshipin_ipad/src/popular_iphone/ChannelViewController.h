@@ -17,6 +17,8 @@
     int typeSelectIndex_;
     int videoType_;
     BOOL isLoading_;
+    UIButton *moreButton_;
+    BOOL sortedByScore_; 
 }
 @property(nonatomic, strong)UIButton *titleButton;
 @property(nonatomic, strong)SegmentControlView *segV;
@@ -27,4 +29,5 @@
 @property(nonatomic, strong)NSMutableDictionary *parameters;
 @property (strong, nonatomic) MBProgressHUD *progressHUD;
 @property (strong, nonatomic) PullRefreshManagerClinet *pullRefreshManager;
+-(void)reFreshViewController;
 @end

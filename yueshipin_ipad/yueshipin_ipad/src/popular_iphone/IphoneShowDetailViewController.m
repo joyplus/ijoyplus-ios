@@ -82,7 +82,8 @@
     commentArray_ = [NSMutableArray arrayWithCapacity:10];
     [self loadData];
     [self loadComments];
-
+    [self isFavority];
+    
     favCount_ = [[self.infoDic objectForKey:@"favority_num" ] intValue];
     supportCount_ = [[self.infoDic objectForKey:@"support_num" ] intValue];
     
@@ -107,7 +108,9 @@
     [moreBtn_ setBackgroundImage:[UIImage imageNamed:@"more_off"] forState:UIControlStateSelected];
     [moreBtn_ addTarget:self action:@selector(more:) forControlEvents:UIControlEventTouchUpInside];
     
-    pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:self.tableView withClient:self];
+    pullToRefreshManager_ = [[PullRefreshManagerClinet alloc] initWithTableView:self.tableView];
+    pullToRefreshManager_.delegate = self;
+    [pullToRefreshManager_ setShowHeaderView:NO];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -204,8 +207,12 @@
                 [commentArray_ addObjectsFromArray:comments];
                 
             }
+            if ([comments count] < 10) {
+                pullToRefreshManager_.canLoadMore = NO;
+            }
             else{
-              [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
+            
+                pullToRefreshManager_.canLoadMore = YES;
             }
         }
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
@@ -214,9 +221,33 @@
     }];
     
 }
+-(void)isFavority{
+    NSString *itemId = [self.infoDic objectForKey:@"prod_id"];
+    if (itemId == nil) {
+        itemId = [self.infoDic objectForKey:@"content_id"];
+    }
+    if (itemId == nil) {
+        itemId = [self.infoDic objectForKey:@"id"];
+    }
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: itemId, @"prod_id", nil];
+    [[AFServiceAPIClient sharedClient] postPath:KPathProgramIsfavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        int responseCode = [[result objectForKey:@"flag"] intValue];
+        if(responseCode == 1){
+            isFavority_ = YES;
+        }
+        else{
+            isFavority_ = NO;
+        }
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
+    }];
+    
+}
+
 - (void)loadTable {
     [self.tableView reloadData];
-    [pullToRefreshManager_ tableViewReloadFinished];
+    [pullToRefreshManager_ loadMoreCompleted];
 }
 
 - (void)viewDidUnload{
@@ -368,7 +399,13 @@
                 addFav.tag = 10002;
                 [addFav setImage:[UIImage imageNamed:@"icon_shoucang.png"] forState:UIControlStateNormal];
                 [addFav setImage:[UIImage imageNamed:@"icon_shoucang_s.png"] forState:UIControlStateHighlighted];
-                
+                [addFav setImage:[UIImage imageNamed:@"icon_shoucang1"] forState:UIControlStateSelected];
+                if (isFavority_) {
+                    addFav.selected = YES;
+                }
+                else{
+                    addFav.selected = NO;
+                }
                 if (favCount_ <1000) {
                     [addFav setTitle:[NSString stringWithFormat:@"(%d)",favCount_]  forState:UIControlStateNormal];
                 }
@@ -425,7 +462,7 @@
                 downLoad.titleLabel.font = [UIFont systemFontOfSize:14];
                 
                 if (isloaded_) {
-                    if ([CommonMotheds getOnlineConfigValue] != 2){
+                    if ([CommonMotheds getOnlineConfigValue] == 0){
                         [cell addSubview:downLoad];
                     }
                 }
@@ -585,22 +622,39 @@
             break;
         }
         case 10002:{
-            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: prodId_, @"prod_id", nil];
-            [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-                NSString *responseCode = [result objectForKey:@"res_code"];
-                if([responseCode isEqualToString:kSuccessResCode]){
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"REFRESH_FAV"object:nil];
-                    favCount_++;
-                     [self showOpSuccessModalView:1 with:DING];
-                    [self.tableView reloadData];
-                } else {
-                    [self showOpFailureModalView:1 with:DING];
-                }
-                
-            } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-                   [self showOpFailureModalView:1 with:DING];
-            }];
-            
+            if (isFavority_) {
+                NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: prodId_, @"prod_id", nil];
+                [[AFServiceAPIClient sharedClient] postPath:kPathProgramUnfavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+                    NSString *responseCode = [result objectForKey:@"res_code"];
+                    if([responseCode isEqualToString:kSuccessResCode]){
+                        isFavority_ = NO;
+                        favCount_--;
+                        [self.tableView reloadData];
+                        [self showOpSuccessModalView:1.5 with:5];
+                    }
+                } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+                    
+                }];
+            }
+            else{
+                NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: prodId_, @"prod_id", nil];
+                [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+                    NSString *responseCode = [result objectForKey:@"res_code"];
+                    if([responseCode isEqualToString:kSuccessResCode]){
+                        [[NSNotificationCenter defaultCenter] postNotificationName:@"REFRESH_FAV"object:nil];
+                        isFavority_ = YES;
+                        favCount_++;
+                        [self showOpSuccessModalView:1 with:2];
+                        [self.tableView reloadData];
+                    }
+//                    else {
+//                        [self showOpFailureModalView:1 with:2];
+//                    }
+//                    
+                } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+                    [self showOpFailureModalView:1 with:2];
+                }];
+            }
             
             break;
         }
@@ -962,18 +1016,22 @@
     //name_ = ((UIButton *)sender).titleLabel.text;
     [self playVideo:playNum-1];
 }
+-(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
+
+    [pullToRefreshManager_ scrollViewBegin];
+}
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     
-    
+    [pullToRefreshManager_ scrollViewScrolled:scrollView];
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
     
-    [pullToRefreshManager_ tableViewReleased];
+    [pullToRefreshManager_ scrollViewEnd:scrollView];
 }
 
-- (void)MNMBottomPullToRefreshManagerClientReloadTable {
+- (void)pulltoLoadMore{
     [CommonMotheds showNetworkDisAbledAlert:self.view];
     [self loadComments];
     

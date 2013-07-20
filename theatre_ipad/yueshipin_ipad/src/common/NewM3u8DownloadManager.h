@@ -14,6 +14,7 @@
 @property (nonatomic, strong)NSOperationQueue *queue;
 @property (nonatomic, weak)id<DownloadingDelegate>delegate;
 @property (nonatomic, weak)id<SubdownloadingDelegate>subdelegate;
+@property (nonatomic, strong)DownloadItem *downloadingItem;
 - (void)startDownloadingThreads:(DownloadItem *)item;
 - (void)stopDownloading;
 

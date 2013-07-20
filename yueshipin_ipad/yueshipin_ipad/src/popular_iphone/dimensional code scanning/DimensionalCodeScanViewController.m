@@ -50,7 +50,7 @@
                                              selector:@selector(appDidBecomeActive)
                                                  name:UIApplicationDidBecomeActiveNotification
                                                object:nil];
-    
+   
     self.title = @"扫一扫";
     
     UIButton *leftButton = [UIButton buttonWithType:UIButtonTypeCustom];

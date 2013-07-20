@@ -253,7 +253,7 @@
     MBProgressHUD  *tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
     [self.view addSubview:tempHUD];
     tempHUD.labelText = @"加载中...";
-    tempHUD.opacity = 0.5;
+    tempHUD.opacity = 0.7;
     [tempHUD show:YES];
     NSString *searchKey = [searchStr stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     currentSearchKey_ = searchKey;
@@ -268,7 +268,9 @@
                 [searchResults_ addObjectsFromArray:searchResult];
             }
             else{
-                [self showFailureView:1];
+                if ([searchResult count] == 0) {
+                    [self loadRecommendVideos];
+                }
                 
             }
             if ([searchResult count]< PAGESIZE){
@@ -290,6 +292,65 @@
     
 }
 
+-(void)loadRecommendVideos{
+    if (searchResults_ != nil) {
+        [searchResults_ removeAllObjects];
+    }
+    else{
+        searchResults_ = [[NSMutableArray alloc]initWithCapacity:10];
+    }
+    [self showNoFindView];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:PAGESIZE], @"page_size", nil];
+    [[AFServiceAPIClient sharedClient] getPath:kPathMoiveTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSArray *tops = [result objectForKey:@"tops"];
+        if ([tops count]>0) {
+            NSDictionary *oneWeekTops = [tops objectAtIndex:0];
+            [searchResults_ addObjectsFromArray:[oneWeekTops objectForKey:@"items"]];
+        }
+        [searchResultList_  reloadData];
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+    }];
+    
+    
+}
+
+-(void)showNoFindView{
+    UIView *view = [self.view viewWithTag:123456];
+    if (view == nil) {
+        UIView *bg = [[UIView alloc] initWithFrame:CGRectMake(0, 41, 320, 75)];
+        bg.tag = 123456;
+        bg.backgroundColor = [UIColor blackColor];
+        bg.alpha = 0.7;
+        UILabel *labelOne = [[UILabel alloc] initWithFrame:CGRectMake(0, 10, 320, 30)];
+        labelOne.textAlignment = NSTextAlignmentCenter;
+        labelOne.text = @"抱歉，未找到相关影片";
+        labelOne.textColor = [UIColor whiteColor];
+        labelOne.backgroundColor = [UIColor clearColor];
+        labelOne.font = [UIFont boldSystemFontOfSize:18];
+        [bg addSubview:labelOne];
+        
+        UILabel *labelTwo = [[UILabel alloc] initWithFrame:CGRectMake(0, 40, 320, 20)];
+        labelTwo.textAlignment = NSTextAlignmentCenter;
+        labelTwo.text = @"您可以观看我们为您推荐的影片";
+        labelTwo.textColor = [UIColor whiteColor];
+        labelTwo.backgroundColor = [UIColor clearColor];
+        labelTwo.font = [UIFont systemFontOfSize:12];
+        [bg addSubview:labelTwo];
+        [self.view addSubview:bg];
+    }
+    
+    searchResultList_.frame = CGRectMake(0, searchResultList_.frame.origin.y+75, 320, searchResultList_.frame.size.height-75);
+    
+}
+-(void)removeNoFindView{
+    UIView *view = [self.view viewWithTag:123456];
+    if (view) {
+        [view removeFromSuperview];
+    }
+    searchResultList_.frame = CGRectMake(0, 41, self.view.bounds.size.width, kCurrentWindowHeight -85);
+}
+
+
 -(void)loadMore{
 
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:currentSearchKey_, @"keyword", [NSString stringWithFormat:@"%d",loadCount_], @"page_num", [NSNumber numberWithInt:PAGESIZE], @"page_size", @"1,2,3,131", @"type", nil];
@@ -310,7 +371,7 @@
         [searchResultList_ reloadData];
         [pullRefreshManager_ loadMoreCompleted];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-       
+       [pullRefreshManager_ loadMoreCompleted];
     }];
 
 
@@ -368,6 +429,7 @@
     [searchResultList_ removeFromSuperview ];
     [self hiddeViews];
     [self removeOverlay];
+    [self removeNoFindView];
     //searchBar_.text = nil;
     [searchBar setShowsCancelButton:YES animated:YES];
     for (id view in searchBar.subviews) {
@@ -405,6 +467,7 @@
         searchBar_.text = nil;
     }
     [self removeOverlay];
+    [self removeNoFindView];
     [tableList_ removeFromSuperview];
     
 }
@@ -474,7 +537,11 @@
         }
         NSDictionary *item = [searchResults_ objectAtIndex:indexPath.row];
         cell.label.text = [item objectForKey:@"prod_name"];
-        cell.actors.text = [NSString stringWithFormat:@"主演：%@",[item objectForKey:@"star"]];
+        NSString *stars = [item objectForKey:@"star"];
+        if (stars == nil) {
+            stars = [item objectForKey:@"stars"];
+        }
+        cell.actors.text = [NSString stringWithFormat:@"主演：%@",stars];
         cell.area.text = [NSString stringWithFormat:@"地区：%@",[item objectForKey:@"area"]];
         [cell.imageview setImageWithURL:[NSURL URLWithString:[item objectForKey:@"prod_pic_url"]] /*placeholderImage:[UIImage imageNamed:@"video_placeholder"]*/];
     

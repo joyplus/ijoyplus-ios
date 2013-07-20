@@ -33,6 +33,7 @@
 @property (strong, nonatomic) NSString *closeVideoMode;   // 0:关闭视频和网页  1:只关闭视频，不关闭网页
 @property (strong, nonatomic) NSString *recommendAppSwich;// 0:显示推荐应用    1:隐藏推荐应用
 @property (assign, atomic) int currentDownloadingNum;
+@property (nonatomic, strong) NSMutableArray * curDownloadingTask;
 
 @property (strong, nonatomic) NSDictionary * alertUserInfo;
 @property (nonatomic) float mediaVolumeValue;

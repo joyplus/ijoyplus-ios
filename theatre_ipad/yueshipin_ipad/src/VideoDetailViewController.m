@@ -28,6 +28,7 @@
 @synthesize subname;
 @synthesize mp4DownloadUrls;
 @synthesize m3u8DownloadUrls;
+@synthesize downloadUrls;
 @synthesize downloadSource;
 @synthesize canPlayVideo;
 
@@ -49,11 +50,11 @@
     self.bgImage.image = [UIImage imageNamed:@"left_background@2x.jpg"];
     self.bgImage.layer.zPosition = -1;
     [self.view addSubview:self.bgImage];
-
+    
     [self setCloseTipsViewHidden:NO];
     mp4DownloadUrls = [[NSMutableArray alloc]initWithCapacity:5];
     m3u8DownloadUrls = [[NSMutableArray alloc]initWithCapacity:5];
-    
+    downloadUrls = [[NSMutableArray alloc]initWithCapacity:5];
 }
 
 - (void)didReceiveMemoryWarning
@@ -77,6 +78,8 @@
     mp4DownloadUrls = nil;
     [m3u8DownloadUrls removeAllObjects];
     m3u8DownloadUrls = nil;
+    [downloadUrls removeAllObjects];
+    downloadUrls = nil;
     episodeArray = nil;
     umengPageName = nil;
 }
@@ -166,10 +169,10 @@
                 return dic;
             }
         }
-//        if ([[playInfo objectForKey:@"id"] isEqualToString:Id])
-//        {
-//            return [playlists objectAtIndex:0];
-//        }
+        //        if ([[playInfo objectForKey:@"id"] isEqualToString:Id])
+        //        {
+        //            return [playlists objectAtIndex:0];
+        //        }
     }
     return nil;
 }
@@ -179,15 +182,21 @@
     NSMutableArray * urls = [NSMutableArray array];
     for (NSString * url in wangpanHTML)
     {
-        NSString *downloadURL = [CommonMotheds getDownloadURLWithHTML:url];
-        if (nil != downloadURL)
+        NSArray * array = [url componentsSeparatedByString:@"|"];
+        NSString * tureURL = nil;
+        if (array.count == 2)
         {
-            [urls addObject:downloadURL];
+            tureURL = [array objectAtIndex:0];
+            
+            NSString *downloadURL = [CommonMotheds getDownloadURLWithHTML:tureURL];
+            if (nil != downloadURL)
+            {
+                [urls addObject:[NSString stringWithFormat:@"%@|%@",downloadURL,[array objectAtIndex:1]]];
+            }
         }
     }
     return urls;
 }
-
 
 #pragma mark - SinaWeibo Delegate
 
@@ -254,7 +263,7 @@
                 [[CacheUtility sharedCache] removeObjectForKey:WATCH_RECORD_CACHE_KEY];
                 [[CacheUtility sharedCache] removeObjectForKey:@"my_support_list"];
                 [[CacheUtility sharedCache] removeObjectForKey:@"my_collection_list"];
-//                [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
+                //                [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
                 [[NSNotificationCenter defaultCenter] postNotificationName:WATCH_HISTORY_REFRESH object:nil];
             } else {
                 NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [userInfo objectForKey:@"idstr"], @"source_id", @"1", @"source_type", avatarUrl, @"pic_url", username, @"nickname", nil];
@@ -363,11 +372,22 @@
 {
     fromViewController.moveToLeft = YES;
     if (fromViewController == nil) {
-         [[AppDelegate instance].rootViewController.stackScrollViewController removeViewInSlider];
+        [[AppDelegate instance].rootViewController.stackScrollViewController removeViewInSlider];
     } else {
         [[AppDelegate instance].rootViewController.stackScrollViewController removeViewToViewInSlider:fromViewController.class];
     }
 }
+
+NSComparator sortString = ^(id obj1, id obj2){
+    if ([obj1 floatValue] > [obj2 floatValue]) {
+        return (NSComparisonResult)NSOrderedDescending;
+    }
+    
+    if ([obj1 floatValue] < [obj2 floatValue]) {
+        return (NSComparisonResult)NSOrderedAscending;
+    }
+    return (NSComparisonResult)NSOrderedSame;
+};
 
 - (void)getDownloadUrls:(int)num
 {
@@ -376,24 +396,89 @@
     }
     [mp4DownloadUrls removeAllObjects];
     [m3u8DownloadUrls removeAllObjects];
+    [downloadUrls removeAllObjects];
     
+    NSMutableArray * allUrls_ = [NSMutableArray array];
     NSArray *videoUrlArray = [[episodeArray objectAtIndex:num] objectForKey:@"down_urls"];
-    if(videoUrlArray.count > 0)
-    {
-        for(NSDictionary *tempVideo in videoUrlArray)
-        {
-            self.downloadSource = [tempVideo objectForKey:@"source"];
-            NSArray *urlArray =  [tempVideo objectForKey:@"urls"];
-            for(NSDictionary *url in urlArray)
-            {
-                if([@"mp4" isEqualToString:[url objectForKey:@"file"]]){
-                    NSString *videoUrl = [url objectForKey:@"url"];
-                    [mp4DownloadUrls addObject:videoUrl];
-                } else if([@"m3u8" isEqualToString:[url objectForKey:@"file"]]){
-                    NSString *videoUrl = [url objectForKey:@"url"];
-                    [m3u8DownloadUrls addObject:videoUrl];
-                }
+    
+    for (NSDictionary *dic in videoUrlArray) {
+        NSArray *oneSourceArr = [dic objectForKey:@"urls"];
+        NSString *source = [dic objectForKey:@"source"];
+        self.downloadSource = source;
+        for (NSDictionary *oneUrlInfo in oneSourceArr) {
+            
+            NSString * str = [oneUrlInfo objectForKey:@"url"];
+            NSString *tempUrl = str;
+            if([str rangeOfString:@"{now_date}"].location != NSNotFound){
+                int nowDate = [[NSDate date] timeIntervalSince1970];
+                tempUrl = [str stringByReplacingOccurrencesOfString:@"{now_date}" withString:[NSString stringWithFormat:@"%i", nowDate]];
             }
+            NSString *filetype = [oneUrlInfo objectForKey:@"file"];
+            NSDictionary *myDic = [NSDictionary dictionaryWithObjectsAndKeys:tempUrl,@"url",filetype,@"type",source,@"source", nil];
+            
+            [allUrls_ addObject:myDic];
+        }
+    }
+    
+    NSMutableArray *tempSortArr = [NSMutableArray arrayWithCapacity:5];
+    for (NSDictionary *dic in allUrls_)
+    {
+        NSMutableDictionary *temp_dic = [NSMutableDictionary dictionaryWithDictionary:dic];
+        NSString *source_str = [temp_dic objectForKey:@"source"];
+        
+        if ([source_str isEqualToString:@"wangpan"]) {
+            [temp_dic setObject:@"0.1" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"le_tv_fee"]) {
+            [temp_dic setObject:@"0.2" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"letv"]) {
+            [temp_dic setObject:@"1" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"fengxing"]){
+            [temp_dic setObject:@"2" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"qiyi"]){
+            [temp_dic setObject:@"3" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"youku"]){
+            [temp_dic setObject:@"4" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"sinahd"]){
+            [temp_dic setObject:@"5" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"sohu"]){
+            [temp_dic setObject:@"6" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"56"]){
+            [temp_dic setObject:@"7" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"qq"]){
+            [temp_dic setObject:@"8" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"pptv"]){
+            [temp_dic setObject:@"9" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"pps"]){
+            [temp_dic setObject:@"10" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"m1905"]){
+            [temp_dic setObject:@"11" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"baidu_wangpan"]){
+            [temp_dic setObject:@"12" forKey:@"level"];
+        }
+        [tempSortArr addObject:temp_dic];
+    }
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"level" ascending:YES comparator:sortString];
+    allUrls_ = [NSMutableArray arrayWithArray:[tempSortArr sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]]];
+    
+    if(allUrls_.count > 0)
+    {
+        for(NSDictionary *tempVideo in allUrls_)
+        {
+            NSString * videoInfo = [NSString stringWithFormat:@"%@|%@",[tempVideo objectForKey:@"url"],[tempVideo objectForKey:@"type"]];
+            [downloadUrls addObject:videoInfo];
         }
     }
 }
@@ -416,6 +501,7 @@
                                                           delegate:self
                                                  cancelButtonTitle:@"取消"
                                                  otherButtonTitles:@"确定", nil];
+        alertView.tag = 8888;
         [alertView show];
     } else {
         [self willPlayVideo:num];
@@ -424,9 +510,38 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if(buttonIndex == 1){
-        [self willPlayVideo:willPlayIndex];
+    if (alertView.tag == 8888) {
+        if(buttonIndex == 1){
+            [self willPlayVideo:willPlayIndex];
+        }
     }
+    else{
+        NSMutableArray *httpUrlArray = [[NSMutableArray alloc]initWithCapacity:5];
+        for (int i = 0; i < episodeArray.count; i++) {
+            NSArray *videoUrls = [[episodeArray objectAtIndex:i] objectForKey:@"video_urls"];
+            BOOL found = NO;
+            for (NSDictionary *videoUrl in videoUrls) {
+                NSString *url = [NSString stringWithFormat:@"%@", [videoUrl objectForKey:@"url"]];
+                if([self validadUrl:url]){
+                    NSString *httpUrl = [url stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+                    [httpUrlArray addObject:httpUrl];
+                    found = YES;
+                    break;
+                }
+            }
+            if (!found) {
+                [httpUrlArray addObject:@""];
+            }
+        }
+        if (buttonIndex == 0) {
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[httpUrlArray objectAtIndex:0]]];
+        }
+        else if(buttonIndex == 1){
+            [self beginPlayVideo:playNum withArray:httpUrlArray];
+        }
+        
+    }
+    
 }
 
 - (void)willPlayVideo:(int)num
@@ -434,6 +549,23 @@
     if(num < 0 || num >= episodeArray.count){
         return;
     }
+    
+    NSArray *downUrls = [[episodeArray objectAtIndex:num] objectForKey:@"down_urls"];
+    for (NSDictionary *downUrl in downUrls)
+    {
+        NSArray *urls = [downUrl objectForKey:@"urls"];
+        for (NSDictionary *url in urls)
+        {
+            NSString *realurl = [url objectForKey:@"url"];
+            NSString *trimUrl = [realurl stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+            if (trimUrl && trimUrl.length > 0)
+            {
+                hasVideoUrl_ = YES;
+            }
+        }
+    }
+
+    playNum = num;
     [self recordPlayStatics];
     // 网页地址
     NSMutableArray *httpUrlArray = [[NSMutableArray alloc]initWithCapacity:5];
@@ -460,67 +592,80 @@
         } else {
             [UIUtility showPlayVideoFailure:self.view];
         }
+        return;
     }
-    else
-    {
-        NSDictionary * info = [self downloadedItem:self.prodId index:num];
-        if (nil != info)
-        {
-            AVPlayerViewController *viewController = [[AVPlayerViewController alloc]init];
-            viewController.videoFormat = [info objectForKey:@"downloadType"];
-            viewController.isDownloaded = YES;
-            viewController.m3u8Duration = [[info objectForKey:@"duration"] intValue];
-            viewController.closeAll = YES;
-            viewController.videoUrl = [info objectForKey:@"videoUrl"];
-            viewController.type = type;
-            viewController.name = [video objectForKey:@"name"];
-            if (type == SHOW_TYPE)
-            {
-                viewController.subname = [info objectForKey:@"name"];
-            } else {
-                viewController.subname = [info objectForKey:@"subItemId"];
-            }
-            viewController.currentNum = num;
-            viewController.prodId = self.prodId;
-            viewController.video = video;
-            viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, 768);
-            [[UIApplication sharedApplication] setStatusBarHidden:YES];
-            [[AppDelegate instance].rootViewController pesentMyModalView:viewController];
-            return;
-        }
+    else if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"3"]){
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"将使用何种方式来播放？" delegate:self cancelButtonTitle:@"Safari" otherButtonTitles:@"内置浏览器", nil];
+        alert.tag = 9999;
+        [alert show];
+        return;
         
-        BOOL hasVideoUrls = NO;
-        for (int i = 0; i < episodeArray.count; i++) {
-            NSArray *videoUrlArray = [[episodeArray objectAtIndex:num] objectForKey:@"down_urls"];
-            if(videoUrlArray.count > 0){
-                for(NSDictionary *tempVideo in videoUrlArray){
-                    hasVideoUrls = YES;
-                    break;
-                }
-            }
-            if (hasVideoUrls) {
+    }
+    
+    [self beginPlayVideo:num withArray:httpUrlArray];
+    
+}
+
+-(void)beginPlayVideo:(int)num  withArray:(NSMutableArray *)httpUrlArray{
+    
+    NSDictionary * info = [self downloadedItem:self.prodId index:num];
+    if (nil != info)
+    {
+        AVPlayerViewController *viewController = [[AVPlayerViewController alloc]init];
+        viewController.videoFormat = [info objectForKey:@"downloadType"];
+        viewController.isDownloaded = YES;
+        viewController.m3u8Duration = [[info objectForKey:@"duration"] intValue];
+        viewController.closeAll = YES;
+        viewController.videoUrl = [info objectForKey:@"videoUrl"];
+        viewController.type = type;
+        viewController.name = [video objectForKey:@"name"];//[info objectForKey:@"name"];
+        if (type == SHOW_TYPE)
+        {
+            viewController.subname = [info objectForKey:@"name"];
+        } else {
+            viewController.subname = [info objectForKey:@"subItemId"];
+        }
+        viewController.currentNum = num;
+        viewController.prodId = self.prodId;
+        viewController.video = video;
+        viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, 768);
+        [[UIApplication sharedApplication] setStatusBarHidden:YES];
+        [[AppDelegate instance].rootViewController pesentMyModalView:viewController];
+        return;
+    }
+    
+    BOOL hasVideoUrls = NO;
+    for (int i = 0; i < episodeArray.count; i++) {
+        NSArray *videoUrlArray = [[episodeArray objectAtIndex:num] objectForKey:@"down_urls"];
+        if(videoUrlArray.count > 0){
+            for(NSDictionary *tempVideo in videoUrlArray){
+                hasVideoUrls = YES;
                 break;
             }
         }
-        
-        AvVideoWebViewController *webViewController = [[AvVideoWebViewController alloc] init];
-        webViewController.videoHttpUrlArray = httpUrlArray;
-        webViewController.prodId = self.prodId;
-        webViewController.hasVideoUrls = hasVideoUrls;
-        webViewController.type = type;
-        webViewController.currentNum = num;
-        webViewController.dramaDetailViewControllerDelegate = self;
-        webViewController.video = video;
-        webViewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-        [[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:webViewController]];
+        if (hasVideoUrls) {
+            break;
+        }
     }
+    
+    AvVideoWebViewController *webViewController = [[AvVideoWebViewController alloc] init];
+    webViewController.videoHttpUrlArray = httpUrlArray;
+    webViewController.prodId = self.prodId;
+    webViewController.hasVideoUrls = hasVideoUrls;
+    webViewController.type = type;
+    webViewController.currentNum = num;
+    webViewController.dramaDetailViewControllerDelegate = self;
+    webViewController.video = video;
+    webViewController.hasVideoUrl = hasVideoUrl_;
+    webViewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+    [[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:webViewController]];
+    
 }
-
 - (void)recordPlayStatics
 {
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.prodId, @"prod_id", [video objectForKey:@"name"], @"prod_name", subname, @"prod_subname", [NSNumber numberWithInt:type], @"prod_type", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathRecordPlay parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-    
+        
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         
     }];
@@ -547,8 +692,9 @@
     viewController.titleContent = [commentItem objectForKey:@"title"];
     viewController.content = [commentItem objectForKey:@"comments"];
     viewController.parentDelegateController = self;
-    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES moveToLeft:YES];
-    self.moveToLeft = NO;
+    viewController.preViewController = self;
+    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES moveToLeft:self.moveToLeft];
+    //self.moveToLeft = NO;
 }
 
 - (void)hideCloseBtn

@@ -32,6 +32,7 @@
 @synthesize subnameArray;
 @synthesize isPlayFromRecord = isPlayFromRecord_;
 @synthesize continuePlayInfo = continuePlayInfo_;
+@synthesize hasVideoUrl = hasVideoUrl_;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -71,11 +72,11 @@
         
         
         [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(initWebView)
+                                                 selector:@selector(initWebView:)
                                                      name:@"addWebView"
                                                    object:nil];
-    } else if([[AppDelegate instance].showVideoSwitch isEqualToString:@"1"]) {
-        [self initWebView];
+    } else if([[AppDelegate instance].showVideoSwitch isEqualToString:@"1"]||[[AppDelegate instance].showVideoSwitch isEqualToString:@"3"]) {
+        [self initWebView:nil];
     }
     
 }
@@ -94,12 +95,29 @@
 }
 
 
--(void)initWebView{
+-(void)initWebView:(NSNotification *)notfication{
     CGRect bounds = [UIScreen mainScreen].bounds;
-    webView_ = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, bounds.size.height, bounds.size.width-54)];
+    webView_ = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, bounds.size.height, bounds.size.width-32)];
     webView_.scalesPageToFit = YES;
     webView_.delegate = self;
-    [webView_ loadRequest:[NSURLRequest requestWithURL:webUrl_]];
+    if (notfication) {
+        NSDictionary *userInfo = notfication.userInfo;
+        BOOL fromBaidu = ((NSNumber *)[userInfo objectForKey:@"fromBaidu"]).boolValue;
+        if (fromBaidu) {
+            NSString *boundle = [[NSBundle mainBundle] resourcePath];
+            webView_.scrollView.scrollEnabled = NO;
+            webView_.backgroundColor = [UIColor colorWithRed:218/255.0 green:218/255.0 blue:218/255.0 alpha:1];
+            if ([CommonMotheds isIphone5]) {
+                [webView_ loadHTMLString:[NSString stringWithFormat:@"<body bgcolor='#dadada'><img src='404iphone5.jpg'/></body>"] baseURL:[NSURL fileURLWithPath:boundle]];
+            } else {
+                [webView_ loadHTMLString:[NSString stringWithFormat:@"<body bgcolor='#dadada'><img src='404iphone4.jpg'/></body>"] baseURL:[NSURL fileURLWithPath:boundle]];
+            }
+        } else {
+            [webView_ loadRequest:[NSURLRequest requestWithURL:webUrl_]];
+        }
+    } else {
+        [webView_ loadRequest:[NSURLRequest requestWithURL:webUrl_]];
+    }
     [self.view addSubview:webView_];
 }
 
@@ -174,7 +192,11 @@
     if (videoType_ != 1 && playNum < subnameArray.count) {
         subname = [subnameArray objectAtIndex:playNum];
     }
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: userId, @"userid", prodId_, @"prod_id", nameStr_, @"prod_name", subname, @"prod_subname", [NSNumber numberWithInt:videoType_], @"prod_type", tempPlayType, @"play_type", [NSNumber numberWithInt:0], @"playback_time", [NSNumber numberWithInt:0], @"duration", webUrl_, @"video_url", nil];
+    NSNumber *duration = [NSNumber numberWithInt:0];
+    if (!hasVideoUrl_) {
+        duration = [NSNumber numberWithInt:-2];
+    }
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: userId, @"userid", prodId_, @"prod_id", nameStr_, @"prod_name", subname, @"prod_subname", [NSNumber numberWithInt:videoType_], @"prod_type", tempPlayType, @"play_type",[NSNumber numberWithInt:0], @"playback_time",duration , @"duration", webUrl_, @"video_url", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathAddPlayHistory parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         [[NSNotificationCenter defaultCenter] postNotificationName:WATCH_HISTORY_REFRESH object:nil];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {

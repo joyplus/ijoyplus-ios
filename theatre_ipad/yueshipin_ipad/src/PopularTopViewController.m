@@ -281,8 +281,14 @@ void transferDataFromOldDbWithCatch()
     [tvTopsArray removeAllObjects];
     NSString *responseCode = [result objectForKey:@"res_code"];
     if(responseCode == nil){
-        NSArray *tempTopsArray = [result objectForKey:@"tops"];
+       // NSArray *tempTopsArray = [result objectForKey:@"tops"];
+        NSMutableArray *tempTopsArray = [NSMutableArray arrayWithArray:[result objectForKey:@"tops"]];
+       
         if(tempTopsArray.count > 0){
+            NSString *HiddenAVS = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:HIDDEN_AMERICAN_VIDEOS];
+            if ([HiddenAVS isEqualToString:@"1"]){
+                [tempTopsArray removeObjectAtIndex:0];
+            }
             [[CacheUtility sharedCache] putInCache:@"tv_top_list" result:result];
             [tvTopsArray addObjectsFromArray:tempTopsArray];
         }
@@ -496,6 +502,7 @@ void transferDataFromOldDbWithCatch()
             }
             [showPullToRefreshManager_ loadMoreCompleted];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            [showPullToRefreshManager_ loadMoreCompleted];
             [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
         }];
     }
@@ -769,7 +776,7 @@ void transferDataFromOldDbWithCatch()
         for (int i=0; i < MOVIE_NUMBER; i++) {
             UIImageView *placeHolderImage = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"video_bg_placeholder"]];
             placeHolderImage.frame = CGRectMake(6 + (MOVIE_POSTER_WIDTH+12+8) * i, 2, MOVIE_POSTER_WIDTH + 8, MOVIE_POSTER_HEIGHT + 4);
-            placeHolderImage.tag = 8011;
+            placeHolderImage.tag = 8011 + i;
             [cellScrollView addSubview:placeHolderImage];
             
             UIButton *tempBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -832,8 +839,17 @@ void transferDataFromOldDbWithCatch()
         UIButton *leftScrollBtn = (UIButton *)[cell viewWithTag:5011];
         UIButton *rightScrollBtn = (UIButton *)[cell viewWithTag:5012];
         [leftScrollBtn setEnabled:NO];
-        [rightScrollBtn setEnabled:YES];
+        
         NSArray *subitemArray = [item objectForKey:@"items"];
+        
+        if (subitemArray.count > 5)
+        {
+            [rightScrollBtn setEnabled:YES];
+        }
+        else
+        {
+            [rightScrollBtn setEnabled:NO];
+        }
         
         //add code by huokun at 13/03/21 for BUG#398
         //根据网络回掉数据，设置scrollView的ContentSize
@@ -897,7 +913,7 @@ void transferDataFromOldDbWithCatch()
         for (int i=0; i < DRAMA_NUMBER; i++) {
             UIImageView *placeHolderImage = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"video_bg_placeholder"]];
             placeHolderImage.frame = CGRectMake(6 + (MOVIE_POSTER_WIDTH+12+8) * i, 2, MOVIE_POSTER_WIDTH + 8, MOVIE_POSTER_HEIGHT + 4);
-            placeHolderImage.tag = 8011;
+            placeHolderImage.tag = 8011 + i;
             [cellScrollView addSubview:placeHolderImage];
             
             UIButton *tempBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -959,8 +975,17 @@ void transferDataFromOldDbWithCatch()
         UIButton *leftScrollBtn = (UIButton *)[cell viewWithTag:5011];
         UIButton *rightScrollBtn = (UIButton *)[cell viewWithTag:5012];
         [leftScrollBtn setEnabled:NO];
-        [rightScrollBtn setEnabled:YES];
+        
         NSArray *subitemArray = [item objectForKey:@"items"];
+        
+        if (subitemArray.count > 5)
+        {
+            [rightScrollBtn setEnabled:YES];
+        }
+        else
+        {
+            [rightScrollBtn setEnabled:NO];
+        }
         
         //add code by huokun at 13/03/21 for BUG#398
         //根据网络回掉数据，设置scrollView的ContentSize
@@ -1087,8 +1112,17 @@ void transferDataFromOldDbWithCatch()
         UIButton *leftScrollBtn = (UIButton *)[cell viewWithTag:5011];
         UIButton *rightScrollBtn = (UIButton *)[cell viewWithTag:5012];
         [leftScrollBtn setEnabled:NO];
-        [rightScrollBtn setEnabled:YES];
+        
         NSArray *subitemArray = [item objectForKey:@"items"];
+        
+        if (subitemArray.count > 5)
+        {
+            [rightScrollBtn setEnabled:YES];
+        }
+        else
+        {
+            [rightScrollBtn setEnabled:NO];
+        }
         
         //add code by huokun at 13/03/21 for BUG#398
         //根据网络回掉数据，设置scrollView的ContentSize
@@ -1277,7 +1311,7 @@ void transferDataFromOldDbWithCatch()
         [leftBtn setEnabled:NO];
         [rightBtn setEnabled:YES];
     } else {
-        [cellScrollView setContentOffset: CGPointMake(cellScrollView.frame.size.width, 0) animated:YES];
+        [cellScrollView setContentOffset: CGPointMake(cellScrollView.contentSize.width - cellScrollView.frame.size.width, 0) animated:YES];
         [leftBtn setEnabled:YES];
         [rightBtn setEnabled:NO];
     }

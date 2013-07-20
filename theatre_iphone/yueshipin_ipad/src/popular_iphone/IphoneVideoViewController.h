@@ -10,6 +10,7 @@
 #import "SinaWeibo.h"
 #define DING 1
 #define ADDFAV  2
+#define UN_ADDFV 5
 #define REPORT 3
 #define ADDEXPECT   4
 @interface IphoneVideoViewController : UITableViewController<SinaWeiboDelegate,SinaWeiboRequestDelegate,UIActionSheetDelegate>{
@@ -25,6 +26,10 @@
     BOOL isNotification_;
     UISegmentedControl *segmentedControl_;
     NSString *wechatImgStr_;
+    int playNum_;
+    NSMutableArray *sortEpisodesArr_;
+    int sendCount_;
+    BOOL haveVideoUrl_;
 }
 @property (nonatomic, strong) SinaWeibo *mySinaWeibo;
 @property (nonatomic, strong) NSDictionary *infoDic;
@@ -45,5 +50,5 @@
 -(BOOL)checkNetWork;
 -(NSMutableDictionary *)checkDownloadUrls:(NSDictionary *)infoDic;
 - (void)checkCanPlayVideo;
-
+-(void)wechatShare:(int)sence;
 @end

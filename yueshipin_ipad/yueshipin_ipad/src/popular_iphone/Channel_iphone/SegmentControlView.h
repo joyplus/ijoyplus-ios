@@ -16,8 +16,8 @@ enum{
 
 @protocol SegmentDelegate <NSObject>
 -(void)segmentDidSelectedLabelStr:(NSString *)str withKey:(NSString *)key;
--(void)moreSelectWithType:(int)type withCurrentKey:(NSString *)currentKey;
--(void)didTapOnSegmentView;
+-(void)moreSelectWithType:(int)type withCurrentKey:(NSString *)currentKey moreButton:(UIButton *)btn;
+-(void)didTapOnSegmentViewButton:(UIButton *)btn;
 @end
 
 
@@ -53,6 +53,8 @@ enum{
 @property (nonatomic, weak) id <FiltrateViewDelegate> delegate;
 @property (nonatomic, strong)NSMutableDictionary *parametersDic;
 @property (nonatomic, strong)NSString *currentKey;
+
+-(void)dismissWithDuration:(float)duration;
 -(void)setViewWithType:(int)type;
 -(void)setFiltrateViewCurrentKey:(NSString *)currentKey;
 @end

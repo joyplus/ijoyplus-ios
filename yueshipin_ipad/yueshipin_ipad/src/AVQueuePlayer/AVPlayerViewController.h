@@ -53,7 +53,15 @@
 #import <AVFoundation/AVFoundation.h>
 #import "AvVideoWebViewController.h"
 #import "AVPlayerView.h"
-
+#import "FayeClient.h"
+enum
+{
+    CLOUND_TV_PLAY,
+    CLOUND_TV_PAUSE,
+    CLOUND_TV_CLOSE,
+    CLOUND_TV_SEEK_TO_TIME,
+    UNKNOW_TYPE
+};
 @protocol AVPlayerViewControllerDelegate <NSObject>
 
 - (void)playOneEpisode:(int)num isDownload:(BOOL)isDownload;
@@ -65,7 +73,7 @@
 @class AVQueuePlayer;
 @class AVPlayerView;
 
-@interface AVPlayerViewController : UIViewController <AVPlayerViewControllerDelegate>
+@interface AVPlayerViewController : UIViewController <AVPlayerViewControllerDelegate,FayeClientDelegate>
 {
 @private
 	float mRestoreAfterScrubbingRate;
@@ -74,6 +82,11 @@
 	id mTimeObserver;
     NSURL* mURL;
     AVMutableAudioMix *audioMix_;
+    UIButton *airPlayButton_;
+    UIButton *cloudPlayButton_;
+    BOOL    isPlayOnTV;
+    BOOL    isTVReady;
+    NSString *sourceStr;
 }
 @property (nonatomic) int type;
 @property (nonatomic) double m3u8Duration;

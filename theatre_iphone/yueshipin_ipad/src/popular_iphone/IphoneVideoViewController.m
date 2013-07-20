@@ -37,6 +37,7 @@
 #import "IphoneAVPlayerViewController.h"
 
 #define VIEWTAG   123654
+extern NSComparator cmpString;
 
 @interface IphoneVideoViewController ()
 
@@ -173,6 +174,92 @@
     return dic;
 }
 
+-(void)initDataSource:(int)num{
+    if (num >= [episodesArr_ count]) {
+        return;
+    }
+    NSDictionary *episodesInfo = [episodesArr_ objectAtIndex:num];
+    NSArray *down_load_urls = [episodesInfo objectForKey:@"down_urls"];
+    NSMutableArray *tempSortArr = [NSMutableArray arrayWithCapacity:5];
+    for (NSDictionary *dic in down_load_urls) {
+        NSMutableDictionary *temp_dic = [NSMutableDictionary dictionaryWithDictionary:dic];
+        NSString *source_str = [temp_dic objectForKey:@"source"];
+        
+        if ([source_str isEqualToString:@"wangpan"]) {
+            [temp_dic setObject:@"0.1" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"le_tv_fee"]) {
+            [temp_dic setObject:@"0.2" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"letv"]) {
+            [temp_dic setObject:@"1" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"fengxing"]){
+            [temp_dic setObject:@"2" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"qiyi"]){
+            [temp_dic setObject:@"3" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"youku"]){
+            [temp_dic setObject:@"4" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"sinahd"]){
+            [temp_dic setObject:@"5" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"sohu"]){
+            [temp_dic setObject:@"6" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"56"]){
+            [temp_dic setObject:@"7" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"qq"]){
+            [temp_dic setObject:@"8" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"pptv"]){
+            [temp_dic setObject:@"9" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"pps"]){
+            [temp_dic setObject:@"10" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"m1905"]){
+            [temp_dic setObject:@"11" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"baidu_wangpan"]){
+            [temp_dic setObject:@"12" forKey:@"level"];
+            NSArray * dURL = [temp_dic objectForKey:@"urls"];
+            if (0 == dURL.count)
+                return;
+            
+            NSMutableArray *newUrls = [NSMutableArray arrayWithCapacity:5];
+            for (NSDictionary *oneDic in dURL) {
+                NSString * downloadURL = [CommonMotheds getDownloadURLWithHTML:[oneDic objectForKey:@"url"]];
+                NSMutableDictionary * newDic = [NSMutableDictionary dictionary];
+                if (nil != downloadURL)
+                {
+                    [newDic setObject:downloadURL forKey:@"url"];
+                    [newDic setObject:[oneDic objectForKey:@"file"] forKey:@"file"];
+                    [newDic setObject:[oneDic objectForKey:@"type"] forKey:@"type"];
+                    [newUrls addObject:newDic];
+                }
+            }
+            [temp_dic setObject:newUrls forKey:@"urls"];
+        }
+        [tempSortArr addObject:temp_dic];
+    }
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"level" ascending:YES comparator:cmpString];
+    NSMutableArray *allSources = [NSMutableArray arrayWithArray:[tempSortArr sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]]];
+    sortEpisodesArr_ = [NSMutableArray arrayWithCapacity:10];
+    for (NSDictionary *item in allSources) {
+        NSArray *oneSourceUrls = [item objectForKey:@"urls"];
+        NSString *source = [item objectForKey:@"source"];
+        for (NSDictionary *dd in oneSourceUrls) {
+            NSString *str = [dd objectForKey:@"url"];
+            NSDictionary *oneUrlInfo = [NSDictionary dictionaryWithObjectsAndKeys:source,@"source",str,@"url",nil];
+            [sortEpisodesArr_ addObject:oneUrlInfo];
+        }
+    }
+}
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -219,18 +306,45 @@
         [view addSubview:label];
     }
     else if (type == DING
-             || type == ADDFAV
              || ADDEXPECT == type)
     {
-         UIImageView *temp = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"operation_is_successful.png"]];
-        temp.frame = CGRectMake(0, 0, 92, 27);
-        temp.center = view.center;
-        [view addSubview:temp];
-        
-        if (ADDEXPECT == type)
-        {
-            
-        }
+        UILabel *label = [[UILabel alloc] initWithFrame: CGRectMake(0, 0, 92, 27)];
+        label.backgroundColor = [UIColor blackColor];
+        label.font = [UIFont systemFontOfSize:12];
+        label.textColor = [UIColor whiteColor];
+        label.textAlignment = NSTextAlignmentCenter;
+        label.alpha = 0.9;
+        label.center = view.center;
+        label.layer.masksToBounds = YES;
+        label.layer.cornerRadius = 6.0;
+        label.text = @"操作成功";
+        [view addSubview:label];
+    }
+    else if (type == ADDFAV){
+        UILabel *label = [[UILabel alloc] initWithFrame: CGRectMake(0, 0, 92, 27)];
+        label.backgroundColor = [UIColor blackColor];
+        label.font = [UIFont systemFontOfSize:12];
+        label.textColor = [UIColor whiteColor];
+        label.textAlignment = NSTextAlignmentCenter;
+        label.alpha = 0.9;
+        label.center = view.center;
+        label.layer.masksToBounds = YES;
+        label.layer.cornerRadius = 6.0;
+        label.text = @"收藏成功";
+        [view addSubview:label];
+    }
+    else if(type == UN_ADDFV){
+        UILabel *label = [[UILabel alloc] initWithFrame: CGRectMake(0, 0, 92, 27)];
+        label.backgroundColor = [UIColor blackColor];
+        label.font = [UIFont systemFontOfSize:12];
+        label.textColor = [UIColor whiteColor];
+        label.textAlignment = NSTextAlignmentCenter;
+        label.alpha = 0.9;
+        label.center = view.center;
+        label.layer.masksToBounds = YES;
+        label.layer.cornerRadius = 6.0;
+        label.text = @"取消成功";
+        [view addSubview:label];
     }
     
     //[[AppDelegate instance].window addSubview:view];
@@ -283,7 +397,6 @@
     
 }
 
-
 -(void)share:(id)sender event:(UIEvent *)event{
     
     if (![self checkNetWork]) {
@@ -307,7 +420,7 @@
     UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"分享到：" delegate:self cancelButtonTitle:@"取消"
                                          destructiveButtonTitle:nil
                                               otherButtonTitles:@"新浪微博",@"微信好友",@"微信朋友圈", nil];
-    [sheet showInView:self.view];
+    [sheet showFromTabBar:self.tabBarController.tabBar];
 
     
 }
@@ -318,15 +431,41 @@
         [UIUtility showNetWorkError:self.view];
         return;
     }
-
-    if (buttonIndex == 0) {
-        [self sinaShare];
-    }else if (buttonIndex == 1) {
-        [self wechatShare:WXSceneSession];
-        [MobClick event:@"ue_wechat_friend_share"];
-    }else if(buttonIndex == 2) {
-        [self wechatShare:WXSceneTimeline];
-        [MobClick event:@"ue_wechat_social_share"];
+    if (actionSheet.tag == 10000001) {
+        if (buttonIndex == 0) {
+            [self sinaShare];
+        }
+        else if(buttonIndex == 1 || buttonIndex == 2){
+            if ([WXApi isWXAppInstalled]) {
+                if (buttonIndex == 1){
+                    [self wechatShare:WXSceneSession];
+                    [MobClick event:@"ue_wechat_friend_share"];
+                }
+                else if(buttonIndex == 2){
+                    [self wechatShare:WXSceneTimeline];
+                    [MobClick event:@"ue_wechat_social_share"];
+                }
+            }
+            else{
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"亲，你还没有安装微信，请安装后再试。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+                [alert show];
+            }
+        }
+    }
+    else if (actionSheet.tag == 10000002){
+        if (buttonIndex == 0) {
+            [self beginPlayVideo:playNum_];
+        }
+        else if (buttonIndex == 1){  //play with tv;
+            dispatch_async(dispatch_queue_create("newQueue", NULL), ^{
+                [self initDataSource:playNum_];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    sendCount_ = 0;
+                    [self sendHttpRequest];
+                    
+                });
+            });
+        }
     }
 }
 
@@ -501,6 +640,7 @@
                                                           delegate:self
                                                  cancelButtonTitle:@"取消"
                                                  otherButtonTitles:@"确定", nil];
+         alertView.tag = 8888;
         [alertView show];
     } else {
         [self willPlayVideo:num];
@@ -509,8 +649,23 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if(buttonIndex == 1){
-        [self willPlayVideo:willPlayIndex];
+    if (alertView.tag == 8888) {
+          if(buttonIndex == 1){
+            [self willPlayVideo:willPlayIndex];
+        }
+    }
+    else if(alertView.tag == 9999){
+        NSDictionary *dic = [episodesArr_ objectAtIndex:playNum_];
+        NSArray *webUrlArr = [dic objectForKey:@"video_urls"];
+        NSDictionary *urlInfo = [webUrlArr objectAtIndex:0];
+
+        if (buttonIndex == 0) {
+              [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[urlInfo objectForKey:@"url"]]];
+        }
+        else if(buttonIndex == 1){
+             [self beginPlayVideo:playNum_];
+         }
+        
     }
 }
 
@@ -519,7 +674,7 @@
     if (num < 0 || num >= episodesArr_.count) {
         return;
     }
-    
+     playNum_ = num;
     if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"2"]) {
         NSDictionary *dic = [episodesArr_ objectAtIndex:num];
         NSArray *webUrlArr = [dic objectForKey:@"video_urls"];
@@ -527,7 +682,34 @@
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[urlInfo objectForKey:@"url"]]];
         return;
     }
+    else if([[AppDelegate instance].showVideoSwitch isEqualToString:@"3"]){
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"将使用何种方式来播放？" delegate:self cancelButtonTitle:@"Safari" otherButtonTitles:@"内置浏览器", nil];
+                alert.tag = 9999;
+                [alert show];
+                return;
+            }
     
+    NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:@"kUserId"];
+    NSDictionary * data = (NSDictionary *)[[ContainerUtility sharedInstance] attributeForKey:[NSString stringWithFormat:@"%@_isBunding",userId]];
+    NSNumber * isbunding = [data objectForKey:KEY_IS_BUNDING];
+    isbunding = [NSNumber numberWithInt:1];
+    if ([isbunding boolValue]){
+        if (![BundingTVManager shareInstance].isConnected)
+        {
+            NSString * sendChannel = [NSString stringWithFormat:@"/screencast/CHANNEL_TV_%@",[data objectForKey:KEY_MACADDRESS]];
+            [[BundingTVManager shareInstance] connecteServerWithChannel:sendChannel];
+        }
+        [BundingTVManager shareInstance].sendClient.delegate = (id <FayeClientDelegate>)self;
+        
+        UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"使用哪种方式打开：" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"直接打开",@"使用悦视频TV版播放", nil];
+        sheet.tag = 10000002;
+        [sheet showInView:self.tabBarController.tabBar];
+    }
+    else{
+        [self beginPlayVideo:num];
+    }
+}
+-(void)beginPlayVideo:(int)num{
     NSDictionary * info = [self downloadedItem:self.prodId index:num-1];
     if (nil != info)
     {
@@ -575,7 +757,7 @@
         iphoneAVPlayerViewController.lastPlayTime = CMTimeMakeWithSeconds(cacheResult.floatValue + 1, NSEC_PER_SEC);
         iphoneAVPlayerViewController.prodId = self.prodId;
         iphoneAVPlayerViewController.episodesArr = episodesArr_;
-        
+
         [self presentViewController:iphoneAVPlayerViewController animated:YES completion:nil];
         return;
     }
@@ -586,6 +768,7 @@
     iphoneWebPlayerViewController.episodesArr = episodesArr_;
     iphoneWebPlayerViewController.videoType = type_;
     iphoneWebPlayerViewController.prodId = prodId_;
+    iphoneWebPlayerViewController.hasVideoUrl = haveVideoUrl_;
     NSString *str = [NSString stringWithFormat:@"%@_%@",prodId_,[NSString stringWithFormat:@"%d",(num+1) ]];
     NSNumber *cacheResult = [[CacheUtility sharedCache] loadFromCache:str];
     
@@ -643,6 +826,80 @@
             }
         }
     }
+}
+
+#pragma mark -
+#pragma mark HttpRequest
+-(void)sendHttpRequest{
+    if ([sortEpisodesArr_ count]> sendCount_) {
+        NSString *str = [[sortEpisodesArr_ objectAtIndex:sendCount_] objectForKey:@"url"];
+        NSString *formattedUrl =  str;
+        if([str rangeOfString:@"{now_date}"].location != NSNotFound){
+            int nowDate = [[NSDate date] timeIntervalSince1970];
+            formattedUrl = [str stringByReplacingOccurrencesOfString:@"{now_date}" withString:[NSString stringWithFormat:@"%i", nowDate]];
+        }
+        NSURLRequest *request = [[NSURLRequest alloc]initWithURL:[NSURL URLWithString:formattedUrl] cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:20];
+        [NSURLConnection connectionWithRequest:request delegate:self];
+    }
+    else{
+        NSLog(@"没找到可以播放的地址!");
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"没找到可以播放的地址!" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+        [alert show];
+    }
+}
+
+#pragma mark -
+#pragma mark NSURLConnectionDelegate
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error{
+    sendCount_ ++;
+    [self sendHttpRequest];
+}
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response{
+    NSHTTPURLResponse *HTTPResponse = (NSHTTPURLResponse *)response;
+    int status_Code = HTTPResponse.statusCode;
+    if (status_Code >= 200 && status_Code <= 299) {
+        NSDictionary *headerFields = [HTTPResponse allHeaderFields];
+        NSString *content_type = [NSString stringWithFormat:@"%@", [headerFields objectForKey:@"Content-Type"]];
+        NSString *contentLength = [headerFields objectForKey:@"Content-Length"];
+        if (![content_type hasPrefix:@"text/html"] &&  contentLength.intValue > 0) {
+            [self controlCloundTV:connection.originalRequest.URL.absoluteString];
+            [connection cancel];
+            return;
+        }
+        
+    }
+    sendCount_ ++;
+    [self sendHttpRequest];
+}
+
+#pragma mark -
+#pragma mark -controlCloundTV
+
+- (void)controlCloundTV:(NSString *)urlStr
+{
+    NSNumber * type = [NSNumber numberWithInt:type_];
+    NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:@"kUserId"];
+    NSString *str = [NSString stringWithFormat:@"%@_%@",prodId_,[NSString stringWithFormat:@"%d",(playNum_+1) ]];
+    NSNumber *cacheResult = [[CacheUtility sharedCache] loadFromCache:str];
+    if (cacheResult == nil) {
+        cacheResult = [NSNumber numberWithInt:1];
+    }
+    subName_ = @"";
+    NSString *source = [[sortEpisodesArr_ objectAtIndex:sendCount_] objectForKey:@"source"];
+    NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
+                          @"41", @"push_type",
+                          userId, @"user_id",
+                          urlStr,@"prod_url",
+                          source,@"prod_src",
+                          cacheResult,@"prod_time",
+                          prodId_,@"prod_id",
+                          name_,@"prod_name",
+                          type,@"prod_type",
+                          [NSNumber numberWithInt:0],@"prod_qua",
+                          subName_,@"prod_subname",
+                          nil];
+    
+    [[BundingTVManager shareInstance] sendMsg:data];
 }
 
 @end

@@ -82,6 +82,8 @@
     pullToRefreshManager_ = [[PullRefreshManagerClinet alloc] initWithTableView:table];
     [pullToRefreshManager_ setShowHeaderView:NO];
     pullToRefreshManager_.delegate = self;
+    
+    [self loadData];
     [self loadTable];
     
     [self.view addGestureRecognizer:self.swipeRecognizer];
@@ -95,9 +97,7 @@
    
 }
 
-
-- (void)viewWillAppear:(BOOL)animated
-{
+-(void)loadData{
     [myHUD showProgressBar:self.view];
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:self.keyword, @"keyword", @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", @"1,2,3,131", @"type", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathSearch parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
@@ -108,11 +108,14 @@
             if(searchResult != nil && searchResult.count > 0){
                 [videoArray addObjectsFromArray:searchResult];
             }
+            else{
+                [self loadRecommendVideos];
+            }
             if(searchResult.count < pageSize){
                 pullToRefreshManager_.canLoadMore = NO;
             }
             else{
-            
+                
                 pullToRefreshManager_.canLoadMore = YES;
             }
         }
@@ -126,6 +129,62 @@
         videoArray = [[NSMutableArray alloc]initWithCapacity:10];
     }];
     [MobClick beginLogPageView:SEARCH_LIST];
+}
+
+-(void)loadRecommendVideos{
+    if (videoArray != nil) {
+        [videoArray removeAllObjects];
+    }
+    else{
+        videoArray = [[NSMutableArray alloc]initWithCapacity:10];
+    }
+    [self showNoFindView];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:20], @"page_size", nil];
+    [[AFServiceAPIClient sharedClient] getPath:kPathMoiveTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSArray *tops = [result objectForKey:@"tops"];
+        if ([tops count]>0) {
+            NSDictionary *oneWeekTops = [tops objectAtIndex:0];
+            [videoArray addObjectsFromArray:[oneWeekTops objectForKey:@"items"]];
+        }
+        [table reloadData];
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+    }];
+    
+    
+}
+
+-(void)showNoFindView{
+    UIView *view = [self.view viewWithTag:123456];
+    if (view == nil) {
+        UIView *bg = [[UIView alloc] initWithFrame:CGRectMake(0, 70, self.view.frame.size.width, 75)];
+        bg.tag = 123456;
+        bg.backgroundColor = [UIColor blackColor];
+        bg.alpha = 0.7;
+        UILabel *labelOne = [[UILabel alloc] initWithFrame:CGRectMake(0, 10,  self.view.frame.size.width, 30)];
+        labelOne.textAlignment = NSTextAlignmentCenter;
+        labelOne.text = @"抱歉，未找到相关影片";
+        labelOne.textColor = [UIColor whiteColor];
+        labelOne.backgroundColor = [UIColor clearColor];
+        labelOne.font = [UIFont boldSystemFontOfSize:18];
+        [bg addSubview:labelOne];
+        
+        UILabel *labelTwo = [[UILabel alloc] initWithFrame:CGRectMake(0, 40,  self.view.frame.size.width, 20)];
+        labelTwo.textAlignment = NSTextAlignmentCenter;
+        labelTwo.text = @"您可以观看我们为您推荐的影片";
+        labelTwo.textColor = [UIColor whiteColor];
+        labelTwo.backgroundColor = [UIColor clearColor];
+        labelTwo.font = [UIFont systemFontOfSize:12];
+        [bg addSubview:labelTwo];
+        [self.view addSubview:bg];
+    }
+    
+    table.frame = CGRectMake(LEFT_WIDTH, table.frame.origin.y+75, 420, table.frame.size.height-75);
+    
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
 }
 
 - (void)refreshSearchList
@@ -324,11 +383,19 @@
             directorLabel.text = @"导演：";
             directorLabel.frame = CGRectMake(nameLabel.frame.origin.x, nameLabel.frame.origin.y + 30, 150, 25);
             directorNameLabel.frame = CGRectMake(nameLabel.frame.origin.x + 40, directorLabel.frame.origin.y, 250, 25);
-            directorNameLabel.text = [item objectForKey:@"director"];
+            NSString *directors = [item objectForKey:@"director"];
+            if (directors == nil) {
+                directors = [item objectForKey:@"directors"];
+            }
+            directorNameLabel.text = directors;
             actorLabel1.text = @"主演：";
             actorLabel1.frame = CGRectMake(nameLabel.frame.origin.x, nameLabel.frame.origin.y + 50, 150, 25);
             actorLabel.frame = CGRectMake(nameLabel.frame.origin.x + 40, actorLabel1.frame.origin.y, 250, 25);
-            actorLabel.text = [item objectForKey:@"star"];
+            NSString *actors = [item objectForKey:@"star"];
+            if (actors == nil) {
+                actors = [item objectForKey:@"stars"];
+            }
+            actorLabel.text = actors;
             actorLabel.backgroundColor = [UIColor clearColor];
             
             areaLabel.text = @"";
@@ -353,7 +420,7 @@
             label.textColor = CMConstants.grayColor;
             label.font = [UIFont systemFontOfSize: 16];
             label.text = @"很抱歉，没有找到相关影片！";
-            [cell.contentView addSubview:label];
+            //[cell.contentView addSubview:label];
         }
         return cell;
     }
@@ -442,6 +509,7 @@
         }
         [pullToRefreshManager_ loadMoreCompleted];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+         [pullToRefreshManager_ loadMoreCompleted];
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
     }];
 

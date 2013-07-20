@@ -15,7 +15,9 @@
 #import "ListViewController.h"
 #import "SubsearchViewController.h"
 #import "CommonHeader.h"
-
+#import "AppDelegate.h"
+#import "ScanDetailViewController.h"
+#import "ScanViewController.h"
 #define TOP_IMAGE_HEIGHT 170
 #define VIDEO_BUTTON_WIDTH 120
 #define VIDEO_BUTTON_HEIGHT 45
@@ -123,12 +125,45 @@
     {
         [self retrieveMovieTopsData];
     }
+    
+    [self showBundingTap];
 }
 
+-(void)showBundingTap{
+    NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:@"kUserId"];
+    NSDictionary * data = (NSDictionary *)[[ContainerUtility sharedInstance] attributeForKey:[NSString stringWithFormat:@"%@_isBunding",userId]];
+    NSNumber *isbunding = [data objectForKey:KEY_IS_BUNDING];
+    //isbunding= [NSNumber numberWithInt:1];
+    if ([isbunding boolValue]) {
+        UIImageView *bunding_succeed_tip = (UIImageView *)[self.view viewWithTag:99999];
+        if (bunding_succeed_tip == nil) {
+            bunding_succeed_tip = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bunding_succeed_tip"]];
+            bunding_succeed_tip.frame = CGRectMake(2, 80, 513, 34);
+            bunding_succeed_tip.tag = 99999;
+            bunding_succeed_tip.userInteractionEnabled = YES;
+            UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self
+                                                                                        action:@selector(TopImageTaped)];
+            tapGesture.numberOfTapsRequired = 1;
+            tapGesture.numberOfTouchesRequired = 1;
+            [bunding_succeed_tip addGestureRecognizer:tapGesture];
+            
+            [self.view addSubview:bunding_succeed_tip];
+        }
+        table.frame = CGRectMake(table.frame.origin.x, 113, table.frame.size.width, table.frame.size.height);
+    }
+    else{
+        UIImageView *bunding_succeed_tip = (UIImageView *)[self.view viewWithTag:99999];
+        if (bunding_succeed_tip) {
+            [bunding_succeed_tip removeFromSuperview];
+        }
+        table.frame = CGRectMake(3, 92, self.view.frame.size.width - 16, self.view.frame.size.height - TOP_SOLGAN_HEIGHT - 20);
+    }
+}
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     [[AppDelegate instance].rootViewController showIntroModalView:SHOW_MENU_INTRO introImage:[UIImage imageNamed:@"menu_intro_yuebang"]];
+    
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -152,7 +187,18 @@
     comicTopsArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
     showTopsArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
     
+    UIButton *saoyisao = [UIButton buttonWithType:UIButtonTypeCustom];
+    saoyisao.frame = CGRectMake(430, 30, 55, 44);
+    [saoyisao setBackgroundImage:[UIImage imageNamed:@"scan_btn_ipad"] forState:UIControlStateNormal];
+    [saoyisao setBackgroundImage:[UIImage imageNamed:@"scan_btn_f_ipad"] forState:UIControlStateHighlighted];
+    [saoyisao addTarget:self action:@selector(saoyisaoClicked) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:saoyisao];
     [self performSelectorInBackground:@selector(transferDataFromOldDb) withObject:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(showBundingTap)
+                                                 name:@"bundingTVSucceeded"
+                                               object:nil];
 }
 
 - (void)transferDataFromOldDb
@@ -280,8 +326,13 @@ void transferDataFromOldDbWithCatch()
     [tvTopsArray removeAllObjects];
     NSString *responseCode = [result objectForKey:@"res_code"];
     if(responseCode == nil){
-        NSArray *tempTopsArray = [result objectForKey:@"tops"];
+        //NSArray *tempTopsArray = [result objectForKey:@"tops"];
+        NSMutableArray *tempTopsArray = [NSMutableArray arrayWithArray:[result objectForKey:@"tops"]];
         if(tempTopsArray.count > 0){
+            NSString *HiddenAVS = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:HIDDEN_AMERICAN_VIDEOS];
+            if ([HiddenAVS isEqualToString:@"1"]){
+                [tempTopsArray removeObjectAtIndex:0];
+            }
             [[CacheUtility sharedCache] putInCache:@"tv_top_list" result:result];
             [tvTopsArray addObjectsFromArray:tempTopsArray];
         }
@@ -496,6 +547,7 @@ void transferDataFromOldDbWithCatch()
             }
             [showPullToRefreshManager_ loadMoreCompleted];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            [showPullToRefreshManager_ loadMoreCompleted];
             [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
         }];
     }
@@ -640,7 +692,17 @@ void transferDataFromOldDbWithCatch()
     [self retrieveComicTopsData];
 }
 
+-(void)saoyisaoClicked{
+    ScanDetailViewController *scanDetailViewController = [[ScanDetailViewController alloc] init];
+    scanDetailViewController.isBunding = NO;
+   [self presentModalViewController:[[UINavigationController alloc] initWithRootViewController:scanDetailViewController] animated:NO];
+}
 
+-(void)TopImageTaped{
+    ScanDetailViewController *scanDetailViewController = [[ScanDetailViewController alloc] init];
+    scanDetailViewController.isBunding = YES;
+    [self presentModalViewController:[[UINavigationController alloc] initWithRootViewController:scanDetailViewController] animated:NO];
+}
 #pragma mark -
 #pragma mark Table view data source
 
@@ -768,7 +830,7 @@ void transferDataFromOldDbWithCatch()
         for (int i=0; i < MOVIE_NUMBER; i++) {
             UIImageView *placeHolderImage = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"video_bg_placeholder"]];
             placeHolderImage.frame = CGRectMake(6 + (MOVIE_POSTER_WIDTH+12+8) * i, 2, MOVIE_POSTER_WIDTH + 8, MOVIE_POSTER_HEIGHT + 4);
-            placeHolderImage.tag = 8011;
+            placeHolderImage.tag = 8011 + i;
             [cellScrollView addSubview:placeHolderImage];
             
             UIButton *tempBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -831,8 +893,15 @@ void transferDataFromOldDbWithCatch()
         UIButton *leftScrollBtn = (UIButton *)[cell viewWithTag:5011];
         UIButton *rightScrollBtn = (UIButton *)[cell viewWithTag:5012];
         [leftScrollBtn setEnabled:NO];
-        [rightScrollBtn setEnabled:YES];
         NSArray *subitemArray = [item objectForKey:@"items"];
+        if (subitemArray.count > 5)
+        {
+            [rightScrollBtn setEnabled:YES];
+        }
+        else
+        {
+            [rightScrollBtn setEnabled:NO];
+        }
         
         //add code by huokun at 13/03/21 for BUG#398
         //根据网络回掉数据，设置scrollView的ContentSize
@@ -896,7 +965,7 @@ void transferDataFromOldDbWithCatch()
         for (int i=0; i < DRAMA_NUMBER; i++) {
             UIImageView *placeHolderImage = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"video_bg_placeholder"]];
             placeHolderImage.frame = CGRectMake(6 + (MOVIE_POSTER_WIDTH+12+8) * i, 2, MOVIE_POSTER_WIDTH + 8, MOVIE_POSTER_HEIGHT + 4);
-            placeHolderImage.tag = 8011;
+            placeHolderImage.tag = 8011 + i;
             [cellScrollView addSubview:placeHolderImage];
             
             UIButton *tempBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -958,8 +1027,15 @@ void transferDataFromOldDbWithCatch()
         UIButton *leftScrollBtn = (UIButton *)[cell viewWithTag:5011];
         UIButton *rightScrollBtn = (UIButton *)[cell viewWithTag:5012];
         [leftScrollBtn setEnabled:NO];
-        [rightScrollBtn setEnabled:YES];
         NSArray *subitemArray = [item objectForKey:@"items"];
+        if (subitemArray.count > 5)
+        {
+            [rightScrollBtn setEnabled:YES];
+        }
+        else
+        {
+            [rightScrollBtn setEnabled:NO];
+        }
         
         //add code by huokun at 13/03/21 for BUG#398
         //根据网络回掉数据，设置scrollView的ContentSize
@@ -1086,8 +1162,15 @@ void transferDataFromOldDbWithCatch()
         UIButton *leftScrollBtn = (UIButton *)[cell viewWithTag:5011];
         UIButton *rightScrollBtn = (UIButton *)[cell viewWithTag:5012];
         [leftScrollBtn setEnabled:NO];
-        [rightScrollBtn setEnabled:YES];
         NSArray *subitemArray = [item objectForKey:@"items"];
+        if (subitemArray.count > 5)
+        {
+            [rightScrollBtn setEnabled:YES];
+        }
+        else
+        {
+            [rightScrollBtn setEnabled:NO];
+        }
         
         //add code by huokun at 13/03/21 for BUG#398
         //根据网络回掉数据，设置scrollView的ContentSize
@@ -1276,7 +1359,7 @@ void transferDataFromOldDbWithCatch()
         [leftBtn setEnabled:NO];
         [rightBtn setEnabled:YES];
     } else {
-        [cellScrollView setContentOffset: CGPointMake(cellScrollView.frame.size.width, 0) animated:YES];
+        [cellScrollView setContentOffset: CGPointMake(cellScrollView.contentSize.width - cellScrollView.frame.size.width, 0) animated:YES];
         [leftBtn setEnabled:YES];
         [rightBtn setEnabled:NO];
     }

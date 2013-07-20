@@ -22,8 +22,9 @@
 #import "UIUtility.h"
 #import "IntroductionView.h"
 #import "CommonMotheds.h"
-#define BUNDING_HEIGHT 30
-#define BUNDING_BUTTON_TAG 20001
+#define BUNDING_HEIGHT 35
+#define BUNDING_BUTTON_TAG 200001
+extern NSComparator cmptr;
 enum
 {
     TYPE_BUNDING_TV = 1,
@@ -66,14 +67,14 @@ enum
     self.navigationItem.leftBarButtonItem = leftButtonItem;
     self.navigationItem.hidesBackButton = YES;
     
-//    UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
-//    [rightButton addTarget:self action:@selector(setting:) forControlEvents:UIControlEventTouchUpInside];
-//    rightButton.frame = CGRectMake(0, 0, 55, 44);
-//    rightButton.backgroundColor = [UIColor clearColor];
-//    [rightButton setImage:[UIImage imageNamed:@"scan_btn.png"] forState:UIControlStateNormal];
-//    [rightButton setImage:[UIImage imageNamed:@"scan_btn_f.png"] forState:UIControlStateHighlighted];
-//    UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
-//    self.navigationItem.rightBarButtonItem = rightButtonItem;
+    UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [rightButton addTarget:self action:@selector(sort:) forControlEvents:UIControlEventTouchUpInside];
+    rightButton.frame = CGRectMake(0, 0, 55, 44);
+    rightButton.backgroundColor = [UIColor clearColor];
+    [rightButton setImage:[UIImage imageNamed:@"sort_iPhone.png"] forState:UIControlStateNormal];
+    [rightButton setImage:[UIImage imageNamed:@"sort_iPhone_f.png"] forState:UIControlStateHighlighted];
+    UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
+    self.navigationItem.rightBarButtonItem = rightButtonItem;
     
     titleButton_ = [UIButton buttonWithType:UIButtonTypeCustom];
     titleButton_.frame = CGRectMake(0, 0, 100, 60);
@@ -101,12 +102,12 @@ enum
     
     _videoTypeSeg = [[VideoTypeSegment alloc] initWithFrame:CGRectMake(0, 0, 320, 65)];
     _videoTypeSeg.delegate = self;
-    _videoTypeSeg.hidden = YES;
+    [_videoTypeSeg dissmiss];
     [self.view addSubview: _videoTypeSeg];
     
     _filtrateView = [[FiltrateView alloc] initWithFrame:CGRectMake(0, 42, 320, 108)];
     _filtrateView.delegate = self;
-    _filtrateView.hidden = YES;
+    [_filtrateView dismissWithDuration:0];
     [self.view addSubview:_filtrateView];
     
     _tableList = [[UITableView alloc] initWithFrame:CGRectMake(0, 42, 320, kCurrentWindowHeight -44-42-48) style:UITableViewStylePlain];
@@ -150,6 +151,17 @@ enum
 -(void)viewWillAppear:(BOOL)animated{
    [super viewWillAppear:animated];
    [self managerTVBunding];
+    if (videoType_ == TYPE_MOVIE) {
+        self.navigationItem.rightBarButtonItem.customView.hidden = NO;
+    }
+    else{
+        self.navigationItem.rightBarButtonItem.customView.hidden = YES;
+    }
+}
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    [self hiddenSortedSelectedView];
+    ((UIButton *)self.navigationItem.rightBarButtonItem.customView).selected = NO;
 }
 
 -(void)initDefaultParameters{
@@ -169,40 +181,96 @@ enum
     [self.navigationController pushViewController:searchViewCotroller animated:YES];
 }
 
--(void)setting:(id)sender
+-(void)sort:(UIButton *)btn
 {
-    UIImageView * scanView = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"scan_bg.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(10, 0, 342.5, 0)]];
-    scanView.frame = CGRectMake(0, 0, 320, (kCurrentWindowHeight - 44));
-    scanView.backgroundColor = [UIColor clearColor];
+    btn.selected = !btn.selected;
+    if (btn.selected) {
+        [self showSortedSelctedView];
+    }
+    else{
+        [self hiddenSortedSelectedView];
+    }
     
-    DimensionalCodeScanViewController * reader = [DimensionalCodeScanViewController new];
-    reader.supportedOrientationsMask = ZBarOrientationMask(UIInterfaceOrientationPortrait);
-    reader.showsZBarControls = NO;
-    reader.showsHelpOnFail = NO;
-    reader.showsCameraControls = NO;
-    reader.cameraOverlayView = scanView;
-    ZBarImageScanner *scanner = reader.scanner;
-    [scanner setSymbology: ZBAR_I25
-                   config: ZBAR_CFG_ENABLE
-                       to: 0];
-    
-    reader.hidesBottomBarWhenPushed = YES;
-    [self.navigationController pushViewController:reader
-                                         animated:YES];
 }
 
+-(void)showSortedSelctedView{
+    UIImageView *bg = (UIImageView *)[self.view viewWithTag:19999];
+    if (bg == nil) {
+        bg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"iphoneSortBg"]];
+        bg.frame = CGRectMake(210, 60, 102, 83);
+        bg.tag = 19999;
+        bg.userInteractionEnabled = YES;
+        UIButton *sortByHot = [UIButton buttonWithType:UIButtonTypeCustom];
+        sortByHot.frame = CGRectMake(4.5, 14, 93, 29);
+        sortByHot.tag = 20001;
+        [sortByHot addTarget:self action:@selector(sortTypePressed:) forControlEvents:UIControlEventTouchUpInside];
+        [sortByHot setBackgroundImage:[UIImage imageNamed:@"sortByHot_iPhone"] forState:UIControlStateNormal];
+        [sortByHot setBackgroundImage:[UIImage imageNamed:@"sortByHot_iPhone_s"] forState:UIControlStateHighlighted];
+        [sortByHot setBackgroundImage:[UIImage imageNamed:@"sortByHot_iPhone_s"] forState:UIControlStateSelected];
+        [bg addSubview:sortByHot];
+        
+        UIButton *sortByScore = [UIButton buttonWithType:UIButtonTypeCustom];
+        sortByScore.frame =  CGRectMake(4.5, 52, 93, 29);
+        sortByScore.tag = 20002;
+        [sortByScore addTarget:self action:@selector(sortTypePressed:) forControlEvents:UIControlEventTouchUpInside];
+        [sortByScore setBackgroundImage:[UIImage imageNamed:@"sortByScore_iphone"] forState:UIControlStateNormal];
+        [sortByScore setBackgroundImage:[UIImage imageNamed:@"sortByScore_iphone_s"] forState:UIControlStateHighlighted];
+        [sortByScore setBackgroundImage:[UIImage imageNamed:@"sortByScore_iphone_s"] forState:UIControlStateSelected];
+        [bg addSubview:sortByScore];
+        
+        if (!sortedByScore_) {
+            sortByHot.selected = YES;
+            sortByScore.selected = NO;
+        }
+        else{
+            sortByHot.selected = NO;
+            sortByScore.selected = YES;
+        }
+        [self.navigationController.view addSubview:bg];
+    }
+}
+
+-(void)hiddenSortedSelectedView{
+    UIImageView *bg = (UIImageView *)[self.navigationController.view viewWithTag:19999];
+    if (bg) {
+        [bg removeFromSuperview];
+    }
+}
+
+-(void)sortTypePressed:(UIButton *)btn{
+    UIImageView *bg = (UIImageView *)[self.navigationController.view viewWithTag:19999];
+    if (bg) {
+        UIButton *sortByHot = (UIButton *)[bg viewWithTag:20001];
+        UIButton *sortByScore = (UIButton *)[bg viewWithTag:20002];
+        if (btn == sortByHot) {
+            sortByHot.selected = YES;
+            sortByScore.selected = NO;
+            sortedByScore_ = NO;
+            
+        }
+        else{
+            sortByHot.selected = NO;
+            sortByScore.selected = YES;
+            sortedByScore_ = YES;
+        }
+        [self pulltoReFresh];
+        [self hiddenSortedSelectedView];
+        ((UIButton *)self.navigationItem.rightBarButtonItem.customView).selected = NO;
+    }
+    
+}
 -(void)closeFiltrateView{
-   _filtrateView.hidden = YES;
+   [_filtrateView dismissWithDuration:0.2];
 }
 
 -(void)showSegmentControl:(UIButton *)btn{
     btn.selected = !btn.selected;
     if (btn.selected) {
-        _videoTypeSeg.hidden = NO;
+        [_videoTypeSeg show];
         [self.view bringSubviewToFront:_videoTypeSeg];
     }
     else{
-        _videoTypeSeg.hidden = YES;
+        [_videoTypeSeg dissmiss];
     }
     [_videoTypeSeg setSelectAtIndex:typeSelectIndex_];
     
@@ -211,8 +279,8 @@ enum
 #pragma mark - videoTypeSegmentDelegate
 -(void)videoTypeSegmentDidSelectedAtIndex:(int)index{
     typeSelectIndex_ = index;
-    _videoTypeSeg.hidden = YES;
-    _filtrateView.hidden = YES;
+     [_videoTypeSeg dissmiss];
+     [_filtrateView dismissWithDuration:0.2];
     titleButton_.selected = NO;
     switch (index) {
         case 0:
@@ -220,24 +288,28 @@ enum
             videoType_ = TYPE_MOVIE;
             [titleButton_ setTitle:@"电影" forState:UIControlStateNormal];
             [titleButton_ setTitle:@"电影" forState:UIControlStateHighlighted];
+             self.navigationItem.rightBarButtonItem.customView.hidden = NO; 
             break;
         case 1:
             [_segV setSegmentControl:TYPE_TV];
             videoType_ = TYPE_TV;
             [titleButton_ setTitle:@"电视剧" forState:UIControlStateNormal];
             [titleButton_ setTitle:@"电视剧" forState:UIControlStateHighlighted];
+             self.navigationItem.rightBarButtonItem.customView.hidden = YES;
             break;
         case 2:
             [_segV setSegmentControl:TYPE_COMIC];
             videoType_ = TYPE_COMIC;
             [titleButton_ setTitle:@"动漫" forState:UIControlStateNormal];
             [titleButton_ setTitle:@"动漫" forState:UIControlStateHighlighted];
+            self.navigationItem.rightBarButtonItem.customView.hidden = YES;
             break;
         case 3:
             [_segV setSegmentControl:TYPE_SHOW];
             videoType_ = TYPE_SHOW;
             [titleButton_ setTitle:@"综艺" forState:UIControlStateNormal];
             [titleButton_ setTitle:@"综艺" forState:UIControlStateHighlighted];
+            self.navigationItem.rightBarButtonItem.customView.hidden = YES;
             break;
         default:
             break;
@@ -269,15 +341,17 @@ enum
     [self sendHttpRequest:_parameters];
 }
 
--(void)moreSelectWithType:(int)type withCurrentKey:(NSString *)currentKey{;
-    _filtrateView.hidden = NO;
+-(void)moreSelectWithType:(int)type withCurrentKey:(NSString *)currentKey moreButton:(UIButton *)btn{;
+    //_filtrateView.hidden = NO;
     [_filtrateView setViewWithType:type];
     [_filtrateView setFiltrateViewCurrentKey:currentKey];
     [self.view bringSubviewToFront:_filtrateView];
+    moreButton_ = btn;
 }
 
--(void)didTapOnSegmentView{
+-(void)didTapOnSegmentViewButton:(UIButton *)btn{
     [self closeFiltrateView];
+    moreButton_ = btn;
 }
 #pragma mark -
 #pragma mark - FiltrateDelegate
@@ -385,6 +459,11 @@ enum
 - (void) scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {
     [pullToRefreshManager_ scrollViewBegin];
+    
+    titleButton_.selected = NO;
+    [_videoTypeSeg dissmiss];
+    moreButton_.selected = NO;
+    [self closeFiltrateView];
 }
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     [pullToRefreshManager_ scrollViewScrolled:scrollView];
@@ -413,6 +492,13 @@ enum
     [[AFServiceAPIClient sharedClient] getPath:kPathFilter parameters:_parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSArray *itemsArr = [result objectForKey:@"results"];
         [_dataArr addObjectsFromArray:itemsArr];
+        if (videoType_ == TYPE_MOVIE && sortedByScore_) {
+            NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"score" ascending:NO comparator:cmptr];
+            NSArray *tempArr = [NSArray arrayWithArray:_dataArr];
+            NSArray *sortedArr = [tempArr sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+            [_dataArr removeAllObjects];
+            [_dataArr addObjectsFromArray:sortedArr];
+        }
         
         if ([itemsArr count]<12) {
             pullToRefreshManager_.canLoadMore = NO;
@@ -425,6 +511,7 @@ enum
         
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [self performSelector:@selector(reloadTableList) withObject:nil afterDelay:0.0f];
+         [pullToRefreshManager_ loadMoreCompleted];
         [UIUtility showDetailError:self.view error:error];
     }];
 
@@ -459,6 +546,10 @@ enum
     }];
 }
 
+-(void)reFreshViewController{
+     [self pulltoReFresh];
+}
+
 -(void)analyzeData:(id)result{
     if (_dataArr == nil) {
         _dataArr = [NSMutableArray arrayWithCapacity:5];
@@ -468,7 +559,14 @@ enum
     }
     if (result != nil) {
         NSArray *itemsArr = [result objectForKey:@"results"];
-        [_dataArr addObjectsFromArray:itemsArr];
+        if (videoType_ == TYPE_MOVIE && sortedByScore_) {
+            NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"score" ascending:NO comparator:cmptr];
+            NSArray *sortedArr = [itemsArr sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+            [_dataArr addObjectsFromArray:sortedArr];
+        }
+        else{
+            [_dataArr addObjectsFromArray:itemsArr];
+        }
         
         if ([itemsArr count]<12) {
             pullToRefreshManager_.canLoadMore = NO;
@@ -485,7 +583,7 @@ enum
     UIButton *btn = (UIButton *)[self.view viewWithTag:BUNDING_BUTTON_TAG];
     if (btn == nil) {
         btn = [UIButton buttonWithType:UIButtonTypeCustom];
-        btn.frame = CGRectMake(0, 0, 320, BUNDING_HEIGHT+1);
+        btn.frame = CGRectMake(0, 0, 320, BUNDING_HEIGHT);
         [btn setBackgroundImage:[UIImage imageNamed:@"bunding_tv.png"] forState:UIControlStateNormal];
         [btn setBackgroundImage:[UIImage imageNamed:@"bunding_tv_s.png"] forState:UIControlStateHighlighted];
         [btn addTarget:self action:@selector(pushView) forControlEvents:UIControlEventTouchUpInside];

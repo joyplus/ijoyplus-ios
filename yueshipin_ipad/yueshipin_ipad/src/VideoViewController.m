@@ -24,7 +24,7 @@
 #define SUB_CATEGORY_INTERVAL_V             (25)
 #define SUB_CATEGORY_INTERVAL_H             (25)
 #define SUB_CATEGORY_INTERVAL_TO_BORDER     (15)
-
+extern NSComparator cmptr;
 @interface VideoViewController ()<UIGestureRecognizerDelegate>
 
 @property (nonatomic, strong)NSString *typePrefix;
@@ -176,6 +176,7 @@
     lastSelectYearKey = @"all";
     lastSelectRegionKey = @"all";
     lastSelectCategoryKey = @"all";
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -230,10 +231,12 @@
         [[AFServiceAPIClient sharedClient] getPath:kPathFilter parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseData:result];
             [myHUD hide];
-
+            [self loadTable];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
+            [self loadTable];
             [myHUD hide];
+            [self loadTable];
             [UIUtility showDetailError:self.view error:error];
         }];
     }    
@@ -247,7 +250,14 @@
         NSArray *tempTopsArray = [result objectForKey:@"results"];
         if(tempTopsArray.count > 0){
             [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"%@_list%@%@%@", typePrefix, categoryType, regionType, yearType] result:result];
-            [videoArray addObjectsFromArray:tempTopsArray];
+            if (videoType == MOVIE_TYPE && sortedByScore_) {
+                NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"score" ascending:NO comparator:cmptr];
+                NSArray *sortedArr = [tempTopsArray sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+                [videoArray addObjectsFromArray:sortedArr];
+            }
+            else{
+               [videoArray addObjectsFromArray:tempTopsArray];
+            }   
         }
         if(tempTopsArray.count < pageSize){
             pullToRefreshManager_.canLoadMore = NO;
@@ -257,7 +267,7 @@
     } else {
         [UIUtility showSystemError:self.view];
     }
-    [self loadTable];
+    [table reloadData];
 }
 
 - (void)hideSubcategoryView
@@ -598,6 +608,16 @@
     }
 }
 
+-(void)sort:(UIButton *)btn{
+    btn.selected = !btn.selected;
+    if (btn.selected) {
+        sortedByScore_ = YES;
+    }
+    else{
+        sortedByScore_ = NO;
+    }
+    [self pulltoReFresh];
+}
 
 #pragma mark -
 #pragma mark - UIScrollviewDelegate
@@ -634,7 +654,16 @@
         if(responseCode == nil){
             tempTopsArray = [result objectForKey:@"results"];
             if(tempTopsArray.count > 0){
+                
                 [videoArray addObjectsFromArray:tempTopsArray];
+                
+                if (videoType == MOVIE_TYPE && sortedByScore_) {
+                    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"score" ascending:NO comparator:cmptr];
+                    NSArray *tempArr = videoArray;
+                    NSArray *sortedArr = [tempArr sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+                    [videoArray removeAllObjects];
+                    [videoArray addObjectsFromArray:sortedArr];
+                }
                 reloads_ ++;
             }
         } else {
@@ -649,6 +678,7 @@
         [table reloadData];
         [pullToRefreshManager_ loadMoreCompleted];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        [pullToRefreshManager_ loadMoreCompleted];
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
     }];
     
@@ -741,6 +771,7 @@
                 UILabel *titleLabel = (UILabel *)[cell viewWithTag:4011 + i];
                 titleLabel.textAlignment = NSTextAlignmentCenter;
                 NSString *curEpisode = [NSString stringWithFormat:@"%@", [item objectForKey:@"cur_episode"]];
+            
                 //判断UserName是否为数字,字母，下滑线。
                 NSCharacterSet *dateCharacters = [[NSCharacterSet
                                                    characterSetWithCharactersInString:@"1234567890"] invertedSet];
@@ -765,6 +796,11 @@
                     NSString *month = [curEpisode substringWithRange:NSMakeRange(4, 2)];
                     NSString *day = [curEpisode substringWithRange:NSMakeRange(6, 2)];
                     titleLabel.text = [NSString stringWithFormat:@"%@/%@/%@",year,month,day];
+                }
+                else{
+                    titleLabel.text = nil;
+                    nameLabel.frame = CGRectMake(nameLabel.frame.origin.x, nameLabel.frame.origin.y, nameLabel.frame.size.width, 35);
+                    nameLabel.numberOfLines = 2;
                 }
                 
             }
