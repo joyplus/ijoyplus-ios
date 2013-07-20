@@ -51,7 +51,7 @@
                                                  name:UIApplicationDidBecomeActiveNotification
                                                object:nil];
 
-    scanSymbolView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"scan_symbol.png"]];
+    scanSymbolView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"ipad_scan_symbol.png"]];
     scanSymbolView.frame = CGRectMake(88, 80, 336, 35);
     [self.view addSubview:scanSymbolView];
 
