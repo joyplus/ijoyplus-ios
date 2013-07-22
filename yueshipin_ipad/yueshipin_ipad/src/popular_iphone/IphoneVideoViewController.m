@@ -196,6 +196,18 @@ extern NSComparator cmpString;
         }
         else if ([source_str isEqualToString:@"letv"]) {
             [temp_dic setObject:@"1" forKey:@"level"];
+            NSString *htmlUrl = nil;
+            for (NSDictionary *dd in [episodesInfo objectForKey:@"video_urls"]) {
+                if ([[dd objectForKey:@"source"] isEqualToString:@"letv"]) {
+                    htmlUrl = [dd objectForKey:@"url"];
+                    break;
+                }
+            }
+            if (htmlUrl != nil) {
+                NSString *subname = [episodesInfo objectForKey:@"name"];
+                NSDictionary *resultDic = [CommonMotheds getLetvRealUrlWithHtml:htmlUrl prodId:prodId_ subname:subname];
+                [temp_dic setObject:[[resultDic objectForKey:@"down_urls"] objectForKey:@"urls"] forKey:@"urls"];
+            }
         }
         else if ([source_str isEqualToString:@"fengxing"]){
             [temp_dic setObject:@"2" forKey:@"level"];

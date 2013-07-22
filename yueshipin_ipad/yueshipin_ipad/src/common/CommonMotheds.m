@@ -14,7 +14,7 @@
 #import "CMConstants.h"
 #import "TFHpple.h"
 #import "AFHTTPClient.h"
-#define LETV_BASEURL @"http://parseurl.yue001.com:8080/"
+#define LETV_BASEURL @"http://parseurl.yue001.com:8080/letv/?url="
 #define IS_IPHONE5  ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(640, 1136), [[UIScreen mainScreen] currentMode].size) : NO)
 
 @implementation CommonMotheds
@@ -242,20 +242,29 @@
     return downloadURL;
 } 
 
-+(NSDictionary *)getLetvRealUrlWithHtml:(NSString *)url prodId:(NSString *)prodId episode:(NSString *)episode{
-    return nil;
-    NSString *urlStr = [NSString stringWithFormat:@"%@%@",@"letv/?url=",url];
-    AFHTTPClient *afHTTPClient = [[AFHTTPClient alloc] initWithBaseURL:[NSURL URLWithString:LETV_BASEURL]];
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:prodId,@"id",
-                                episode,@"episode",nil];
-    [afHTTPClient getPath:urlStr parameters:parameters
-                  success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                      
-                  }
-                  failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                      
-                  }];
++(NSDictionary *)getLetvRealUrlWithHtml:(NSString *)url prodId:(NSString *)prodId subname:(NSString *)subname{
+ 
+    NSString *urlStr = [NSString stringWithFormat:@"%@%@",LETV_BASEURL,url];
 
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:prodId,@"id",
+                                subname,@"episode",nil];
+
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:urlStr]];
+    [request setAllHTTPHeaderFields:parameters];
+    
+    NSError *error;
+    NSURLResponse *response;
+    NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
+    if (error) {
+        NSLog(@"解析letv真实视频地址失败:%@",error);
+        return nil;
+    }
+    NSDictionary *jsonObject = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
+    if (error) {
+        NSLog(@"解析letv真实视频地址失败:%@",error);
+        return nil;
+    }
+    return jsonObject;
 }
 
 + (BOOL)isIphone5
