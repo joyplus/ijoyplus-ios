@@ -15,7 +15,7 @@
 #import "TFHpple.h"
 #import "AFHTTPClient.h"
 #define IS_IPHONE5  ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(640, 1136), [[UIScreen mainScreen] currentMode].size) : NO)
-
+#define LETV_APPKEY  @"90227b001edcf46abab5f9dc428877d5"
 @implementation CommonMotheds
 +(BOOL)isNetworkEnbled{
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
@@ -245,11 +245,10 @@
  
     NSString *urlStr = [NSString stringWithFormat:@"%@%@&id=%@&episode=%@",LETV_BASEURL,url,prodId,subname];
 
-//    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:prodId,@"id",
-//                                subname,@"episode",nil];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:LETV_APPKEY,@"appkey",nil];
 
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:urlStr]];
-//    [request setAllHTTPHeaderFields:parameters];
+   [request setAllHTTPHeaderFields:parameters];
     
     NSError *error;
     NSURLResponse *response;
