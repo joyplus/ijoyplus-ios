@@ -802,6 +802,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     
     [self addCacheview];
     
+    isResetLetvData_ = NO;
     [self initDataSource:playNum];
     
     [self beginToPlay];
@@ -969,32 +970,42 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         else if ([source_str isEqualToString:@"le_tv_fee"]) {
             [temp_dic setObject:@"0.2" forKey:@"level"];
             
-            NSString *htmlUrl = nil;
-            for (NSDictionary *dd in [episodesInfo objectForKey:@"video_urls"]) {
-                if ([[dd objectForKey:@"source"] isEqualToString:@"le_tv_fee"]) {
-                    htmlUrl = [dd objectForKey:@"url"];
-                    break;
+            if (isResetLetvData_) {
+                NSString *htmlUrl = nil;
+                for (NSDictionary *dd in [episodesInfo objectForKey:@"video_urls"]) {
+                    if ([[dd objectForKey:@"source"] isEqualToString:@"le_tv_fee"]) {
+                        htmlUrl = [dd objectForKey:@"url"];
+                        break;
+                    }
                 }
-            }
-            if (htmlUrl != nil) {
-                NSString *subname = [episodesInfo objectForKey:@"name"];
-                NSDictionary *resultDic = [CommonMotheds getLetvRealUrlWithHtml:htmlUrl prodId:prodId_ subname:subname];
-                [temp_dic setObject:[[resultDic objectForKey:@"down_urls"] objectForKey:@"urls"] forKey:@"urls"];
+                if (htmlUrl != nil) {
+                    NSString *subname = [episodesInfo objectForKey:@"name"];
+                    NSDictionary *resultDic = [CommonMotheds getLetvRealUrlWithHtml:htmlUrl prodId:prodId_ subname:subname];
+                    if (resultDic != nil) {
+                         [temp_dic setObject:[[resultDic objectForKey:@"down_urls"] objectForKey:@"urls"] forKey:@"urls"];
+                    }
+                }
+
             }
         }
         else if ([source_str isEqualToString:@"letv"]) {
             [temp_dic setObject:@"1" forKey:@"level"];
-            NSString *htmlUrl = nil;
-            for (NSDictionary *dd in [episodesInfo objectForKey:@"video_urls"]) {
-                if ([[dd objectForKey:@"source"] isEqualToString:@"letv"]) {
-                    htmlUrl = [dd objectForKey:@"url"];
-                    break;
+            if (isResetLetvData_) {
+                NSString *htmlUrl = nil;
+                for (NSDictionary *dd in [episodesInfo objectForKey:@"video_urls"]) {
+                    if ([[dd objectForKey:@"source"] isEqualToString:@"le_tv_fee"]) {
+                        htmlUrl = [dd objectForKey:@"url"];
+                        break;
+                    }
                 }
-            }
-            if (htmlUrl != nil) {
-                NSString *subname = [episodesInfo objectForKey:@"name"];
-                NSDictionary *resultDic = [CommonMotheds getLetvRealUrlWithHtml:htmlUrl prodId:prodId_ subname:subname];
-                [temp_dic setObject:[[resultDic objectForKey:@"down_urls"] objectForKey:@"urls"] forKey:@"urls"];
+                if (htmlUrl != nil) {
+                    NSString *subname = [episodesInfo objectForKey:@"name"];
+                    NSDictionary *resultDic = [CommonMotheds getLetvRealUrlWithHtml:htmlUrl prodId:prodId_ subname:subname];
+                    if (resultDic != nil) {
+                        [temp_dic setObject:[[resultDic objectForKey:@"down_urls"] objectForKey:@"urls"] forKey:@"urls"];
+                    }
+                }
+                
             }
         }
         else if ([source_str isEqualToString:@"fengxing"]){
@@ -1179,7 +1190,7 @@ NSComparator cmpString = ^(id obj1, id obj2){
                 NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:fromBaidu], @"fromBaidu", nil];
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"addWebView"
                                                                     object:self
-                                                                  userInfo:userInfo];
+                                                      userInfo:userInfo];
             }
             
             break;
@@ -1188,7 +1199,6 @@ NSComparator cmpString = ^(id obj1, id obj2){
 }
 
 -(void)retryUrltoPlay{
-    
     play_url_index ++;
     
     switch (clear_type) {
@@ -1259,6 +1269,85 @@ NSComparator cmpString = ^(id obj1, id obj2){
     }
     
     
+}
+
+-(void)proceedForLetv{
+    NSDictionary *dic = nil;
+    //BOOL hasOtherSource = [self ishasOtherSource];
+    switch (clear_type) {
+        case PLAIN_CLEAR:{
+            if ([plainClearArr count] >  play_url_index) {
+                dic = [plainClearArr objectAtIndex:play_url_index];
+            }
+            break;
+        }
+        case HIGH_CLEAR:{
+            if ([highClearArr count] > play_url_index ) {
+               dic = [highClearArr objectAtIndex:play_url_index];
+            }
+            break;
+        }
+        case SUPER_CLEAR:{
+            if ([superClearArr count] > play_url_index ) {
+               dic = [superClearArr objectAtIndex:play_url_index] ;
+            }
+            
+            break;
+        }
+        default:{
+            NSMutableArray *playUrlArr = [NSMutableArray arrayWithCapacity:5];
+            
+            if ([highClearArr count]>0) {
+                [playUrlArr addObjectsFromArray:highClearArr];
+            }
+            if ([superClearArr count]>0) {
+                [playUrlArr addObjectsFromArray:superClearArr];
+            }
+            
+            if ([plainClearArr count]>0) {
+                [playUrlArr addObjectsFromArray:plainClearArr];
+            }
+            if (play_url_index < [playUrlArr count ]) {
+                dic = [playUrlArr objectAtIndex:play_url_index];
+            }
+            break;
+        }
+    }
+    if (dic != nil) {
+        if (([[dic objectForKey:@"source"] isEqualToString:@"le_tv_fee"]||[[dic objectForKey:@"source"] isEqualToString:@"letv"]) /*&& !hasOtherSource*/) {
+            isResetLetvData_ = YES;
+            dispatch_async( dispatch_queue_create("newQueue", NULL), ^{
+                [self initDataSource:playNum];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self beginToPlay];
+                    [self clearSelectView];
+                });
+            });
+        }
+        else{
+          [self retryUrltoPlay];
+        }
+    }
+
+}
+-(BOOL)ishasOtherSource{
+    NSMutableArray *playUrlArr = [NSMutableArray arrayWithCapacity:5];
+    if ([highClearArr count]>0) {
+        [playUrlArr addObjectsFromArray:highClearArr];
+    }
+    if ([superClearArr count]>0) {
+        [playUrlArr addObjectsFromArray:superClearArr];
+    }
+    
+    if ([plainClearArr count]>0) {
+        [playUrlArr addObjectsFromArray:plainClearArr];
+    }
+    for (NSDictionary *dic in playUrlArr) {
+        if (![[dic objectForKey:@"source"] isEqualToString:@"le_tv_fee"] && ![[dic objectForKey:@"source"] isEqualToString:@"letv"]) {
+            return YES;
+        }
+    }
+    return NO;
 }
 -(void)showNOThisClearityUrl:(BOOL)bol{
     if (bol) {
@@ -1388,7 +1477,8 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
     
     //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
-        [self retryUrltoPlay];
+        //[self retryUrltoPlay];
+        [self proceedForLetv];
     }
     
 }
@@ -1414,7 +1504,8 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
         }
         
     }
-    [self retryUrltoPlay];
+    //[self retryUrltoPlay];
+     [self proceedForLetv];
 }
 -(void)initTopToolBar{
     topToolBar_ = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 20, kFullWindowHeight, 38)];
@@ -2751,6 +2842,7 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
         islocalFile_ = NO;
         [self disableBottomToolBarButtons];
         [self addCacheview];
+        isResetLetvData_ = NO;
         [self initDataSource:playNum];
         [self beginToPlay];
         

@@ -87,6 +87,7 @@ enum
     BOOL    isPlayOnTV;
     BOOL    isTVReady;
     NSString *sourceStr;
+    BOOL isResetLetvData_ ;
 }
 @property (nonatomic) int type;
 @property (nonatomic) double m3u8Duration;
