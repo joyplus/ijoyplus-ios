@@ -244,13 +244,13 @@
 
 +(NSDictionary *)getLetvRealUrlWithHtml:(NSString *)url prodId:(NSString *)prodId subname:(NSString *)subname{
  
-    NSString *urlStr = [NSString stringWithFormat:@"%@%@",LETV_BASEURL,url];
+    NSString *urlStr = [NSString stringWithFormat:@"%@%@&id=%@&episode=%@",LETV_BASEURL,url,prodId,subname];
 
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:prodId,@"id",
-                                subname,@"episode",nil];
+//    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:prodId,@"id",
+//                                subname,@"episode",nil];
 
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:urlStr]];
-    [request setAllHTTPHeaderFields:parameters];
+//    [request setAllHTTPHeaderFields:parameters];
     
     NSError *error;
     NSURLResponse *response;
