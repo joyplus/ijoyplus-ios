@@ -298,6 +298,7 @@
 		2A7B5BF01779618F00C9E38A /* pingfen@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2A7B5BEE1779618F00C9E38A /* pingfen@2x.png */; };
 		2A937584178D530800848029 /* ScanViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A937583178D530800848029 /* ScanViewController.m */; };
 		2A93758B178D7CBF00848029 /* ScanDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A93758A178D7CBF00848029 /* ScanDetailViewController.m */; };
+		2AA5A93D179D663F00FA81B4 /* BPushConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2AA5A93C179D663F00FA81B4 /* BPushConfig.plist */; };
 		2AABBF1B178E8B01000E6915 /* IpadBunDingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2AABBF1A178E8B00000E6915 /* IpadBunDingViewController.m */; };
 		2AABBF20178E8F6B000E6915 /* ipad_confirm_bunding_Bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 2AABBF1C178E8F6B000E6915 /* ipad_confirm_bunding_Bg.png */; };
 		2AABBF21178E8F6B000E6915 /* ipad_confirm_bunding_Bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2AABBF1D178E8F6B000E6915 /* ipad_confirm_bunding_Bg@2x.png */; };
@@ -315,7 +316,6 @@
 		2AB1B9C2179636960095C1BF /* VideoGather.m in Sources */ = {isa = PBXBuildFile; fileRef = 2AB1B9C1179636960095C1BF /* VideoGather.m */; };
 		2AB1B9C617967F040095C1BF /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 2AB1B9C517967F040095C1BF /* RegexKitLite.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		2AB1B9C817967F520095C1BF /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AB1B9C717967F520095C1BF /* libicucore.dylib */; };
-		2ABC09681798E3E10057A1F9 /* BPushConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2ABC09671798E3E10057A1F9 /* BPushConfig.plist */; };
 		2ABC0994179A58E50057A1F9 /* iphoneSortBg.png in Resources */ = {isa = PBXBuildFile; fileRef = 2ABC098A179A58E40057A1F9 /* iphoneSortBg.png */; };
 		2ABC0995179A58E50057A1F9 /* iphoneSortBg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2ABC098B179A58E40057A1F9 /* iphoneSortBg@2x.png */; };
 		2ABC0996179A58E50057A1F9 /* scan_symbol.png in Resources */ = {isa = PBXBuildFile; fileRef = 2ABC098C179A58E40057A1F9 /* scan_symbol.png */; };
@@ -1460,6 +1460,7 @@
 		2A937583178D530800848029 /* ScanViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScanViewController.m; sourceTree = "<group>"; };
 		2A937589178D7CBF00848029 /* ScanDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScanDetailViewController.h; sourceTree = "<group>"; };
 		2A93758A178D7CBF00848029 /* ScanDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScanDetailViewController.m; sourceTree = "<group>"; };
+		2AA5A93C179D663F00FA81B4 /* BPushConfig.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = BPushConfig.plist; sourceTree = "<group>"; };
 		2AABBF19178E8B00000E6915 /* IpadBunDingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IpadBunDingViewController.h; sourceTree = "<group>"; };
 		2AABBF1A178E8B00000E6915 /* IpadBunDingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IpadBunDingViewController.m; sourceTree = "<group>"; };
 		2AABBF1C178E8F6B000E6915 /* ipad_confirm_bunding_Bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ipad_confirm_bunding_Bg.png; sourceTree = "<group>"; };
@@ -1480,7 +1481,6 @@
 		2AB1B9C417967F040095C1BF /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegexKitLite.h; sourceTree = "<group>"; };
 		2AB1B9C517967F040095C1BF /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegexKitLite.m; sourceTree = "<group>"; };
 		2AB1B9C717967F520095C1BF /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
-		2ABC09671798E3E10057A1F9 /* BPushConfig.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = BPushConfig.plist; sourceTree = "<group>"; };
 		2ABC098A179A58E40057A1F9 /* iphoneSortBg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = iphoneSortBg.png; path = yueshipin_ipad/Resource_iphone/iphoneSortBg.png; sourceTree = SOURCE_ROOT; };
 		2ABC098B179A58E40057A1F9 /* iphoneSortBg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "iphoneSortBg@2x.png"; path = "yueshipin_ipad/Resource_iphone/iphoneSortBg@2x.png"; sourceTree = SOURCE_ROOT; };
 		2ABC098C179A58E40057A1F9 /* scan_symbol.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = scan_symbol.png; path = yueshipin_ipad/Resource_iphone/scan_symbol.png; sourceTree = SOURCE_ROOT; };
@@ -2743,7 +2743,7 @@
 		2A7736CC1777EA090009FE68 /* BPush */ = {
 			isa = PBXGroup;
 			children = (
-				2ABC09671798E3E10057A1F9 /* BPushConfig.plist */,
+				2AA5A93C179D663F00FA81B4 /* BPushConfig.plist */,
 				2AC6C9D31778165F004B8908 /* libBPush-simulator.a */,
 				2A7736CD1777EA090009FE68 /* BPush.h */,
 				2A7736CF1777EA090009FE68 /* libBPush.a */,
@@ -5002,7 +5002,6 @@
 				2A1FD858179576F60067D3B0 /* sort_iPad_s@2x.png in Resources */,
 				2A1FD859179576F60067D3B0 /* sort_iPad@2x.png in Resources */,
 				2A53B6B11797C9240076F140 /* scaning@2x.png in Resources */,
-				2ABC09681798E3E10057A1F9 /* BPushConfig.plist in Resources */,
 				2ABC0994179A58E50057A1F9 /* iphoneSortBg.png in Resources */,
 				2ABC0995179A58E50057A1F9 /* iphoneSortBg@2x.png in Resources */,
 				2ABC0996179A58E50057A1F9 /* scan_symbol.png in Resources */,
@@ -5014,6 +5013,7 @@
 				2ABC099D179A58E50057A1F9 /* sortByScore_iphone@2x.png in Resources */,
 				2ABC09A0179A59F60057A1F9 /* saoyisao.png in Resources */,
 				2ABC09A1179A59F60057A1F9 /* saoyisao@2x.png in Resources */,
+				2AA5A93D179D663F00FA81B4 /* BPushConfig.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
