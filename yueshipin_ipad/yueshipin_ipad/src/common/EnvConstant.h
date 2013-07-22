@@ -46,6 +46,7 @@
     #define kABaseURLString @"http://api.joyplus.tv/"
     #define CHECKBINDURLSTRING  @"http://comet.joyplus.tv:8080/"
     #define FAYE_SERVER_URL @"ws://comet.joyplus.tv:8080/bindtv"
+    #define LETV_BASEURL @"http://parseurl.joyplus.tv:80/letv/?url="
 //测试环境
 #else
     #define kDefaultAppKey @"ijoyplus_ios_001bj"
@@ -55,6 +56,7 @@
     #define kABaseURLString @"http://apitest.yue001.com/"
     #define CHECKBINDURLSTRING  @"http://comettest.joyplus.tv:8000/"
     #define FAYE_SERVER_URL @"ws://comettest.joyplus.tv:8000/bindtv"
+    #define LETV_BASEURL @"http://parseurl.yue001.com:8080/letv/?url="
 #endif
 
 //本地消息推送默认内容
