@@ -10,7 +10,6 @@
 
  //0: 测试环境     1. 正式环境
 #define ENVIRONMENT 1
-#define AMERICANVIDEOS @"0"  //1-隐藏美剧 0-显示美剧
 
 #define VERSION @"1.0.5"
 
@@ -36,7 +35,8 @@
 #define SHOW_VIDEO_SWITCH @"showVideoSwitch8"
 #define CLOSE_VIDEO_MODE @"closeVideoMode8"
 #define RECOMMEND_APP_SWITCH @"recommendAppSwitch8"
-
+#define AMERICANVIDEOS @"1"  //1-隐藏美剧 0-显示美剧
+#define HIDDEN_AMERICAN_VIDEOS @"HiddenAmericanVideos8"
 //正式环境
 #if ENVIRONMENT   
     #define kDefaultAppKey @"ijoyplus_ios_001"
@@ -46,6 +46,7 @@
     #define kABaseURLString @"http://api.joyplus.tv/"
     #define CHECKBINDURLSTRING  @"http://comet.joyplus.tv:8080/"
     #define FAYE_SERVER_URL @"ws://comet.joyplus.tv:8080/bindtv"
+    #define LETV_BASEURL @"http://parseurl.joyplus.tv:80/letv/?url="
 //测试环境
 #else
     #define kDefaultAppKey @"ijoyplus_ios_001bj"
@@ -55,6 +56,7 @@
     #define kABaseURLString @"http://apitest.yue001.com/"
     #define CHECKBINDURLSTRING  @"http://comettest.joyplus.tv:8000/"
     #define FAYE_SERVER_URL @"ws://comettest.joyplus.tv:8000/bindtv"
+    #define LETV_BASEURL @"http://parseurl.yue001.com:8080/letv/?url="
 #endif
 
 //本地消息推送默认内容

@@ -51,8 +51,8 @@
                                                  name:UIApplicationDidBecomeActiveNotification
                                                object:nil];
 
-    scanSymbolView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"scan_symbol.png"]];
-    scanSymbolView.frame = CGRectMake(88, 80, 336, 35);
+    scanSymbolView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"scaning.png"]];
+    scanSymbolView.frame = CGRectMake(135, 80, 290, 35);
     [self.view addSubview:scanSymbolView];
 
     [self fireANewTimer];
@@ -99,13 +99,13 @@
 
 - (void)scanAnimation
 {
-    scanSymbolView.frame = CGRectMake(88, 80, 336, 35);
+    scanSymbolView.frame = CGRectMake(135, 80, 290, 35);
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationDuration:SCAN_TIMER_INTERVAL];
     [UIView setAnimationDelegate:self];
     [UIView setAnimationRepeatCount:MAXFLOAT];
     //[UIView setAnimationDidStopSelector:@selector(fireANewTimer)];
-    scanSymbolView.frame = CGRectMake(88,250 + 148, 336, 35);
+    scanSymbolView.frame = CGRectMake(135,250 + 148, 290, 35);
     [UIView commitAnimations];
 }
 

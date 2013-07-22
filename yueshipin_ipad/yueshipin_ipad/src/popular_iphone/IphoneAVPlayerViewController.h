@@ -96,6 +96,8 @@
     NSArray * localPlaylist;
     
     UIButton *airPlayButton_;
+    
+    BOOL isResetLetvData_;
 }
 @property (nonatomic, strong) UIToolbar *topToolBar;
 @property (nonatomic, strong) UIToolbar *bottomToolBar;

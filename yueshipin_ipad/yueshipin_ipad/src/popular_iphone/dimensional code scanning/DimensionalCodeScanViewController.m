@@ -141,7 +141,7 @@
     if (![symbol.data hasPrefix:@"joy"])
     {
         UIAlertView * alert = [[UIAlertView alloc] initWithTitle:nil
-                                                         message:@"请扫描悦视频TV版的\"我的悅视频\"中的二维码哦"
+                                                         message:@"请扫描悦视频TV版的\"个人中心\"中的二维码哦"
                                                         delegate:nil
                                                cancelButtonTitle:@"我知道了"
                                                otherButtonTitles:nil, nil];

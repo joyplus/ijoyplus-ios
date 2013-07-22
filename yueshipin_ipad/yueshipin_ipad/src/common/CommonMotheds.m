@@ -13,10 +13,9 @@
 #import "SubdownloadItem.h"
 #import "CMConstants.h"
 #import "TFHpple.h"
-
-
+#import "AFHTTPClient.h"
 #define IS_IPHONE5  ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(640, 1136), [[UIScreen mainScreen] currentMode].size) : NO)
-
+#define LETV_APPKEY  @"90227b001edcf46abab5f9dc428877d5"
 @implementation CommonMotheds
 +(BOOL)isNetworkEnbled{
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
@@ -240,8 +239,31 @@
         }
     }
     return downloadURL;
-}
+} 
 
++(NSDictionary *)getLetvRealUrlWithHtml:(NSString *)url prodId:(NSString *)prodId subname:(NSString *)subname{
+ 
+    NSString *urlStr = [NSString stringWithFormat:@"%@%@&id=%@&episode=%@",LETV_BASEURL,url,prodId,subname];
+
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:LETV_APPKEY,@"appkey",nil];
+
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:urlStr]];
+   [request setAllHTTPHeaderFields:parameters];
+    
+    NSError *error;
+    NSURLResponse *response;
+    NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
+    if (error) {
+        NSLog(@"解析letv真实视频地址失败:%@",error);
+        return nil;
+    }
+    NSDictionary *jsonObject = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
+    if (error) {
+        NSLog(@"解析letv真实视频地址失败:%@",error);
+        return nil;
+    }
+    return jsonObject;
+}
 
 + (BOOL)isIphone5
 {

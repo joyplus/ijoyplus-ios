@@ -19,5 +19,6 @@
                        type:(NSInteger)type;
 +(int)getOnlineConfigValue;
 +(NSString *)getDownloadURLWithHTML:(NSString *)url;
++(NSDictionary *)getLetvRealUrlWithHtml:(NSString *)url prodId:(NSString *)prodId subname:(NSString *)subname;
 + (BOOL)isIphone5;
 @end
