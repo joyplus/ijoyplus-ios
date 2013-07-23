@@ -9,11 +9,9 @@
 #import <Foundation/Foundation.h>
 
  //0: 测试环境     1. 正式环境
-#define ENVIRONMENT 0
+#define ENVIRONMENT 1
 
-#define VERSION @"1.0.0alpha"
-
-#define AMERICANVIDEOS @"0"  //1-hidden ,0-show
+#define VERSION @"1.0.1alpha"
 
 //0: 关闭loglog      1. 打开log      Log功能只有再测试环境才生效
 #define LOG_ENABLED 0
@@ -38,7 +36,8 @@
 #define SHOW_VIDEO_SWITCH @"showVideoSwitch1"
 #define CLOSE_VIDEO_MODE @"closeVideoMode1"
 #define RECOMMEND_APP_SWITCH @"recommendAppSwitch1"
-
+#define HIDDEN_AMERICAN_VIDEOS @"HiddenAmericanVideos1"
+#define AMERICANVIDEOS @"1"  //1-hidden ,0-show
 //正式环境
 #if ENVIRONMENT   
     #define kDefaultAppKey @"ijoyplus_ios_001"
