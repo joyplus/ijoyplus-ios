@@ -419,8 +419,40 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
             [temp_dic setObject:@"0.1" forKey:@"level"];
         } else if ([source_str isEqualToString:@"le_tv_fee"]) {
             [temp_dic setObject:@"0.2" forKey:@"level"];
+            if (isResetLetvData_) {
+                NSString *htmlUrl = nil;
+                for (NSDictionary *dd in [episodesInfo objectForKey:@"video_urls"]) {
+                    if ([[dd objectForKey:@"source"] isEqualToString:@"le_tv_fee"]) {
+                        htmlUrl = [dd objectForKey:@"url"];
+                        break;
+                    }
+                }
+                if (htmlUrl != nil) {
+                    NSString *subnameStr = [episodesInfo objectForKey:@"name"];
+                    NSDictionary *resultDic = [CommonMotheds getLetvRealUrlWithHtml:htmlUrl prodId:prodId subname:subnameStr];
+                    if (resultDic != nil) {
+                        [temp_dic setObject:[[resultDic objectForKey:@"down_urls"] objectForKey:@"urls"] forKey:@"urls"];
+                    }
+                }
+            }
         } else if ([source_str isEqualToString:@"letv"]) {
             [temp_dic setObject:@"1" forKey:@"level"];
+            if (isResetLetvData_) {
+                NSString *htmlUrl = nil;
+                for (NSDictionary *dd in [episodesInfo objectForKey:@"video_urls"]) {
+                    if ([[dd objectForKey:@"source"] isEqualToString:@"le_tv_fee"]) {
+                        htmlUrl = [dd objectForKey:@"url"];
+                        break;
+                    }
+                }
+                if (htmlUrl != nil) {
+                    NSString *subnameStr = [episodesInfo objectForKey:@"name"];
+                    NSDictionary *resultDic = [CommonMotheds getLetvRealUrlWithHtml:htmlUrl prodId:prodId subname:subnameStr];
+                    if (resultDic != nil) {
+                        [temp_dic setObject:[[resultDic objectForKey:@"down_urls"] objectForKey:@"urls"] forKey:@"urls"];
+                    }
+                }
+            }
         } else if ([source_str isEqualToString:@"fengxing"]){
             [temp_dic setObject:@"2" forKey:@"level"];
         } else if ([source_str isEqualToString:@"qiyi"]){
@@ -619,6 +651,27 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     }
 }
 
+-(void)proceedForLetv{
+    NSDictionary *tempDic = [combinedArr objectAtIndex:combinedIndex];
+    resolution = [tempDic objectForKey:RESOLUTION_KEY];
+    NSDictionary *urlDic = [tempDic objectForKey:URL_KEY];
+    if ([[urlDic objectForKey:@"source"]isEqualToString:@"le_tv_fee"]||[[urlDic objectForKey:@"source"]isEqualToString:@"letv"]) {
+        isResetLetvData_ = YES;
+        dispatch_async( dispatch_queue_create("newQueue", NULL), ^{
+            [self parseVideoData:[video objectForKey:@"episodes"]];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self parseResolutionNum];
+                [self showPlayCacheView];
+                [self sendRequest];
+            });
+        });
+    }
+    else{
+        combinedIndex++;
+        [self sendRequest];
+    }
+}
+
 - (void)showWebView
 {
     [self updateWatchRecord];
@@ -643,8 +696,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     NSLog(@"error url");
     [connection cancel];
     //如果所有的视频地址都无效，则播放网页地址
-    combinedIndex++;
-    [self sendRequest];
+//    combinedIndex++;
+//    [self sendRequest];
+    [self proceedForLetv];
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
@@ -668,12 +722,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                 workingUrl = connection.originalRequest.URL;
                 [self performSelectorOnMainThread:@selector(setURL:) withObject:workingUrl waitUntilDone:NO];
             } else {
-                combinedIndex++;
-                [self sendRequest];
+//                combinedIndex++;
+//                [self sendRequest];
+                [self proceedForLetv];
             }
         } else {
-            combinedIndex++;
-            [self sendRequest];
+//            combinedIndex++;
+//            [self sendRequest];
+            [self proceedForLetv];
         }
     }
     [connection cancel];

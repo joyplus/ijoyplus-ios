@@ -717,8 +717,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                 workingUrl = connection.originalRequest.URL;
                 [self performSelectorOnMainThread:@selector(setURL:) withObject:workingUrl waitUntilDone:NO];
             } else {
-                combinedIndex++;
-                [self sendRequest];
+//                combinedIndex++;
+//                [self sendRequest];
+                [self proceedForLetv];
             }
         } else {
 //            combinedIndex++;
