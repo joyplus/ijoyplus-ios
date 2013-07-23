@@ -35,11 +35,11 @@
 
 
 //友盟在线参数
-#define SHOW_VIDEO_SWITCH @"showVideoSwitch1"
-#define CLOSE_VIDEO_MODE @"closeVideoMode1"
-#define RECOMMEND_APP_SWITCH @"recommendAppSwitch1"
+#define SHOW_VIDEO_SWITCH @"showVideoSwitch3"
+#define CLOSE_VIDEO_MODE @"closeVideoMode4"
+#define RECOMMEND_APP_SWITCH @"recommendAppSwitch3"
 #define AMERICANVIDEOS @"1"  //1-show,0-hidden
-#define HIDDEN_AMERICAN_VIDEOS @"HiddenAmericanVideos1"
+#define HIDDEN_AMERICAN_VIDEOS @"HiddenAmericanVideos3"
 //正式环境
 #if ENVIRONMENT   
     #define kDefaultAppKey @"ijoyplus_ios_001"
