@@ -669,7 +669,34 @@ extern NSComparator cmpString;
          }
         
     }
+     else if (alertView.tag == 20000) {
+        if (buttonIndex == 1) {
+            [self wechatShare:WXSceneSession];
+            [MobClick event:@"ue_wechat_friend_share"];
+        }
+        else if (buttonIndex == 2){
+            [self wechatShare:WXSceneTimeline];
+            [MobClick event:@"ue_wechat_social_share"];
+        }
+    }
+    else if(alertView.tag  == 30000){
+        if (buttonIndex == 1) {
+            if ([WXApi isWXAppInstalled]) {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"分享到：" message:nil delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"微信好友",@"微信朋友圈", nil];
+                alert.tag = 20000;
+                [alert show];
+            }
+            else{
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"亲，你还没有安装微信，请安装后再试。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+                [alert show];
+            }
+            
+        }
+        
+    }
+
 }
+
 
 - (void)willPlayVideo:(int)num
 {
