@@ -18,4 +18,5 @@
 + (NSArray *)localPlaylists:(NSString *)mediaId
                        type:(NSInteger)type;
 +(NSString *)getDownloadURLWithHTML:(NSString *)url;
++(NSDictionary *)getLetvRealUrlWithHtml:(NSString *)url prodId:(NSString *)prodId subname:(NSString *)subname;
 @end

@@ -32,11 +32,11 @@
 //#define CHANNEL_ID @"b006001"
 
 //友盟在线参数
-#define SHOW_VIDEO_SWITCH @"showVideoSwitch8"
-#define CLOSE_VIDEO_MODE @"closeVideoMode8"
-#define RECOMMEND_APP_SWITCH @"recommendAppSwitch8"
+#define SHOW_VIDEO_SWITCH @"showVideoSwitch9"
+#define CLOSE_VIDEO_MODE @"closeVideoMode9"
+#define RECOMMEND_APP_SWITCH @"recommendAppSwitch9"
 #define AMERICANVIDEOS @"1"  //1-隐藏美剧 0-显示美剧
-#define HIDDEN_AMERICAN_VIDEOS @"HiddenAmericanVideos8"
+#define HIDDEN_AMERICAN_VIDEOS @"HiddenAmericanVideos9"
 //正式环境
 #if ENVIRONMENT   
     #define kDefaultAppKey @"ijoyplus_ios_001"

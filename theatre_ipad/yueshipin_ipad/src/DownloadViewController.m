@@ -102,7 +102,7 @@
         
         leftWidth = 15;
         
-        topImage = [[UIImageView alloc]initWithFrame:CGRectMake(leftWidth, 40, 260, 42)];
+        topImage = [[UIImageView alloc]initWithFrame:CGRectMake(leftWidth, 40, 310, 42)];
         topImage.image = [UIImage imageNamed:@"download_title"];
         [self.view addSubview:topImage];
         
