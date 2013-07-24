@@ -147,13 +147,13 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
     [feedBack addTarget:self action:@selector(feedBack:) forControlEvents:UIControlEventTouchUpInside];
     [scrollView addSubview:feedBack];
     
-    UIButton *aboutUs = [UIButton buttonWithType:UIButtonTypeCustom];
-    aboutUs.frame = CGRectMake(10, 320, 300, 35);
-    //[aboutUs setTitle:@"关于我们" forState:UIControlStateNormal];
-    [aboutUs setBackgroundImage:[UIImage imageNamed:@"my_setting_other2.png"] forState:UIControlStateNormal];
-    [aboutUs setBackgroundImage:[UIImage imageNamed:@"my_setting_other2_s.png"] forState:UIControlStateHighlighted];
-    [aboutUs addTarget:self action:@selector(aboutUs:) forControlEvents:UIControlEventTouchUpInside];
-    [scrollView addSubview:aboutUs];
+//    UIButton *aboutUs = [UIButton buttonWithType:UIButtonTypeCustom];
+//    aboutUs.frame = CGRectMake(10, 320, 300, 35);
+//    //[aboutUs setTitle:@"关于我们" forState:UIControlStateNormal];
+//    [aboutUs setBackgroundImage:[UIImage imageNamed:@"my_setting_other2.png"] forState:UIControlStateNormal];
+//    [aboutUs setBackgroundImage:[UIImage imageNamed:@"my_setting_other2_s.png"] forState:UIControlStateHighlighted];
+//    [aboutUs addTarget:self action:@selector(aboutUs:) forControlEvents:UIControlEventTouchUpInside];
+//    [scrollView addSubview:aboutUs];
     
     UIButton *update = [UIButton buttonWithType:UIButtonTypeCustom];
     update.frame = CGRectMake(10, 206, 300, 35);
@@ -183,13 +183,13 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
 //    [careUs addTarget:self action:@selector(careUs:) forControlEvents:UIControlEventTouchUpInside];
 //    [scrollView addSubview:careUs];
     
-//    UIButton *suggest = [UIButton buttonWithType:UIButtonTypeCustom];
-//    suggest.frame = CGRectMake(10, 386, 300, 35);
-//    //[suggest setTitle:@"免责声明" forState:UIControlStateNormal];
-//    [suggest setBackgroundImage:[UIImage imageNamed:@"my_setting_other4.png"] forState:UIControlStateNormal];
-//    [suggest setBackgroundImage:[UIImage imageNamed:@"my_setting_other4_s.png"] forState:UIControlStateHighlighted];
-//    [suggest addTarget:self action:@selector(suggest:) forControlEvents:UIControlEventTouchUpInside];
-//    [scrollView addSubview:suggest];
+    UIButton *suggest = [UIButton buttonWithType:UIButtonTypeCustom];
+    suggest.frame = CGRectMake(10, 320, 300, 35);
+    //[suggest setTitle:@"免责声明" forState:UIControlStateNormal];
+    [suggest setBackgroundImage:[UIImage imageNamed:@"my_setting_other4.png"] forState:UIControlStateNormal];
+    [suggest setBackgroundImage:[UIImage imageNamed:@"my_setting_other4_s.png"] forState:UIControlStateHighlighted];
+    [suggest addTarget:self action:@selector(suggest:) forControlEvents:UIControlEventTouchUpInside];
+    [scrollView addSubview:suggest];
     
     UIButton *versionBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     versionBtn.frame = CGRectMake(10, 353, 300, 35);
