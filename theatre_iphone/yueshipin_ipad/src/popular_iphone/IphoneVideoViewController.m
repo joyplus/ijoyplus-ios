@@ -162,7 +162,8 @@ extern NSComparator cmpString;
             NSMutableDictionary * newDic = [NSMutableDictionary dictionary];
             [newDic setObject:[urlDic objectForKey:@"file"] forKey:@"file"];
             [newDic setObject:[urlDic objectForKey:@"type"] forKey:@"type"];
-            [newDic setObject:tureDownloadURL forKey:@"url"];
+            if (nil != tureDownloadURL)
+                [newDic setObject:tureDownloadURL forKey:@"url"];
             [newArr addObject:newDic];
         }
         [downloadInfo setObject:newArr forKey:@"urls"];
