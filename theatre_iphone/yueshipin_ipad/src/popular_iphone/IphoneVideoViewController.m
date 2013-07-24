@@ -162,7 +162,8 @@ extern NSComparator cmpString;
             NSMutableDictionary * newDic = [NSMutableDictionary dictionary];
             [newDic setObject:[urlDic objectForKey:@"file"] forKey:@"file"];
             [newDic setObject:[urlDic objectForKey:@"type"] forKey:@"type"];
-            [newDic setObject:tureDownloadURL forKey:@"url"];
+            if (nil != tureDownloadURL)
+                [newDic setObject:tureDownloadURL forKey:@"url"];
             [newArr addObject:newDic];
         }
         [downloadInfo setObject:newArr forKey:@"urls"];
@@ -420,6 +421,7 @@ extern NSComparator cmpString;
     UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"分享到：" delegate:self cancelButtonTitle:@"取消"
                                          destructiveButtonTitle:nil
                                               otherButtonTitles:@"新浪微博",@"微信好友",@"微信朋友圈", nil];
+    sheet.tag = 10000001;
     [sheet showFromTabBar:self.tabBarController.tabBar];
 
     
@@ -692,7 +694,7 @@ extern NSComparator cmpString;
     NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:@"kUserId"];
     NSDictionary * data = (NSDictionary *)[[ContainerUtility sharedInstance] attributeForKey:[NSString stringWithFormat:@"%@_isBunding",userId]];
     NSNumber * isbunding = [data objectForKey:KEY_IS_BUNDING];
-    isbunding = [NSNumber numberWithInt:1];
+    //isbunding = [NSNumber numberWithInt:1];
     if ([isbunding boolValue]){
         if (![BundingTVManager shareInstance].isConnected)
         {

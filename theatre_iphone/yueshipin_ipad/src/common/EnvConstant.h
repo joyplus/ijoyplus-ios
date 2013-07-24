@@ -9,11 +9,9 @@
 #import <Foundation/Foundation.h>
 
  //0: 测试环境     1. 正式环境
-#define ENVIRONMENT 0
+#define ENVIRONMENT 1
 
-#define VERSION @"1.0.0alpha"
-
-#define AMERICANVIDEOS @"0"  //1-hidden ,0-show
+#define VERSION @"1.0.1"
 
 //0: 关闭loglog      1. 打开log      Log功能只有再测试环境才生效
 #define LOG_ENABLED 0
@@ -38,7 +36,8 @@
 #define SHOW_VIDEO_SWITCH @"showVideoSwitch1"
 #define CLOSE_VIDEO_MODE @"closeVideoMode1"
 #define RECOMMEND_APP_SWITCH @"recommendAppSwitch1"
-
+#define HIDDEN_AMERICAN_VIDEOS @"HiddenAmericanVideos1"
+#define AMERICANVIDEOS @"1"  //1-hidden ,0-show
 //正式环境
 #if ENVIRONMENT   
     #define kDefaultAppKey @"ijoyplus_ios_001"
@@ -48,6 +47,7 @@
     #define kABaseURLString @"http://api.joyplus.tv/"
     #define CHECKBINDURLSTRING  @"http://comet.joyplus.tv:8080/"
     #define FAYE_SERVER_URL @"ws://comet.joyplus.tv:8080/bindtv"
+    #define LETV_BASEURL @"http://parseurl.joyplus.tv:80/letv/?url="
 //测试环境
 #else
     #define kDefaultAppKey @"ijoyplus_ios_001bj"
@@ -57,6 +57,7 @@
     #define kABaseURLString @"http://apitest.yue001.com/"
     #define CHECKBINDURLSTRING  @"http://comettest.joyplus.tv:8000/"
     #define FAYE_SERVER_URL @"ws://comettest.joyplus.tv:8000/bindtv"
+    #define LETV_BASEURL @"http://parseurl.yue001.com:8080/letv/?url="
 #endif
 
 //本地消息推送默认内容

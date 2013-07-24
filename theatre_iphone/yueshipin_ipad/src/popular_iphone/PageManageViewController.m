@@ -28,6 +28,7 @@
 #import "UIUtility.h"
 #import "ContainerUtility.h"
 #import "CMConstants.h"
+#import "EnvConstant.h"
 #define PAGE_NUM 4
 #define TV_TYPE 9000
 #define MOVIE_TYPE 9001

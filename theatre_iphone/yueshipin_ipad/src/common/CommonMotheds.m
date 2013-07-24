@@ -13,9 +13,9 @@
 #import "SubdownloadItem.h"
 #import "CMConstants.h"
 #import "TFHpple.h"
-
+#import "EnvConstant.h"
 #define IS_IPHONE5  ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(640, 1136), [[UIScreen mainScreen] currentMode].size) : NO)
-
+#define LETV_APPKEY  @"90227b001edcf46abab5f9dc428877d5"
 @implementation CommonMotheds
 
 + (BOOL)isIphone5
@@ -232,12 +232,10 @@
         
 //        NSLog(@"%@",[dic objectForKey:@"class"]);
 //        NSLog(@"%@",[dic objectForKey:@"id"]);
-        NSLog(@"%@",[element content]);
         
         if (([[dic objectForKey:@"class"] isEqualToString:@"new-dbtn"]
-             && [[dic objectForKey:@"id"] isEqualToString:@"downFileButtom"]) ||
-            ([[dic objectForKey:@"class"] isEqualToString:@"btn blue-btn"]
-             && [[dic objectForKey:@"id"] isEqualToString:@"fileDownload"]))
+             && [[dic objectForKey:@"id"] isEqualToString:@"downFileButtom"])
+            || [[dic objectForKey:@"id"] isEqualToString:@"fileDownload"])
         {
             downloadURL = [element objectForKey:@"href"];
             [downloadURL stringByReplacingOccurrencesOfString:@"amp;" withString:@""];
@@ -246,6 +244,30 @@
         }
     }
     return downloadURL;
+}
+
++(NSDictionary *)getLetvRealUrlWithHtml:(NSString *)url prodId:(NSString *)prodId subname:(NSString *)subname{
+    
+    NSString *urlStr = [NSString stringWithFormat:@"%@%@&id=%@&episode=%@",LETV_BASEURL,url,prodId,subname];
+    
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:LETV_APPKEY,@"appkey",nil];
+    
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:urlStr]];
+    [request setAllHTTPHeaderFields:parameters];
+    
+    NSError *error;
+    NSURLResponse *response;
+    NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
+    if (error) {
+        NSLog(@"解析letv真实视频地址失败:%@",error);
+        return nil;
+    }
+    NSDictionary *jsonObject = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
+    if (error) {
+        NSLog(@"解析letv真实视频地址失败:%@",error);
+        return nil;
+    }
+    return jsonObject;
 }
 
 @end

@@ -108,7 +108,7 @@
     float freePresent = [self getFreeDiskspacePercent];
     
     innerView = [[UIView alloc] initWithFrame:CGRectMake(0, 1, 320 * freePresent, 18)];
-    innerView.backgroundColor = [CMConstants yellowColor];//[UIColor colorWithRed:247/255.0 green:100/255.0 blue:136/255.0 alpha:1];
+    innerView.backgroundColor = [UIColor colorWithRed:247/255.0 green:100/255.0 blue:136/255.0 alpha:1];
     innerView.tag = 12345;
     [spaceBackground addSubview:innerView];
     

@@ -225,16 +225,13 @@
         
         //        NSLog(@"%@",[dic objectForKey:@"class"]);
         //        NSLog(@"%@",[dic objectForKey:@"id"]);
-        //NSLog(@"%@",[element content]);
         
         if (([[dic objectForKey:@"class"] isEqualToString:@"new-dbtn"]
              && [[dic objectForKey:@"id"] isEqualToString:@"downFileButtom"]) ||
-            ([[dic objectForKey:@"class"] isEqualToString:@"btn blue-btn"]
-             && [[dic objectForKey:@"id"] isEqualToString:@"fileDownload"]))
+            [[dic objectForKey:@"id"] isEqualToString:@"fileDownload"])
         {
             downloadURL = [element objectForKey:@"href"];
             [downloadURL stringByReplacingOccurrencesOfString:@"amp;" withString:@""];
-            //            NSLog(@"%@",downloadURL);
             return downloadURL;
         }
     }

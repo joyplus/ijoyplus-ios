@@ -9,7 +9,7 @@
 #import "SegmentControlView.h"
 #import "CMConstants.h"
 #import "ContainerUtility.h"
-
+#import "EnvConstant.h"
 #define MOVIE_ALL_TYPE  [NSArray arrayWithObjects:@"全部",@"动作",@"恐怖",@"惊悚",@"爱情",@"悬疑",@"伦理",@"剧情",@"喜剧",@"科幻",@"战争",@"冒险",@"音乐",@"动画",@"运动",@"奇幻",@"传记",@"古装",@"犯罪",@"武侠",@"其他", nil]
 //#define  MOVIE_ALL_AREA  [NSArray arrayWithObjects:@"全部",@"美国",@"内地",@"香港",@"台湾",@"日本",@"韩国",@"欧洲",@"东南亚",@"其他",nil]
 

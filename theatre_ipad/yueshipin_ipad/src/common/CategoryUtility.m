@@ -10,7 +10,7 @@
 #import "CategoryItem.h"
 #import "CMConstants.h"
 #import "ContainerUtility.h"
-
+#import "EnvConstant.h"
 @implementation CategoryUtility
 
 + (NSArray *)getHightlightCategoryByType:(VideoType)type
