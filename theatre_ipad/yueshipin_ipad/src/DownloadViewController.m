@@ -152,7 +152,7 @@
         
         diskUsedProgress_ = [[DDProgressView alloc] initWithFrame:CGRectMake(0, 0, spaceView.frame.size.width - 26, 32)];
         diskUsedProgress_.center = CGPointMake(spaceView.frame.size.width/2, spaceView.frame.size.height/2 - 1);
-        diskUsedProgress_.innerColor = [UIColor colorWithRed:248/255.0 green:148/255.0 blue:48/255.0 alpha:1];
+        diskUsedProgress_.innerColor = [UIColor colorWithRed:247/255.0 green:100/255.0 blue:136/255.0 alpha:1];;
         diskUsedProgress_.outerColor = [UIColor clearColor];
         [spaceView addSubview:diskUsedProgress_];
         
