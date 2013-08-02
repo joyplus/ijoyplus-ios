@@ -160,7 +160,8 @@ extern NSComparator cmpString;
         if (0 != urlArr.count)
         {
             NSDictionary * urlDic = [urlArr objectAtIndex:0];
-            NSString * tureDownloadURL = [CommonMotheds getDownloadURLWithHTML:[urlDic objectForKey:@"url"]];
+//            NSString * tureDownloadURL = [CommonMotheds getDownloadURLWithHTML:[urlDic objectForKey:@"url"]];
+            NSString *tureDownloadURL = [CommonMotheds getDownloadURLWithHTML:[urlDic objectForKey:@"url"] prodId:prodId_ subname:@""];
             NSMutableDictionary * newDic = [NSMutableDictionary dictionary];
             [newDic setObject:[urlDic objectForKey:@"file"] forKey:@"file"];
             [newDic setObject:[urlDic objectForKey:@"type"] forKey:@"type"];
@@ -260,7 +261,8 @@ extern NSComparator cmpString;
             
             NSMutableArray *newUrls = [NSMutableArray arrayWithCapacity:5];
             for (NSDictionary *oneDic in dURL) {
-                NSString * downloadURL = [CommonMotheds getDownloadURLWithHTML:[oneDic objectForKey:@"url"]];
+               // NSString * downloadURL = [CommonMotheds getDownloadURLWithHTML:[oneDic objectForKey:@"url"]];
+                NSString * downloadURL = [CommonMotheds getDownloadURLWithHTML:[oneDic objectForKey:@"url"] prodId:prodId_ subname:@""];
                 NSMutableDictionary * newDic = [NSMutableDictionary dictionary];
                 if (nil != downloadURL)
                 {
@@ -524,7 +526,7 @@ extern NSComparator cmpString;
             message.title = [NSString stringWithFormat:@"我正在看《%@》，不错哦，推荐给你~",name];;
         }
         UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:wechatImgStr_]]];
-        UIImage *newImage = [image resizedImage:CGSizeMake(image.size.width*0.5, image.size.height*0.5) interpolationQuality:kCGInterpolationLow];
+        UIImage *newImage = [image resizedImage:CGSizeMake(image.size.width*0.4, image.size.height*0.4) interpolationQuality:kCGInterpolationLow];
         [message setThumbImage:newImage];
     
         WXWebpageObject *ext = [WXWebpageObject object];
@@ -687,17 +689,43 @@ extern NSComparator cmpString;
         NSDictionary *dic = [episodesArr_ objectAtIndex:playNum_];
         NSArray *webUrlArr = [dic objectForKey:@"video_urls"];
         NSDictionary *urlInfo = [webUrlArr objectAtIndex:0];
-       
+        
         if (buttonIndex == 0) {
-          [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[urlInfo objectForKey:@"url"]]];
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[urlInfo objectForKey:@"url"]]];
         }
         else if(buttonIndex == 1){
-         [self beginPlayVideo:playNum_];
+            [self beginPlayVideo:playNum_];
         }
-    
+        
+    }
+    else if (alertView.tag == 20000) {
+        if (buttonIndex == 1) {
+            [self wechatShare:WXSceneSession];
+            [MobClick event:@"ue_wechat_friend_share"];
+        }
+        else if (buttonIndex == 2){
+            [self wechatShare:WXSceneTimeline];
+            [MobClick event:@"ue_wechat_social_share"];
+        }
+    }
+    else if(alertView.tag  == 30000){
+        if (buttonIndex == 1) {
+            if ([WXApi isWXAppInstalled]) {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"分享到：" message:nil delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"微信好友",@"微信朋友圈", nil];
+                alert.tag = 20000;
+                [alert show];
+            }
+            else{
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"亲，你还没有安装微信，请安装后再试。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+                [alert show];
+            }
+            
+        }
+        
     }
     
 }
+
 
 - (void)willPlayVideo:(int)num
 {

@@ -190,7 +190,8 @@ extern NSComparator cmpString;
         {
             tureURL = [array objectAtIndex:0];
             
-            NSString *downloadURL = [CommonMotheds getDownloadURLWithHTML:tureURL];
+            //NSString *downloadURL = [CommonMotheds getDownloadURLWithHTML:tureURL];
+            NSString *downloadURL = [CommonMotheds getDownloadURLWithHTML:tureURL prodId:prodId subname:@""];
             if (nil != downloadURL)
             {
                 [urls addObject:[NSString stringWithFormat:@"%@|%@",downloadURL,[array objectAtIndex:1]]];
@@ -592,7 +593,7 @@ NSComparator sortString = ^(id obj1, id obj2){
             
             NSMutableArray *newUrls = [NSMutableArray arrayWithCapacity:5];
             for (NSDictionary *oneDic in dURL) {
-                NSString * downloadURL = [CommonMotheds getDownloadURLWithHTML:[oneDic objectForKey:@"url"]];
+                NSString *downloadURL = [CommonMotheds getDownloadURLWithHTML:[oneDic objectForKey:@"url"] prodId:prodId subname:@""];
                 NSMutableDictionary * newDic = [NSMutableDictionary dictionary];
                 if (nil != downloadURL)
                 {
