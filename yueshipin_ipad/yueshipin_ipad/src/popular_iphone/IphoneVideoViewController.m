@@ -833,7 +833,7 @@ extern NSComparator cmpString;
     NSNumber *cacheResult = [[CacheUtility sharedCache] loadFromCache:str];
     
     iphoneWebPlayerViewController.playBackTime = cacheResult;
-    [self presentViewController:[[CustomNavigationViewController alloc] initWithRootViewController:iphoneWebPlayerViewController] animated:YES completion:nil];
+    [self presentViewController:[[CustomNavigationViewController alloc] initWithRootViewController:iphoneWebPlayerViewController] animated:NO completion:nil];
 
 }
 

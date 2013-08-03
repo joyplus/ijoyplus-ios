@@ -1519,20 +1519,19 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     [BundingTVManager shareInstance].sendClient.delegate = (id)[BundingTVManager shareInstance];
     
     [self destoryPlayer];
-    if ([@"0" isEqualToString:[AppDelegate instance].closeVideoMode]){
-        [self dismissViewControllerAnimated:YES completion:^{
-            [[UIApplication sharedApplication] setStatusBarHidden:NO];
-        }];
-    } else {
-        if (closeAll) {
-            [self dismissViewControllerAnimated:YES completion:^{
-                [[UIApplication sharedApplication] setStatusBarHidden:NO];
-            }];
-        } else {
-            [[UIApplication sharedApplication] setStatusBarHidden:NO];
-            [self.navigationController popViewControllerAnimated:NO];
-        }
-    }
+//    if ([@"0" isEqualToString:[AppDelegate instance].closeVideoMode]){
+//        [[NSNotificationCenter defaultCenter] postNotificationName:@"addWebViewwithTimer" object:nil];
+//        [[UIApplication sharedApplication] setStatusBarHidden:NO];
+//    } else {
+//        if (closeAll) {
+//            [[NSNotificationCenter defaultCenter] postNotificationName:@"addWebViewwithTimer" object:nil];
+//        } else {
+//            
+//        }
+//    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"addWebViewwithTimer" object:nil];
+    [[UIApplication sharedApplication] setStatusBarHidden:NO];
+    [self.navigationController popViewControllerAnimated:NO];
     isClosed = YES;
 }
 

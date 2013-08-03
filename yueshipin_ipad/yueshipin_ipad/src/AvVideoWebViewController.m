@@ -110,17 +110,17 @@
     if (name == nil) {
         name = [video objectForKey:@"name"];
     }
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
-        UILabel *t = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 400, 30)];
-        t.font = [UIFont boldSystemFontOfSize:18];
-        t.textColor = [UIColor whiteColor];
-        t.backgroundColor = [UIColor clearColor];
-        t.textAlignment = UITextAlignmentCenter;
-        t.text = [NSString stringWithFormat:@"%@", name];
-        self.navigationItem.titleView = t;        
-    }else{
-        self.title = [NSString stringWithFormat:@"%@", name];
-    }
+    
+    UILabel *t = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 400, 30)];
+    t.font = [UIFont boldSystemFontOfSize:18];
+    t.textColor = [UIColor whiteColor];
+    t.backgroundColor = [UIColor clearColor];
+    t.textAlignment = UITextAlignmentCenter;
+    NSURL *url = [NSURL URLWithString:[videoHttpUrlArray objectAtIndex:currentNum]];
+    t.text = url.absoluteString;
+    self.navigationItem.titleView = t;        
+
+    
     [self.navigationController.navigationBar setBackgroundImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_bg_common.png"] toSize:CGSizeMake(kFullWindowHeight, 44)]
                                                   forBarMetrics:UIBarMetricsDefault];
     if (!hasVideoUrls) {
@@ -131,6 +131,11 @@
         }
         [self updateWatchRecord];
     }
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(addWebViewFortime:)
+                                                 name:@"addWebViewwithTimer"
+                                               object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -245,6 +250,11 @@
         
         [self hideGradientBackground:subview];
     }
+}
+
+-(void)addWebViewFortime:(NSNotification *)notfication{
+    [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(closeSelf) userInfo:nil repeats:NO];
+    [self addWebView:NO];
 }
 
 - (void)addWebView:(BOOL)fromBaidu

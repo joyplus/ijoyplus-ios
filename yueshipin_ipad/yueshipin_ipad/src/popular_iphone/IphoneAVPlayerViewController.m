@@ -825,6 +825,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    self.navigationItem.hidesBackButton = YES;
     [self initPlayerView];
     [self initUI];
     
@@ -876,7 +877,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 }
 
 -(void)initUI{
-    self.title = nameStr_;
+    //self.title = nameStr_;
     
     [self.navigationController setNavigationBarHidden:YES animated:YES];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque];
@@ -2436,7 +2437,9 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
 
 -(void)playEnd{
     [self destoryPlayer];
-    [self dismissViewControllerAnimated:YES completion:nil];
+    //[self dismissViewControllerAnimated:YES completion:nil];
+    [self.navigationController popViewControllerAnimated:NO];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"addWebViewwithTimer" object:nil];
 }
 - (void)beginScrubbing:(id)sender
 {

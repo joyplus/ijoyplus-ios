@@ -46,9 +46,8 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.   
-    self.title = nameStr_;
+    self.view.backgroundColor = [UIColor whiteColor];
     [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"top_bg_common.png"] forBarMetrics:UIBarMetricsDefault];
-    
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
     backButton.frame = CGRectMake(0, 0, 49, 30);
@@ -61,20 +60,24 @@
     if (!isPlayFromRecord_) {
          [self initDataSource];
     }
-   
+    self.title = webUrl_.absoluteString;
     //[self initWebView];
     if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"2"]) {
         [[UIApplication sharedApplication] openURL:webUrl_];
         return;
     } else if([[AppDelegate instance].showVideoSwitch isEqualToString:@"0"]) {
-        [self initPlayerView];
-
+        //[self initPlayerView];
+        [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(initPlayerView) userInfo:nil repeats:NO];
         [AppDelegate instance].isInPlayView = YES;
 
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(initWebView:)
                                                  name:@"addWebView"
                                                object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(addWebViewFortime:)
+                                                     name:@"addWebViewwithTimer"
+                                                   object:nil];
     } else if([[AppDelegate instance].showVideoSwitch isEqualToString:@"1"]||[[AppDelegate instance].showVideoSwitch isEqualToString:@"3"]) {
         [self initWebView:nil];
     }
@@ -95,6 +98,10 @@
     webUrl_ = [NSURL URLWithString:[oneEpisodeInfo objectForKey:@"url"]];
 }
 
+-(void)addWebViewFortime:(NSNotification *)notfication{
+    [NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(back:) userInfo:nil repeats:NO];
+    [self initWebView:nil];
+}
 
 -(void)initWebView:(NSNotification *)notfication{
     CGRect bounds = [UIScreen mainScreen].bounds;
@@ -218,6 +225,7 @@
     [[NSNotificationCenter defaultCenter]removeObserver:self
                                                    name:@"addWebView"
                                                  object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [AppDelegate instance].isInPlayView = NO;
     webView_.delegate = nil;
     [subnameArray removeAllObjects];
