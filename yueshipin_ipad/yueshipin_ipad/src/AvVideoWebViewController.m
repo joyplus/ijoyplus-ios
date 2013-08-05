@@ -253,7 +253,7 @@
 }
 
 -(void)addWebViewFortime:(NSNotification *)notfication{
-    [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(closeSelf) userInfo:nil repeats:NO];
+    [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(closeSelf) userInfo:nil repeats:NO];
     [self addWebView:NO];
 }
 
