@@ -1531,7 +1531,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 //    }
     [[NSNotificationCenter defaultCenter] postNotificationName:@"addWebViewwithTimer" object:nil];
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
-    [self.navigationController popViewControllerAnimated:NO];
+    if (self.isPlayFromDownloadView) {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
+    else{
+      [self.navigationController popViewControllerAnimated:NO];
+    }
+    
     isClosed = YES;
 }
 

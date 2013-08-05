@@ -115,5 +115,5 @@ enum
 @property (nonatomic) CMTime lastPlayTime;
 @property (nonatomic, weak)id <AvVideoWebViewControllerDelegate>videoWebViewControllerDelegate;
 @property (nonatomic, strong) NSArray * localPlaylists;
-
+@property (nonatomic, assign) BOOL isPlayFromDownloadView;
 @end

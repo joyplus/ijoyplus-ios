@@ -98,6 +98,7 @@
     UIButton *airPlayButton_;
     
     BOOL isResetLetvData_;
+    
 }
 @property (nonatomic, strong) UIToolbar *topToolBar;
 @property (nonatomic, strong) UIToolbar *bottomToolBar;
@@ -148,6 +149,7 @@
 @property (nonatomic, assign) BOOL isPlayFromRecord;
 @property (nonatomic, strong) NSArray * localPlaylist;
 @property (nonatomic, strong) UIButton * localLogoBtn;
+@property (nonatomic, assign) BOOL isPlayFromDownloadView;
 - (void)setURL:(NSURL*)URL;
 - (NSURL*)URL;
 - (void)clearPlayerData;

@@ -416,6 +416,7 @@
             NSNumber *cacheResult = [[CacheUtility sharedCache] loadFromCache:str];
             iphoneAVPlayerViewController.lastPlayTime = CMTimeMakeWithSeconds(cacheResult.floatValue + 1, NSEC_PER_SEC);
             iphoneAVPlayerViewController.prodId = downloadItem.itemId;
+            iphoneAVPlayerViewController.isPlayFromDownloadView = YES;
             
             [self presentViewController:iphoneAVPlayerViewController animated:YES completion:nil];
         }

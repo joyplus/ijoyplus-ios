@@ -592,6 +592,7 @@
             viewController.type = 1;
             viewController.name = item.name;
             viewController.prodId = item.itemId;
+            viewController.isPlayFromDownloadView = YES;
             viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, 768);
             [[UIApplication sharedApplication] setStatusBarHidden:YES];
             [[AppDelegate instance].rootViewController pesentMyModalView:viewController];

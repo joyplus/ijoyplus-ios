@@ -539,6 +539,7 @@
             viewController.prodId = itemId;
             //viewController.localPlaylists = playlists;
             viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, 768);
+            viewController.isPlayFromDownloadView = YES;
             [[UIApplication sharedApplication] setStatusBarHidden:YES];
             [[AppDelegate instance].rootViewController pesentMyModalView:viewController];
         } else {

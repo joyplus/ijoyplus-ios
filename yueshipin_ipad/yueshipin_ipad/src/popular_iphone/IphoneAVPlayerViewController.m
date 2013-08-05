@@ -2438,7 +2438,13 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
 -(void)playEnd{
     [self destoryPlayer];
     //[self dismissViewControllerAnimated:YES completion:nil];
-    [self.navigationController popViewControllerAnimated:NO];
+    if (self.isPlayFromDownloadView) {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
+    else{
+        [self.navigationController popViewControllerAnimated:NO];
+    }
+    
     [[NSNotificationCenter defaultCenter] postNotificationName:@"addWebViewwithTimer" object:nil];
 }
 - (void)beginScrubbing:(id)sender

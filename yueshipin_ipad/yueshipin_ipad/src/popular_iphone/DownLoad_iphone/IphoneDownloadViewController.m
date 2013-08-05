@@ -516,6 +516,7 @@
                 iphoneAVPlayerViewController.prodId = item.itemId;
                 iphoneAVPlayerViewController.playNum = 0;
                 iphoneAVPlayerViewController.videoType = 1;
+                iphoneAVPlayerViewController.isPlayFromDownloadView = YES;
                 [self presentViewController:iphoneAVPlayerViewController animated:YES completion:nil];
             }
             else{

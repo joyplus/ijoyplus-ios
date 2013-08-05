@@ -32,7 +32,7 @@
 //#define CHANNEL_ID @"b006001"
 
 //友盟在线参数
-#define SHOW_VIDEO_SWITCH @"showVideoSwitch8"
+#define SHOW_VIDEO_SWITCH @"showVideoSwitch9"
 #define CLOSE_VIDEO_MODE @"closeVideoMode8"
 #define RECOMMEND_APP_SWITCH @"recommendAppSwitch8"
 #define AMERICANVIDEOS @"1"  //1-隐藏美剧 0-显示美剧
