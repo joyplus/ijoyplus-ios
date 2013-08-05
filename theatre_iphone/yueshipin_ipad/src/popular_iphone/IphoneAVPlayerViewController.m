@@ -1049,7 +1049,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                 return;
             NSMutableArray *newUrls = [NSMutableArray arrayWithCapacity:5];
             for (NSDictionary *oneDic in dURL) {
-                    NSString * downloadURL = [CommonMotheds getDownloadURLWithHTML:[oneDic objectForKey:@"url"]];
+                NSString *downloadURL = [CommonMotheds getDownloadURLWithHTML:[oneDic objectForKey:@"url"] prodId:prodId_ subname:@""];
                     NSMutableDictionary * newDic = [NSMutableDictionary dictionary];
                     if (nil != downloadURL){
                         [newDic setObject:downloadURL forKey:@"url"];

@@ -337,7 +337,8 @@
         if (0 != urlArr.count)
         {
             NSDictionary * urlDic = [urlArr objectAtIndex:0];
-            NSString * tureDownloadURL = [CommonMotheds getDownloadURLWithHTML:[urlDic objectForKey:@"url"]];
+            //NSString * tureDownloadURL = [CommonMotheds getDownloadURLWithHTML:[urlDic objectForKey:@"url"]];
+            NSString *tureDownloadURL = [CommonMotheds getDownloadURLWithHTML:[urlDic objectForKey:@"url"] prodId:prodId_ subname:@""];
             NSMutableDictionary * newDic = [NSMutableDictionary dictionary];
             [newDic setObject:[urlDic objectForKey:@"file"] forKey:@"file"];
             [newDic setObject:[urlDic objectForKey:@"type"] forKey:@"type"];

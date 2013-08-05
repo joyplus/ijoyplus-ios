@@ -3127,8 +3127,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 459B84FA869C445E8C832D00 /* Pods.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Yongqing Li (5N3A7RMGPK)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Yongqing Li (T9RTL69AE5)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Yongqing Li (T9RTL69AE5)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -3146,8 +3146,8 @@
 					"\"$(SRCROOT)/yueshipin_ipad/External/BPush\"",
 				);
 				PRODUCT_NAME = iphonetheatre;
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "67FFD528-4E22-476C-93C7-3D352FF9D2DB";
+				PROVISIONING_PROFILE = "7965A97E-33FF-4D57-8F66-A1249B6E3B29";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "7965A97E-33FF-4D57-8F66-A1249B6E3B29";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
