@@ -160,7 +160,7 @@ extern NSComparator cmpString;
         if (0 != urlArr.count)
         {
             NSDictionary * urlDic = [urlArr objectAtIndex:0];
-            NSString * tureDownloadURL = [CommonMotheds getDownloadURLWithHTML:[urlDic objectForKey:@"url"]];
+            NSString * tureDownloadURL = [CommonMotheds getDownloadURLWithHTML:[urlDic objectForKey:@"url"] prodId:prodId_ subname:subName_];
             NSMutableDictionary * newDic = [NSMutableDictionary dictionary];
             [newDic setObject:[urlDic objectForKey:@"file"] forKey:@"file"];
             [newDic setObject:[urlDic objectForKey:@"type"] forKey:@"type"];
@@ -261,7 +261,7 @@ extern NSComparator cmpString;
             
             NSMutableArray *newUrls = [NSMutableArray arrayWithCapacity:5];
             for (NSDictionary *oneDic in dURL) {
-                NSString * downloadURL = [CommonMotheds getDownloadURLWithHTML:[oneDic objectForKey:@"url"]];
+                NSString * downloadURL = [CommonMotheds getDownloadURLWithHTML:[oneDic objectForKey:@"url"] prodId:prodId_ subname:@""];
                 NSMutableDictionary * newDic = [NSMutableDictionary dictionary];
                 if (nil != downloadURL)
                 {

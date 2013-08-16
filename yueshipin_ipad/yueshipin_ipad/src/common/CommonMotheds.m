@@ -212,31 +212,19 @@
    return [valueStr intValue];
 }
 
-+ (NSString *)getDownloadURLWithHTML:(NSString *)url
-{
-    NSData *htmlData = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
-    TFHpple *xpathParser = [[TFHpple alloc] initWithHTMLData:htmlData];
-    NSArray *elements  = [xpathParser searchWithXPathQuery:@"//a"]; // get the title
-    
-    NSString * downloadURL = nil;
-    for (TFHppleElement * element in elements)
-    {
-        NSDictionary * dic = [element attributes];
-        
-        //        NSLog(@"%@",[dic objectForKey:@"class"]);
-        //        NSLog(@"%@",[dic objectForKey:@"id"]);
-        
-        if (([[dic objectForKey:@"class"] isEqualToString:@"new-dbtn"]
-             && [[dic objectForKey:@"id"] isEqualToString:@"downFileButtom"]) ||
-            [[dic objectForKey:@"id"] isEqualToString:@"fileDownload"])
-        {
-            downloadURL = [element objectForKey:@"href"];
-            [downloadURL stringByReplacingOccurrencesOfString:@"amp;" withString:@""];
-            return downloadURL;
-        }
++(NSString *)getDownloadURLWithHTML:(NSString *)url prodId:(NSString *)prodId subname:(NSString *)subname{
+    NSString *encodedStr = [url  stringByReplacingOccurrencesOfString:@"&" withString:@"%26"];
+    NSString *newUrl = [NSString stringWithFormat:@"%@%@&id=%@&episode=%@",BAIDU_PAN_BASEURL,encodedStr,prodId,@"1"];
+    NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:newUrl]];
+    NSError *error = nil;
+    NSDictionary* jsonObject = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
+    if (error) {
+        return nil;
     }
-    return downloadURL;
-} 
+    NSDictionary *download_urls = [jsonObject objectForKey:@"down_urls"];
+    NSDictionary *url_info = [[download_urls objectForKey:@"urls"] objectAtIndex:0];
+    return [url_info objectForKey:@"url"];
+}
 
 +(NSDictionary *)getLetvRealUrlWithHtml:(NSString *)url prodId:(NSString *)prodId subname:(NSString *)subname{
  

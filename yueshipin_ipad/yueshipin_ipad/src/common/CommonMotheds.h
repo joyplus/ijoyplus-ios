@@ -18,7 +18,7 @@
 + (NSArray *)localPlaylists:(NSString *)mediaId
                        type:(NSInteger)type;
 +(int)getOnlineConfigValue;
-+(NSString *)getDownloadURLWithHTML:(NSString *)url;
++(NSString *)getDownloadURLWithHTML:(NSString *)url prodId:(NSString *)prodId subname:(NSString *)subname;
 +(NSDictionary *)getLetvRealUrlWithHtml:(NSString *)url prodId:(NSString *)prodId subname:(NSString *)subname;
 + (BOOL)isIphone5;
 @end
