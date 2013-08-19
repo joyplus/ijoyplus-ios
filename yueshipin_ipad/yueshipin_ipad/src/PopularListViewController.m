@@ -120,6 +120,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    [self setAutoScrollTimer];
     [[AppDelegate instance].rootViewController showIntroModalView:SHOW_MENU_INTRO_YUEDAN introImage:[UIImage imageNamed:@"menu_intro"]];
     
     if (0 == lunboArray.count)
@@ -140,6 +141,7 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
+    [self cancelAutoScrollTimer];
     if (umengPageName) {
         [MobClick endLogPageView:umengPageName];
     }
@@ -388,6 +390,7 @@
 - (void) scrollViewWillBeginDragging:(UIScrollView *)ascrollView
 {
     if (ascrollView.tag == 11270014) {
+        [self cancelAutoScrollTimer];
         return;
     }
     [pullToRefreshManager_ scrollViewBegin];
@@ -396,7 +399,7 @@
 - (void)scrollViewDidScroll:(UIScrollView *)aScrollView
 {
     if(aScrollView.tag == 11270014){
-        [self cancelAutoScrollTimer];
+        //[self cancelAutoScrollTimer];
         CGFloat pageWidth = scrollView.bounds.size.width ;
         float fractionalPage = scrollView.contentOffset.x / pageWidth ;
         NSInteger nearestNumber = lround(fractionalPage) ;
