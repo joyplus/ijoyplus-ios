@@ -214,7 +214,7 @@
 
 +(NSString *)getDownloadURLWithHTML:(NSString *)url prodId:(NSString *)prodId subname:(NSString *)subname{
     NSString *encodedStr = [url  stringByReplacingOccurrencesOfString:@"&" withString:@"%26"];
-    NSString *newUrl = [NSString stringWithFormat:@"%@%@&id=%@&episode=%@",BAIDU_PAN_BASEURL,encodedStr,prodId,@"1"];
+    NSString *newUrl = [NSString stringWithFormat:@"%@%@&id=%@&episode=%@",PARSEURL_TEMP_URL,encodedStr,prodId,@"1"];
     NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:newUrl]];
     NSError *error = nil;
     NSDictionary* jsonObject = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
@@ -228,9 +228,9 @@
 
 +(NSDictionary *)getLetvRealUrlWithHtml:(NSString *)url prodId:(NSString *)prodId subname:(NSString *)subname{
  
-    NSString *urlStr = [NSString stringWithFormat:@"%@%@&id=%@&episode=%@",LETV_BASEURL,url,prodId,subname];
+    NSString *urlStr = [NSString stringWithFormat:@"%@%@&id=%@&episode=%@",PARSEURL_TEMP_URL,url,prodId,subname];
 
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:LETV_APPKEY,@"appkey",nil];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:PARSEURL_TEMP_URL,@"appkey",nil];
 
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:urlStr]];
    [request setAllHTTPHeaderFields:parameters];
