@@ -390,9 +390,9 @@
 - (void) scrollViewWillBeginDragging:(UIScrollView *)ascrollView
 {
     if (ascrollView.tag == 11270014) {
+        [self cancelAutoScrollTimer];
         return;
     }
-    [self cancelAutoScrollTimer];
     [pullToRefreshManager_ scrollViewBegin];
 }
 

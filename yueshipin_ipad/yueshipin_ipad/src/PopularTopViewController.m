@@ -575,9 +575,12 @@ void transferDataFromOldDbWithCatch()
 	[scrollView setContentOffset: CGPointMake(scrollView.bounds.size.width * thePageControl.currentPage, scrollView.contentOffset.y) animated: YES] ;
 }
 
-- (void) scrollViewWillBeginDragging:(UIScrollView *)scrollView
+- (void) scrollViewWillBeginDragging:(UIScrollView *)ascrollView
 {
-    [self cancelAutoScrollTimer];
+    if(ascrollView.tag == 11270014){
+        [self cancelAutoScrollTimer];
+    }
+    
     [showPullToRefreshManager_ scrollViewBegin];
 }
 
