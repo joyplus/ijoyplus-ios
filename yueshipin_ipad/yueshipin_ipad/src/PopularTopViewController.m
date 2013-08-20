@@ -125,7 +125,7 @@
     {
         [self retrieveMovieTopsData];
     }
-    
+    [self setAutoScrollTimer];
     [self showBundingTap];
 }
 
@@ -156,7 +156,7 @@
         if (bunding_succeed_tip) {
             [bunding_succeed_tip removeFromSuperview];
         }
-        table.frame = CGRectMake(3, 92, self.view.frame.size.width - 16, self.view.frame.size.height - TOP_SOLGAN_HEIGHT - 20);
+        table.frame = CGRectMake(3, 92, self.view.frame.size.width - 16, 635);
     }
 }
 - (void)viewDidAppear:(BOOL)animated
@@ -169,6 +169,7 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
+    [self cancelAutoScrollTimer];
     if (umengPageName) {
         [MobClick endLogPageView:umengPageName];
     }
@@ -576,13 +577,13 @@ void transferDataFromOldDbWithCatch()
 
 - (void) scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {
+    [self cancelAutoScrollTimer];
     [showPullToRefreshManager_ scrollViewBegin];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)aScrollView
 {
     if(aScrollView.tag == 11270014){
-        [self cancelAutoScrollTimer];
         CGFloat pageWidth = scrollView.bounds.size.width ;
         float fractionalPage = scrollView.contentOffset.x / pageWidth ;
         NSInteger nearestNumber = lround(fractionalPage) ;
