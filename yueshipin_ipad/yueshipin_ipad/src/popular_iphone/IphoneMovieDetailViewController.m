@@ -911,8 +911,7 @@
     UIButton *button = (UIButton *)sender;
     switch (button.tag) {
         case 10001:{
-            
-            if ([source_ isEqualToString:@"baidu_wangpan"]) {
+            if ([source_ isEqualToString:@"baidu_wangpan"] && [[UIDevice currentDevice] systemVersion].floatValue < 7.0) {
                 if ([DatabaseManager isWXSharedProdId:prodId_]) {
                     [self playVideo:0];
                 }
