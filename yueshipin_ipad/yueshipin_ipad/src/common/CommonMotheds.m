@@ -216,6 +216,9 @@
     NSString *encodedStr = [url  stringByReplacingOccurrencesOfString:@"&" withString:@"%26"];
     NSString *newUrl = [NSString stringWithFormat:@"%@%@&id=%@&episode=%@",PARSEURL_TEMP_URL,encodedStr,prodId,@"1"];
     NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:newUrl]];
+    if (data == nil) {
+        return nil;
+    }
     NSError *error = nil;
     NSDictionary* jsonObject = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
     if (error) {

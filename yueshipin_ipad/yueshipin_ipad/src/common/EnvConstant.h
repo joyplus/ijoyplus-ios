@@ -8,10 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
- //0: 测试环境     1. 正式环境
-#define ENVIRONMENT 0
+ //0: 测试环境     1. 正式环境 
+#define ENVIRONMENT 1
 
-#define VERSION @"1.0.5"
+#define VERSION @"1.0.6"
 
 //0: 关闭loglog      1. 打开log      Log功能只有再测试环境才生效
 #define LOG_ENABLED 0
@@ -35,7 +35,7 @@
 #define SHOW_VIDEO_SWITCH @"showVideoSwitch9"
 #define CLOSE_VIDEO_MODE @"closeVideoMode9"
 #define RECOMMEND_APP_SWITCH @"recommendAppSwitch9"
-#define AMERICANVIDEOS @"1"  //1-隐藏美剧 0-显示美剧
+#define AMERICANVIDEOS @"0"  //1-隐藏美剧 0-显示美剧
 #define HIDDEN_AMERICAN_VIDEOS @"HiddenAmericanVideos9"
 //正式环境
 #if ENVIRONMENT   
@@ -47,7 +47,7 @@
     #define CHECKBINDURLSTRING  @"http://comet.joyplus.tv:8080/"
     #define FAYE_SERVER_URL @"ws://comet.joyplus.tv:8080/bindtv"
     #define LETV_BASEURL @"http://parseurl.joyplus.tv:80/letv/?url="
-    #define PARSEURL_TEMP_URL @"http://tt.showkey.tv/getAnalyzedUrl?url"
+    #define PARSEURL_TEMP_URL @"http://tt.showkey.tv/getAnalyzedUrl?url="
 //测试环境
 #else
     #define kDefaultAppKey @"ijoyplus_ios_001bj"
