@@ -1273,7 +1273,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         currentTime = CMTimeGetSeconds(mPlayer.currentTime);
         currentTime = fmax(0, currentTime - 30);
     }
-    [mPlayer seekToTime:CMTimeMakeWithSeconds(currentTime, NSEC_PER_SEC)];
+    if (CMTIME_IS_VALID(CMTimeMakeWithSeconds(currentTime, NSEC_PER_SEC))) {
+        [mPlayer seekToTime:CMTimeMakeWithSeconds(currentTime, NSEC_PER_SEC)];
+    }
 }
 
 - (void)preparePlayVideo
@@ -2163,7 +2165,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 			
 			double time = duration * (value - minValue) / (maxValue - minValue);
 			
-			[mPlayer seekToTime:CMTimeMakeWithSeconds(time, NSEC_PER_SEC)];
+            if (CMTIME_IS_VALID(CMTimeMakeWithSeconds(time, NSEC_PER_SEC))) {
+                [mPlayer seekToTime:CMTimeMakeWithSeconds(time, NSEC_PER_SEC)];
+            }
 		}
 	}
 }
