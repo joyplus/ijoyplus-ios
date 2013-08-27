@@ -75,7 +75,7 @@
         [(UITabBarItem *)[self.tabBar.items objectAtIndex:3] setTitle:XIAZAI];
         [(UITabBarItem *)[self.tabBar.items objectAtIndex:3] setTitlePositionAdjustment:UIOffsetMake(0, -3)];
         self.tabBar.selectedImageTintColor = [UIColor orangeColor];
-        self.selectedIndex = 0;
+        self.selectedIndex = 1;
         [self setNoHighlightTabBar];
         
         [self setBadgeValue];
