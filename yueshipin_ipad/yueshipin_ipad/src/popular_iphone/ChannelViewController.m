@@ -77,7 +77,7 @@ enum
     self.navigationItem.rightBarButtonItem = rightButtonItem;
     
     titleButton_ = [UIButton buttonWithType:UIButtonTypeCustom];
-    titleButton_.frame = CGRectMake(0, 0, 100, 60);
+    titleButton_.frame = CGRectMake(0, 0, 100, 44);
     titleButton_.titleLabel.font = [UIFont boldSystemFontOfSize:20];
     [titleButton_ setTitle:@"电影" forState:UIControlStateNormal];
     [titleButton_ setTitle:@"电影" forState:UIControlStateHighlighted];

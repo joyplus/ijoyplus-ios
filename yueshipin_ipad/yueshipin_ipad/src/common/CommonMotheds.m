@@ -245,12 +245,39 @@
         NSLog(@"解析letv真实视频地址失败:%@",error);
         return nil;
     }
-    NSDictionary *jsonObject = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
+    NSMutableDictionary *jsonObject = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
     if (error) {
         NSLog(@"解析letv真实视频地址失败:%@",error);
         return nil;
     }
-    return jsonObject;
+    NSDictionary *downUrls = [jsonObject objectForKey:@"down_urls"];
+    if (downUrls == nil) {
+        return nil;
+    }
+    NSArray *urls = [downUrls objectForKey:@"urls"];
+    NSMutableArray *realUrls = [NSMutableArray arrayWithCapacity:5];
+    for(NSDictionary *url in urls){
+        NSString *tempUrl = [url objectForKey:@"url"];
+        NSMutableURLRequest *tempRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:tempUrl]];
+        NSData *tempData = [NSURLConnection sendSynchronousRequest:tempRequest returningResponse:&response error:&error];
+        if (tempData != nil) {
+            NSDictionary *tempjsonObject = [NSJSONSerialization JSONObjectWithData:tempData options:NSJSONReadingAllowFragments error:&error];
+            if (error || tempjsonObject == nil) {
+                continue;
+            }
+            NSString *realUrl = [tempjsonObject objectForKey:@"location"];
+            NSMutableDictionary *realDic = [NSMutableDictionary dictionaryWithDictionary:url];
+            [realDic setObject:realUrl forKey:url];
+            [realUrls addObject:realUrl];
+        }
+        
+    }
+    NSMutableDictionary *realdownUrls = [NSMutableDictionary dictionaryWithDictionary:downUrls];
+    [realdownUrls setObject:realdownUrls forKey:@"urls"];
+    NSMutableDictionary *result = [NSMutableDictionary dictionaryWithDictionary:jsonObject];
+    [result setObject:realdownUrls forKey:@"down_urls"];
+    
+    return result;
 }
 
 + (BOOL)isIphone5
