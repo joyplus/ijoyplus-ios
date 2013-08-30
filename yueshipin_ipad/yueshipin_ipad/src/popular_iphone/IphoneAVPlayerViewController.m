@@ -993,7 +993,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
             if (isResetLetvData_) {
                 NSString *htmlUrl = nil;
                 for (NSDictionary *dd in [episodesInfo objectForKey:@"video_urls"]) {
-                    if ([[dd objectForKey:@"source"] isEqualToString:@"le_tv_fee"]) {
+                    if ([[dd objectForKey:@"source"] isEqualToString:@"letv"]) {
                         htmlUrl = [dd objectForKey:@"url"];
                         break;
                     }

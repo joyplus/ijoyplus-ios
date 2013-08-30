@@ -46,7 +46,6 @@
     #define kABaseURLString @"http://api.joyplus.tv/"
     #define CHECKBINDURLSTRING  @"http://comet.joyplus.tv:8080/"
     #define FAYE_SERVER_URL @"ws://comet.joyplus.tv:8080/bindtv"
-    #define LETV_BASEURL @"http://parseurl.joyplus.tv:80/letv/?url="
     #define PARSEURL_TEMP_URL @"http://tt.showkey.tv/getAnalyzedUrl?url="
 //测试环境
 #else
@@ -57,7 +56,6 @@
     #define kABaseURLString @"http://apitest.yue001.com/"
     #define CHECKBINDURLSTRING  @"http://comettest.joyplus.tv:8000/"
     #define FAYE_SERVER_URL @"ws://comettest.joyplus.tv:8000/bindtv"
-    #define LETV_BASEURL @"http://parseurl.yue001.com:8080/letv/?url="
     #define PARSEURL_TEMP_URL  @"http://tt.yue001.com:8080/getAnalyzedUrl?url="
 #endif
 
