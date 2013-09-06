@@ -86,8 +86,7 @@
     sBar.delegate = self;
     [self.view addSubview:sBar];
     
-    //60 190 824 502
-    UIImageView * bgImage = [[UIImageView alloc] initWithFrame:CGRectMake(60, 190, 824, 502)];
+    UIImageView * bgImage = [[UIImageView alloc] initWithFrame:CGRectMake(80, 190, 784, 502)];
     bgImage.image = [UIImage imageNamed:@"search_hot"];
     [self.view addSubview:bgImage];
     
@@ -100,7 +99,7 @@
         [searchView removeFromSuperview];
         searchView = nil;
     }
-    searchView = [[YueSearchView alloc] initWithFrame:CGRectMake(60, 190, 824, 502)];
+    searchView = [[YueSearchView alloc] initWithFrame:CGRectMake(80, 190, 784, 502)];
     searchView.backgroundColor = [UIColor clearColor];
     searchView.info = data;
     searchView.delegate = self;

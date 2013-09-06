@@ -101,11 +101,12 @@
         NSString * name = [info objectAtIndex:i];
         
         CGPoint point = [[pointArray objectAtIndex:i] CGPointValue];
-        NSInteger fontSize = arc4random()%FONT_SIZE_INTERVAL + 12;
+        NSInteger fontSize = arc4random()%FONT_SIZE_INTERVAL + 18;
         CGSize size = [name sizeWithFont:[UIFont systemFontOfSize:fontSize]];
         
         UIButton * btn = [UIButton buttonWithType:UIButtonTypeCustom];
         btn.backgroundColor = [UIColor clearColor];
+        btn.titleLabel.font = [UIFont systemFontOfSize:fontSize];
         btn.frame = CGRectMake(point.x, point.y, size.width + 65, size.height+30);
         [btn setTitle:name forState:UIControlStateNormal];
         UIColor * color = [colors objectAtIndex:arc4random()%2];
