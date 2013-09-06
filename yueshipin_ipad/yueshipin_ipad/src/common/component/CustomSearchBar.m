@@ -12,10 +12,9 @@
 @interface CustomSearchBar (){
     UIButton *cancelButton;
 }
-
 @end
 @implementation CustomSearchBar
-
+@synthesize searchBtnImg,searchSelectedBtnImage;
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -39,14 +38,23 @@
             
             [cancelButton setHidden:YES];
             UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+            if (!searchBtnImg)
+            {
+                searchBtnImg = @"search_btn";
+            }
+            if (!searchSelectedBtnImage)
+            {
+                searchSelectedBtnImage = @"search_btn_pressed";
+            }
             [btn setBackgroundImage:[UIImage imageNamed:@"search_btn_pressed"] forState:UIControlStateHighlighted];
             [btn setBackgroundImage:[UIImage imageNamed:@"search_btn"] forState:UIControlStateNormal];
-            btn.frame = CGRectMake(335, -1, 68, 42);
+            btn.frame = CGRectMake(self.frame.size.width - 68, -1, 68, 42);
             [btn addTarget:self action:@selector(cancelBtnClicked) forControlEvents:UIControlEventTouchUpInside];
             [self addSubview:btn];
         }
     }
-    UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"search_box_text"]];
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"search_box_text"] resizableImageWithCapInsets:UIEdgeInsetsMake(2, 10, 2, 10)]];
+    imageView.frame = CGRectMake(0, 0, self.frame.size.width - 72, 40);
     [self insertSubview:imageView atIndex:1];
     //3自定义背景
     [super layoutSubviews];

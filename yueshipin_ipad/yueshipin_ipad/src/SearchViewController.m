@@ -47,6 +47,7 @@
 - (id)initWithFrame:(CGRect)frame {
     if (self = [super init]) {
 		[self.view setFrame:frame];
+        self.view.clipsToBounds = YES;
         [self.view setBackgroundColor:[UIColor clearColor]];
         UIView *bgView = [[UIView alloc]initWithFrame:self.view.frame];
         [self.view addSubview:bgView];
@@ -60,7 +61,7 @@
         topImage.image = [UIImage imageNamed:@"search_title"];
         [self.view addSubview:topImage];
         
-        sBar = [[CustomSearchBar alloc]initWithFrame:CGRectMake(50, 115, 390, 38)];
+        sBar = [[CustomSearchBar alloc]initWithFrame:CGRectMake(50, 115, 403, 38)];
         sBar.placeholder = @"请输入片名/导演/主演";
         sBar.delegate = self;
         [self.view addSubview:sBar];
