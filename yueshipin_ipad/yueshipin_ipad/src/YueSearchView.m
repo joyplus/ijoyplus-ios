@@ -55,16 +55,16 @@
                         [NSValue valueWithCGPoint:CGPointMake(210, 285)],
                         [NSValue valueWithCGPoint:CGPointMake(430, 270)],
                         [NSValue valueWithCGPoint:CGPointMake(460, 110)],
-                        [NSValue valueWithCGPoint:CGPointMake(655, 90)],
+                        [NSValue valueWithCGPoint:CGPointMake(255, 90)],
                         [NSValue valueWithCGPoint:CGPointMake(515, 225)],
-                        [NSValue valueWithCGPoint:CGPointMake(600, 275)],
+                        [NSValue valueWithCGPoint:CGPointMake(550, 305)],
                         [NSValue valueWithCGPoint:CGPointMake(430, 385)], nil];
     
     NSArray * secondP = [NSArray arrayWithObjects:
                         [NSValue valueWithCGPoint:CGPointMake(350, 80)],
-                        [NSValue valueWithCGPoint:CGPointMake(170, 155)],
-                        [NSValue valueWithCGPoint:CGPointMake(360, 149)],
-                        [NSValue valueWithCGPoint:CGPointMake(580, 155)],
+                        [NSValue valueWithCGPoint:CGPointMake(170, 175)],
+                        [NSValue valueWithCGPoint:CGPointMake(280, 139)],
+                        [NSValue valueWithCGPoint:CGPointMake(540, 155)],
                         [NSValue valueWithCGPoint:CGPointMake(280, 220)],
                         [NSValue valueWithCGPoint:CGPointMake(515, 225)],
                         [NSValue valueWithCGPoint:CGPointMake(130, 275)],

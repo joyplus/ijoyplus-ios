@@ -9,8 +9,9 @@
 #import "CommonHeader.h"
 #import "CustomSearchBar.h"
 #import "YueSearchView.h"
-@interface YueSearchViewController : UIViewController <UISearchBarDelegate,YueSearchViewDelegate>
+@interface YueSearchViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,UISearchBarDelegate,YueSearchViewDelegate>
 {
     YueSearchView * searchView;
+    UITableView *   historyTable;
 }
 @end
