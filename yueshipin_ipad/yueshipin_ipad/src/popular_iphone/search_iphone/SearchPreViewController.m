@@ -24,6 +24,8 @@
 #import "TVDetailViewController.h"
 #import "IphoneShowDetailViewController.h"
 #import "CommonMotheds.h"
+#import "YueSouViewController.h"
+
 #define SEARCH_HISTORY @"serach_history"
 #define HISTORY_LIST 9999
 #define RESULT_LIST 99999
@@ -54,6 +56,16 @@
 {
     [super viewDidLoad];
     self.title = @"搜索";
+    
+    UIButton * rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    rightBtn.frame = CGRectMake(0, 0, 55, 44);
+    [rightBtn setBackgroundImage:[UIImage imageNamed:@"icon_yuesou"] forState:UIControlStateNormal];
+    [rightBtn setBackgroundImage:[UIImage imageNamed:@"icon_yuesou_s"] forState:UIControlStateHighlighted];
+    [rightBtn addTarget:self
+                 action:@selector(rightBarButtonClicked:)
+       forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem * rightItem = [[UIBarButtonItem alloc] initWithCustomView:rightBtn];
+    self.navigationItem.rightBarButtonItem = rightItem;
     
     UIImageView *bg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
     bg.userInteractionEnabled = YES;
@@ -392,6 +404,12 @@
 -(void)back:(id)sender{
     
     [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)rightBarButtonClicked:(id)sender
+{
+    YueSouViewController * yueSouCtrl = [[YueSouViewController alloc] init];
+    [self.navigationController pushViewController:yueSouCtrl animated:YES];
 }
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar{
