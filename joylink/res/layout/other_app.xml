@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/control_bg" >
+
+    <RelativeLayout
+        android:id="@+id/relativeLayoutListView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentTop="true">
+
+            <GridView
+        android:id="@+id/gridView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:cacheColorHint="#F2F2F2"
+        android:fadingEdge="none"
+        android:horizontalSpacing="2dp"
+        android:numColumns="3"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:scrollbars="none"
+        android:verticalSpacing="13dp" >
+    </GridView>
+
+            <TextView
+                android:id="@+id/textViewJP"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="正在加载应用列表，请稍等  ..."
+              android:textAppearance="?android:attr/textAppearanceMedium"
+              android:textColor="@color/white"
+             />
+
+    </RelativeLayout>
+
+</RelativeLayout>

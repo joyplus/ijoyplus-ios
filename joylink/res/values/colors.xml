@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources> 
+  <color name="black">#000000</color>  
+  <color name="white">#FFFFFF</color>  
+  <color name="red">#ED1C17</color>  
+  <color name="grey">#999999</color>  
+  <color name="blue">#2763AB</color>  
+  <color name="transparent">#00000000</color>  
+  <color name="actionbarbg">#002633</color> 
+</resources>

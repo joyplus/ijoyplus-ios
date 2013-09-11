@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relativeLayout1"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:paddingBottom="6dp">
+
+       <TextView
+           android:id="@+id/textViewTime"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_marginLeft="10dp"
+           android:layout_marginTop="6dp"
+           android:ellipsize="end"
+           android:singleLine="true"
+           android:text="上午12:00"
+           android:textColor="@color/white"
+           android:textSize="18sp" />
+       
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="6dp"
+        android:layout_toRightOf="@+id/textViewTime"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="http://www.baidu.com"
+        android:textColor="@color/white"
+        android:textSize="18sp" />
+
+</RelativeLayout>

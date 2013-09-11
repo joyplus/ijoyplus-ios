@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#F2F2F2"
+    android:paddingRight="18dp" >
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="45dp"
+        android:layout_marginTop="14dp"
+        android:text="请选择播放设备"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#969696"
+        android:textSize="14sp" />
+
+    <ListView
+        android:id="@+id/listView1"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_above="@+id/checkBox1"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textView1"
+        android:layout_marginLeft="17dp"
+        android:layout_marginTop="15dp" >
+    </ListView>
+
+    <CheckBox
+        android:id="@+id/checkBox1"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/listView1"
+        android:layout_marginRight="100dp"
+        android:layout_marginTop="2dp"
+        android:button="@drawable/select_devices_check_box" />
+
+</RelativeLayout>

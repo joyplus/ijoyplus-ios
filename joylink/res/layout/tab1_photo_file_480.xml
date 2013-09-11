@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/control_bg"
+    android:gravity="center_horizontal"
+    android:paddingLeft="9dp"
+    android:paddingRight="9dp" >
+
+    <GridView
+        android:id="@+id/gridView1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:fadingEdge="none"
+        android:numColumns="3"
+         android:verticalSpacing="9dp" 
+        android:scrollbars="none" >
+    </GridView>
+
+</RelativeLayout>
