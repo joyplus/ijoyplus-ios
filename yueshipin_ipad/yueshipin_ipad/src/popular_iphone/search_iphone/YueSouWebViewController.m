@@ -46,7 +46,7 @@
     
     self.view.backgroundColor = [UIColor clearColor];
     
-    self.title = titleStr;
+    //self.title = titleStr;
     
     UIButton *myButton = [UIButton buttonWithType:UIButtonTypeCustom];
     myButton.frame = CGRectMake(0, 2, 56, 40);
@@ -55,18 +55,7 @@
     [myButton addTarget:self action:@selector(closeSelf) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *customItem = [[UIBarButtonItem alloc] initWithCustomView:myButton];
     self.navigationItem.leftBarButtonItem = customItem;
-    
-//    UILabel *t = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 800, 30)];
-//    t.font = [UIFont boldSystemFontOfSize:18];
-//    t.textColor = [UIColor whiteColor];
-//    t.backgroundColor = [UIColor clearColor];
-//    t.textAlignment = UITextAlignmentCenter;
-//    t.text = url;
-//    self.navigationItem.titleView = t;
-    
-//    [self.navigationController.navigationBar setBackgroundImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_bg_common.png"] toSize:CGSizeMake(kFullWindowHeight, 44)]
-//                                                  forBarMetrics:UIBarMetricsDefault];
-    
+
 	webView = [[UIWebView alloc]initWithFrame:CGRectMake(0, 0, 320, kCurrentWindowHeight - 44)];
     [webView setBackgroundColor:[UIColor clearColor]];
     [webView setScalesPageToFit:YES];
@@ -78,8 +67,10 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    NSURL * request = [NSURL URLWithString:[url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-    //NSURL * request = [[NSURL alloc] initWithString:url];
+    
+    NSString * requestUrl = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    self.title = requestUrl;
+    NSURL * request = [NSURL URLWithString:requestUrl];
     [webView loadRequest:[NSURLRequest requestWithURL:request]];
 }
 
@@ -108,7 +99,7 @@
 {
     NSString *newKey = [NSString stringWithFormat:@"%@_%@", VERSION, YUE_SEARCH_KEY];
     NSString *showMenuIntro = [NSString stringWithFormat:@"%@", [[ContainerUtility sharedInstance] attributeForKey:newKey]];
-    if ([showMenuIntro isEqualToString:@"1"]) {
+    if (![showMenuIntro isEqualToString:@"1"]) {
         [[ContainerUtility sharedInstance] setAttribute:@"1" forKey:newKey];
         UIView *view = [self.view viewWithTag:3268999];
         if (view == nil) {
@@ -156,8 +147,8 @@
     {
         [self showIntroView];
     }
-    UILabel * text = (UILabel *)self.navigationItem.titleView;
-    text.text = wView.request.URL.absoluteString;
+    
+    self.title = wView.request.URL.absoluteString;
 }
 
 @end

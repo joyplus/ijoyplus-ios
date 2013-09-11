@@ -14,8 +14,9 @@
 #define YUE_SEARCH_URL          (@"http://www.lesou.org/search.php?wd=")
 #define EXPLAIN_YUESOU_STRING   (@"悦搜的搜索结果将以网页形式展示,您可以在影片详情页面点击\"转屏推电视\",将大片投放到电视上观看!")
 
-#define HISTORY_LIST (1132)
-#define SEARCH_HISTORY (@"yueSou_History")
+#define HISTORY_LIST    (1132)
+#define SEARCH_HISTORY  (@"yueSou_History")
+#define HOTKEY_CACHE    (@"yueSou_hotkey")
 
 @interface YueSouViewController ()
 @property (nonatomic, strong) NSMutableArray * hotkeysArray;
@@ -119,7 +120,7 @@
     historyTable_.delegate = self;
     historyTable_.tag = HISTORY_LIST;
     
-    hotkeysArray = [[NSMutableArray alloc] init];
+    hotkeysArray = [[NSMutableArray alloc] initWithArray:[[CacheUtility sharedCache] loadFromCache:HOTKEY_CACHE]];
     searchHistory = [[NSMutableArray alloc] initWithArray:[[CacheUtility sharedCache] loadFromCache:SEARCH_HISTORY]];
     
     [self getHotKey];
@@ -167,6 +168,7 @@
                                                      [hotkeysArray addObject:name];
                                                  }
                                              }
+                                             [[CacheUtility sharedCache] putInCache:HOTKEY_CACHE result:hotkeysArray];
                                              [table_ reloadData];
                                          } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
                                              NSLog(@"fail");
@@ -179,8 +181,6 @@
     [searchBar_ resignFirstResponder];
     searchBar_.text = nil;
     [searchBar_ setShowsCancelButton:NO animated:NO];
-//    [searchHistory removeAllObjects];
-//    [searchHistory addObjectsFromArray:[[CacheUtility sharedCache] loadFromCache:SEARCH_HISTORY]];
     
     BOOL isHave = NO;
     for (int i = 0; i< searchHistory.count; i ++)

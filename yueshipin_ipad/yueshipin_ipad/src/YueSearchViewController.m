@@ -44,8 +44,7 @@
     hotkeysArray = [[NSMutableArray alloc] init];
     searchHistoryArray = [[NSMutableArray alloc] initWithArray:[[CacheUtility sharedCache] loadFromCache:SEARCH_HISTORY]];
     [self initMainView];
-    [self getHotKey];
-    
+    //[self getHotKey];
 }
 
 - (void)didReceiveMemoryWarning
@@ -57,7 +56,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    //[self getHotKey];
+    [self getHotKey];
     //[historyTable reloadData];
 }
 
@@ -95,7 +94,7 @@
     
     
     historyTable = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
-    historyTable.frame = CGRectMake(170, 152, 520, 0);
+    historyTable.frame = CGRectMake(170, 152, 513, 0);
     historyTable.backgroundColor = [UIColor whiteColor];
     historyTable.delegate = self;
     historyTable.dataSource = self;
@@ -184,9 +183,10 @@
         }
         else
         {
-            height = searchHistoryArray.count >= 6 ? 244 : (searchHistoryArray.count + 1) * 35;
+            height = (searchHistoryArray.count == 0 ? 0 : (searchHistoryArray.count + 1) * 35);
+            height = (height >= 244 ? 244 : height);
         }
-        historyTable.frame = CGRectMake(170, 152, 520, height);
+        historyTable.frame = CGRectMake(170, 152, 513, height);
         [self.view bringSubviewToFront:historyTable];
     } completion:^(BOOL finished) {
         
@@ -300,7 +300,8 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return searchHistoryArray.count + 1;
+    NSInteger number = (searchHistoryArray.count == 0 ? 0 : searchHistoryArray.count + 1);
+    return number;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -309,7 +310,7 @@
     UITableViewCell *cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     cell.selectionStyle = UITableViewCellSelectionStyleGray;
     if (indexPath.row < searchHistoryArray.count) {
-        cell.textLabel.text = [NSString stringWithFormat:@"%@", [searchHistoryArray objectAtIndex:indexPath.row]];
+        cell.textLabel.text = [NSString stringWithFormat:@"%@", [searchHistoryArray objectAtIndex:searchHistoryArray.count - 1 - indexPath.row]];
         cell.textLabel.font = [UIFont systemFontOfSize:15];
         cell.textLabel.textColor = CMConstants.grayColor;
     }
@@ -360,6 +361,8 @@
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (indexPath.row < searchHistoryArray.count) {
+        UITableViewCell * cell = [tableView cellForRowAtIndexPath:indexPath];
+        [self searchWithKey:cell.textLabel.text];
         //[self.parentDelegate historyCellClicked:[[historyArray objectAtIndex:indexPath.row] objectForKey:@"content"]];
     }
     if (indexPath.row == searchHistoryArray.count) {

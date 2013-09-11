@@ -63,14 +63,14 @@
     NSArray * secondP = [NSArray arrayWithObjects:
                         [NSValue valueWithCGPoint:CGPointMake(350, 80)],
                         [NSValue valueWithCGPoint:CGPointMake(170, 175)],
-                        [NSValue valueWithCGPoint:CGPointMake(280, 139)],
+                        [NSValue valueWithCGPoint:CGPointMake(140, 119)],
                         [NSValue valueWithCGPoint:CGPointMake(540, 155)],
                         [NSValue valueWithCGPoint:CGPointMake(280, 220)],
                         [NSValue valueWithCGPoint:CGPointMake(515, 225)],
                         [NSValue valueWithCGPoint:CGPointMake(130, 275)],
                         [NSValue valueWithCGPoint:CGPointMake(340, 285)],
                         [NSValue valueWithCGPoint:CGPointMake(240, 360)],
-                        [NSValue valueWithCGPoint:CGPointMake(430, 325)], nil];
+                        [NSValue valueWithCGPoint:CGPointMake(450, 335)], nil];
     
     NSArray * thirdP  = [NSArray arrayWithObjects:
                         [NSValue valueWithCGPoint:CGPointMake(170, 115)],
