@@ -18,6 +18,8 @@
 #define URL_KEY @"url_key"
 #define MAX_EPISODE_NUM 10
 #define TRACK_BUTTON_TAG 10013
+#define KEY_LETV_MAX_RETERY_TIME (3)
+
 /* Asset keys */
 static NSString * const kTracksKey         = @"tracks";
 static NSString * const kPlayableKey		= @"playable";
@@ -83,6 +85,7 @@ static NSString * const kCurrentItemKey	= @"currentItem";
 @property BOOL isChangeQuality;
 @property (nonatomic, strong) UIButton *trackSelect;
 @property (nonatomic) BOOL fromBaidu;
+@property (nonatomic) NSInteger letvReteryTime;
 @end
 
 @interface AVPlayerViewController (Player)
@@ -121,7 +124,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 @synthesize tableCellHeight, tableWidth, maxEpisodeNum, umengPageName,urlConnection,isAppEnterBackground, videoFormat;
 @synthesize m3u8Duration,isChangeQuality;
 @synthesize localPlaylists;
-@synthesize downloadLogoBtn, fromBaidu;
+@synthesize downloadLogoBtn, fromBaidu,letvReteryTime;
 #pragma mark
 #pragma mark View Controller
 
@@ -224,6 +227,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     self.view.backgroundColor = [UIColor blackColor];
     isAppEnterBackground = NO;
     isClosed = NO;
+    letvReteryTime = 0;
     if (type == 1) {
         umengPageName = MOVIE_PLAY;
     } else if(type == 2 || type == 131){
@@ -652,6 +656,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     resolution = [tempDic objectForKey:RESOLUTION_KEY];
     NSDictionary *urlDic = [tempDic objectForKey:URL_KEY];
     if ([[urlDic objectForKey:@"source"]isEqualToString:@"le_tv_fee"]||[[urlDic objectForKey:@"source"]isEqualToString:@"letv"]) {
+        
+        if (letvReteryTime > KEY_LETV_MAX_RETERY_TIME)
+        {
+            [self closeSelf];
+            return;
+        }
+        letvReteryTime ++;
         isResetLetvData_ = YES;
         dispatch_async( dispatch_queue_create("newQueue", NULL), ^{
             [self parseVideoData:[video objectForKey:@"episodes"]];
@@ -711,10 +722,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         if (status_Code >= 200 && status_Code <= 299){
             if ([source isEqualToString:@"sohu"] && ([fileType isEqualToString:@"m3u8"] || [fileType isEqualToString:@"m3u"])) {
                 NSLog(@"working = %@", connection.originalRequest.URL);
+                letvReteryTime = 0;
                 workingUrl = connection.originalRequest.URL;
                 [self performSelectorOnMainThread:@selector(setURL:) withObject:workingUrl waitUntilDone:NO];
             } else if (status_Code >= 200 && status_Code <= 299 && ![contentType hasPrefix:@"text/html"] && contentLength.intValue > 100) {
                 NSLog(@"working = %@", connection.originalRequest.URL);
+                letvReteryTime = 0;
                 workingUrl = connection.originalRequest.URL;
                 [self performSelectorOnMainThread:@selector(setURL:) withObject:workingUrl waitUntilDone:NO];
             } else {
