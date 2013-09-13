@@ -10,7 +10,7 @@
 #import "AFYueSearchAPIClient.h"
 #import "YueSearchWebViewController.h"
 
-#define YUE_SEARCH_URL  (@"http://www.lesou.org/search.php?wd=")
+#define YUE_SEARCH_URL  ([AppDelegate instance].internetSearchUrl)//(@"http://www.lesou.org/search.php?wd=")
 #define SEARCH_HISTORY  (@"yueSou_History")
 
 @interface YueSearchViewController ()
@@ -84,7 +84,7 @@
     
     //search Bar
     sBar = [[CustomSearchBar alloc]initWithFrame:CGRectMake(170, 114, 585, 38)];
-    sBar.placeholder = @"乐搜资源:请输入影片名称搜索";
+    sBar.placeholder = @"网络资源:请输入影片名称搜索";
     sBar.delegate = self;
     [self.view addSubview:sBar];
     
@@ -166,7 +166,8 @@
     
     [self setSearchHistoryHidden:YES];
     
-    NSString * url = [NSString stringWithFormat:@"%@%@",YUE_SEARCH_URL,key];
+    NSString * url = [YUE_SEARCH_URL stringByReplacingOccurrencesOfString:@"@" withString:key];
+    //NSString * url = [NSString stringWithFormat:@"%@%@",YUE_SEARCH_URL,key];
     YueSearchWebViewController * webView = [[YueSearchWebViewController alloc] initWithUrl:url];
     [[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:webView]];
 }

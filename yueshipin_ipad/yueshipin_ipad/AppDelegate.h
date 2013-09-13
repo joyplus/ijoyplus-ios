@@ -56,6 +56,7 @@
 
 @property (nonatomic, strong)NSString *advUrl;
 @property (nonatomic, strong)NSString *advTargetUrl;
+@property (nonatomic, strong)NSString *internetSearchUrl;
 @property UIBackgroundTaskIdentifier bgTask;
 + (AppDelegate *) instance;
 - (void)startHttpServer;

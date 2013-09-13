@@ -11,7 +11,7 @@
 #import "AFYueSearchAPIClient.h"
 #import "YueSouWebViewController.h"
 
-#define YUE_SEARCH_URL          (@"http://www.lesou.org/search.php?wd=")
+#define YUE_SEARCH_URL          ([AppDelegate instance].internetSearchUrl)//(@"http://www.lesou.org/search.php?wd=")
 #define EXPLAIN_YUESOU_STRING   (@"悦搜的搜索结果将以网页形式展示,您可以在影片详情页面点击\"转屏推电视\",将大片投放到电视上观看!")
 
 #define HISTORY_LIST    (1132)
@@ -198,7 +198,8 @@
     }
     [[CacheUtility sharedCache] putInCache:SEARCH_HISTORY result:searchHistory];
     
-    NSString * url = [NSString stringWithFormat:@"%@%@",YUE_SEARCH_URL,key];
+    NSString * url = [YUE_SEARCH_URL stringByReplacingOccurrencesOfString:@"@" withString:key];
+    //NSString * url = [NSString stringWithFormat:@"%@%@",YUE_SEARCH_URL,key];
     YueSouWebViewController * ctrl = [[YueSouWebViewController alloc] initWithUrl:url title:key];
     [self.navigationController pushViewController:ctrl animated:YES];
 }

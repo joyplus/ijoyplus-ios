@@ -122,6 +122,7 @@
 #define ADV_IMAGE_NAME @"advertisement_image"
 #define ADV_PAHT @"advertisementUrl"
 #define ADV_TARGET_PATH @"advertisementTargetUrl"
+#define INTERNET_SEARCH_URL (@"InternetSearchUrl")
 
 #define DocumentsDirectory [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) lastObject]
 

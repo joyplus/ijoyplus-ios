@@ -72,6 +72,7 @@
 @synthesize adViewController;
 @synthesize advUrl, advTargetUrl,bgTask;
 @synthesize curDownloadingTask;
+@synthesize internetSearchUrl;
 
 + (AppDelegate *) instance {
 	return (AppDelegate *) [[UIApplication sharedApplication] delegate];
@@ -329,6 +330,8 @@
     self.advUrl = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:ADV_PAHT]];
 //    self.advUrl = @"http://g.hiphotos.baidu.com/album/w%3D230/sign=7f271f7883025aafd33279c8cbecab8d/060828381f30e92416adc5894d086e061d95f779.jpg";
     self.advTargetUrl = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:ADV_TARGET_PATH]];
+    
+    self.internetSearchUrl = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:INTERNET_SEARCH_URL]];
     [self downloadAdvImage];
     
     if(self.showVideoSwitch == nil || [self.showVideoSwitch isEqualToString:@"(null)"]){
