@@ -20,6 +20,7 @@
 #import "CustomNavigationViewControllerPortrait.h"
 #import "CacheUtility.h"
 #import "DownLoadManager.h"
+#import "CommonHeader.h"
 
 @interface TabBarViewController ()
 
@@ -31,27 +32,38 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
+        {
+            self.edgesForExtendedLayout = UIRectEdgeNone;
+        }
+        
         ChannelViewController *channelview = [[ChannelViewController alloc] init];
         UINavigationController *channelNav = [[UINavigationController alloc] initWithRootViewController:channelview];
-        [channelNav.navigationBar setBackgroundImage:[UIImage imageNamed:@"top_bg_common.png"]forBarMetrics:UIBarMetricsDefault];
+        [channelNav.navigationBar setBackgroundImage:IPHONE_TOP_NAVIGATIONBAR_BG forBarMetrics:UIBarMetricsDefault];
         
         allListViewController *allListview = [[allListViewController alloc] init];
         //RespForWXRootViewController *allListview = [[RespForWXRootViewController alloc] init];
         UINavigationController *allListNav = [[UINavigationController alloc] initWithRootViewController:allListview];
-        [allListNav.navigationBar setBackgroundImage:[UIImage imageNamed:@"top_bg_common.png"]forBarMetrics:UIBarMetricsDefault];
+        [allListNav.navigationBar setBackgroundImage:IPHONE_TOP_NAVIGATIONBAR_BG forBarMetrics:UIBarMetricsDefault];
        
         PageManageViewController *pageView = [[PageManageViewController alloc] init];
         UINavigationController *sortNav = [[UINavigationController alloc] initWithRootViewController:pageView];
-        [sortNav.navigationBar setBackgroundImage:[UIImage imageNamed:@"top_bg_common.png"]forBarMetrics:UIBarMetricsDefault];
+        [sortNav.navigationBar setBackgroundImage:IPHONE_TOP_NAVIGATIONBAR_BG forBarMetrics:UIBarMetricsDefault];
         
         MineViewController *mineview = [[MineViewController alloc] init];
         UINavigationController *mineNav = [[UINavigationController alloc] initWithRootViewController:mineview];
-        [mineNav.navigationBar setBackgroundImage:[UIImage imageNamed:@"top_bg_common.png"] forBarMetrics:UIBarMetricsDefault];
+        [mineNav.navigationBar setBackgroundImage:IPHONE_TOP_NAVIGATIONBAR_BG forBarMetrics:UIBarMetricsDefault];
         
         //init downLoad viewController
         IphoneDownloadViewController * downloadCtrl = [[IphoneDownloadViewController alloc] init];
         UINavigationController * downLoadNavCtrl = [[UINavigationController alloc] initWithRootViewController:downloadCtrl];
-        [downLoadNavCtrl.navigationBar setBackgroundImage:[UIImage imageNamed:@"top_bg_common.png"] forBarMetrics:UIBarMetricsDefault];
+        [downLoadNavCtrl.navigationBar setBackgroundImage:IPHONE_TOP_NAVIGATIONBAR_BG forBarMetrics:UIBarMetricsDefault];
+        
+        channelNav.navigationBar.titleTextAttributes = [NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor];
+        allListNav.navigationBar.titleTextAttributes = [NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor];
+        sortNav.navigationBar.titleTextAttributes = [NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor];
+        downLoadNavCtrl.navigationBar.titleTextAttributes = [NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor];
+        mineNav.navigationBar.titleTextAttributes = [NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor];
         
         UIImage *tabBackground = [[UIImage imageNamed:@"tab_bg.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
         [[UITabBar appearance] setBackgroundImage:tabBackground];
@@ -74,7 +86,15 @@
         [(UITabBarItem *)[self.tabBar.items objectAtIndex:3] setImage:[UIImage imageNamed:@"icon_tab3.png" ]];
         [(UITabBarItem *)[self.tabBar.items objectAtIndex:3] setTitle:XIAZAI];
         [(UITabBarItem *)[self.tabBar.items objectAtIndex:3] setTitlePositionAdjustment:UIOffsetMake(0, -3)];
-        self.tabBar.selectedImageTintColor = [UIColor orangeColor];
+        if ([[UIDevice currentDevice].systemVersion floatValue] >= 7.0)
+        {
+            self.tabBar.tintColor = [UIColor orangeColor];
+        }
+        else
+        {
+            self.tabBar.selectedImageTintColor = [UIColor orangeColor];
+        }
+        
         self.selectedIndex = 1;
         [self setNoHighlightTabBar];
         
@@ -247,10 +267,30 @@
 }
 
 
+#ifdef __IPHONE_7_0
+
+- (NSUInteger)navigationControllerSupportedInterfaceOrientations:(UINavigationController *)navigationController NS_AVAILABLE_IOS(7_0)
+{
+    return UIInterfaceOrientationMaskPortrait;
+}
+- (UIInterfaceOrientation)navigationControllerPreferredInterfaceOrientationForPresentation:(UINavigationController *)navigationController NS_AVAILABLE_IOS(7_0)
+{
+    return UIInterfaceOrientationPortrait;
+}
+
+#endif
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    if ([[UIDevice currentDevice].systemVersion floatValue] >= 7.0)
+        [self setNeedsStatusBarAppearanceUpdate];
 }
 
 - (void)didReceiveMemoryWarning
@@ -258,5 +298,17 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+//
+//#pragma mark -
+//- (UIStatusBarStyle)preferredStatusBarStyle
+//{
+//    return UIStatusBarStyleLightContent;
+//}
+//
+//- (BOOL)prefersStatusBarHidden
+//{
+//    return NO;
+//}
 
 @end

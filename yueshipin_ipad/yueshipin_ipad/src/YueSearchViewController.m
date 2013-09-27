@@ -64,7 +64,7 @@
 - (void)initMainView
 {
     //bg image
-    UIImageView * image = [[UIImageView alloc] initWithFrame:CGRectMake(10, 0, 942, 750)];
+    UIImageView * image = [[UIImageView alloc] initWithFrame:CGRectMake(10, 0, 942, 770)];
     image.image = [UIImage imageNamed:@"yueSearch_back"];
     [self.view addSubview:image];
     
@@ -304,7 +304,10 @@
     NSInteger number = (searchHistoryArray.count == 0 ? 0 : searchHistoryArray.count + 1);
     return number;
 }
-
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    cell.backgroundColor = [UIColor clearColor];
+}
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";

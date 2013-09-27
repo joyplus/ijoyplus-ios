@@ -67,25 +67,47 @@
     searchBar_.backgroundColor = [UIColor clearColor];
     searchBar_.tintColor = [UIColor clearColor];
     searchBar_.placeholder = @" 请输入片名/导演/主演";
-    [[searchBar_.subviews objectAtIndex:0]removeFromSuperview];
+    //[[searchBar_.subviews objectAtIndex:0]removeFromSuperview];
     UITextField *searchField;
     NSUInteger numViews = [searchBar_.subviews count];
-    for(int i = 0; i < numViews; i++)
+    if ([[UIDevice currentDevice].systemVersion floatValue] >= 7.0)
     {
-        if([[searchBar_.subviews objectAtIndex:i] isKindOfClass:[UITextField class]])
-        {
-            searchField = [searchBar_.subviews objectAtIndex:i];
+        //[searchBar_ setBackgroundImage:[UIImage imageNamed:@"shuru_kuang_bg.png"] forBarMetrics:UIBarMetricsDefault];
+        for (UIView *subView in searchBar_.subviews){
+            for (UIView *secLeveSubView in subView.subviews){
+                if ([secLeveSubView isKindOfClass:[UITextField class]])
+                {
+                    searchField = (UITextField *)secLeveSubView;
+                    break;
+                }
+                else if ([secLeveSubView isKindOfClass:[UIView class]])
+                {
+                    [secLeveSubView removeFromSuperview];
+                }
+            }
         }
-        if([[searchBar_.subviews objectAtIndex:i] isKindOfClass:[UIButton class]])
-        {
-            
-        }
-    }
-    
-    if(!(searchField == nil))
-    {
         [searchField setBackground: [[UIImage imageNamed:@"shuru_kuang_bg.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(14, 13,14, 13)] ];
-        [searchField setBorderStyle:UITextBorderStyleNone];
+    }
+    else
+    {
+        [[searchBar_.subviews objectAtIndex:0]removeFromSuperview];
+        numViews = [searchBar_.subviews count];
+        for(int i = 0; i < numViews; i++) {
+            if([[searchBar_.subviews objectAtIndex:i] isKindOfClass:[UITextField class]]) {
+                searchField = [searchBar_.subviews objectAtIndex:i];
+            }
+            if([[searchBar_.subviews objectAtIndex:i] isKindOfClass:[UIButton class]]){
+                
+                //            [(UIButton *)[searchBar_.subviews objectAtIndex:i] setBackgroundImage:[UIImage imageNamed:@"sousuo_qu_xiao.png"] forState:UIControlStateNormal];
+                //            [(UIButton *)[searchBar_.subviews objectAtIndex:i] setBackgroundImage:[UIImage imageNamed:@"sousuo_qu_xiao_s.png"] forState:UIControlStateHighlighted];0
+                
+            }
+        }
+        if(!(searchField == nil)) {
+            //[searchField.leftView setHidden:YES];
+            [searchField setBackground: [[UIImage imageNamed:@"shuru_kuang_bg.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(14, 13,14, 13)] ];
+            [searchField setBorderStyle:UITextBorderStyleNone];
+        }
     }
     searchBar_.delegate = self;
     [self.view addSubview:searchBar_];
@@ -221,7 +243,10 @@
     NSInteger number = hotkeysArray.count % 2 == 0 ? hotkeysArray.count/2 : hotkeysArray.count/2 + 1;
     return number;
 }
-
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    cell.backgroundColor = [UIColor clearColor];
+}
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
@@ -262,6 +287,7 @@
             line.image = [UIImage imageNamed:@"sousuo_bg_fen_ge_xian"];
             [cell.contentView addSubview:line];
         }
+        cell.backgroundColor = [UIColor clearColor];
         UIView *selectedBg = [[UIView alloc] initWithFrame:cell.frame];
         selectedBg.backgroundColor = [UIColor colorWithRed:185.0/255 green:185.0/255 blue:174.0/255 alpha:0.4];
         cell.selectedBackgroundView = selectedBg;
@@ -324,13 +350,35 @@
     }
     [historyTable_ reloadData];
     [searchBar setShowsCancelButton:YES animated:YES];
-    for (id view in searchBar.subviews) {
-        if ([view isKindOfClass:[UIButton class]]) {
-            [(UIButton *)view setBackgroundImage:[UIImage imageNamed:@"sousuo_qu_xiao.png"] forState:UIControlStateNormal];
-            [(UIButton *)view setBackgroundImage:[UIImage imageNamed:@"sousuo_qu_xiao_s.png"] forState:UIControlStateHighlighted];
-            [(UIButton *)view setTitle:nil forState:UIControlStateNormal];
-            [(UIButton *)view setTitle:nil forState:UIControlStateHighlighted];
+    [searchBar setShowsCancelButton:YES animated:YES];
+    for (UIView * view in searchBar.subviews) {
+        if ([[UIDevice currentDevice].systemVersion floatValue] >= 7.0)
+        {
+            for (UIView * secSubView in view.subviews)
+            {
+                if ([secSubView isKindOfClass:[UIButton class]]) {
+                    secSubView.frame = CGRectMake(232, -2, 54, 30);
+                    [(UIButton *)secSubView setBackgroundImage:[UIImage imageNamed:@"sousuo_qu_xiao.png"] forState:UIControlStateNormal];
+                    [(UIButton *)secSubView setBackgroundImage:[UIImage imageNamed:@"sousuo_qu_xiao_s.png"] forState:UIControlStateHighlighted];
+                    [(UIButton *)secSubView setTitle:nil forState:UIControlStateNormal];
+                    [(UIButton *)secSubView setTitle:nil forState:UIControlStateHighlighted];
+                }
+                else if ([secSubView isKindOfClass:[UITextField class]])
+                {
+                    secSubView.frame = CGRectMake(8, 0, 213, 28);
+                }
+            }
         }
+        else
+        {
+            if ([view isKindOfClass:[UIButton class]]) {
+                [(UIButton *)view setBackgroundImage:[UIImage imageNamed:@"sousuo_qu_xiao.png"] forState:UIControlStateNormal];
+                [(UIButton *)view setBackgroundImage:[UIImage imageNamed:@"sousuo_qu_xiao_s.png"] forState:UIControlStateHighlighted];
+                [(UIButton *)view setTitle:nil forState:UIControlStateNormal];
+                [(UIButton *)view setTitle:nil forState:UIControlStateHighlighted];
+            }
+        }
+        
     }
 }
 - (void)searchBarCancelButtonClicked:(UISearchBar *) searchBar{

@@ -126,6 +126,8 @@
 
 #define DocumentsDirectory [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) lastObject]
 
+#define IPHONE_TOP_NAVIGATIONBAR_BG ([[UIDevice currentDevice] systemVersion].floatValue >= 7.0 ? [UIImage imageNamed:@"top_bg_common_64.png"] : [UIImage imageNamed:@"top_bg_common.png"])
+
 typedef enum {
     MOVIE_TYPE = 1,
     DRAMA_TYPE = 2,

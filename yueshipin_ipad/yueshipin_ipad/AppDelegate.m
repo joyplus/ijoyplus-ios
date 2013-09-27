@@ -132,7 +132,16 @@
 - (void)customizeAppearance
 {
     // Set the background image for *all* UINavigationBars
-    UIImage *gradientImage44 = [[UIImage imageNamed:@"nav_bar_bg_44"]resizableImageWithCapInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
+    NSString * name = nil;
+    if ([[UIDevice currentDevice].systemVersion floatValue] >= 7.0)
+    {
+        name = @"nav_bar_bg_64";
+    }
+    else
+    {
+        name = @"nav_bar_bg_44";
+    }
+    UIImage *gradientImage44 = [[UIImage imageNamed:name]resizableImageWithCapInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
     [[UINavigationBar appearance] setBackgroundImage:gradientImage44 forBarMetrics:UIBarMetricsDefault];
     
     [[UIProgressView appearance] setProgressTintColor:[UIColor colorWithRed:95/255.0 green:169/255.0 blue:250/255.0 alpha:1.0]];

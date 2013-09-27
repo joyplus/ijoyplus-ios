@@ -49,15 +49,23 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    UILabel *titleText = [[UILabel alloc] initWithFrame: CGRectMake(220, 0, 80, 50)];
-    titleText.backgroundColor = [UIColor clearColor];
-    titleText.textColor=[UIColor whiteColor];
-    [titleText setFont:[UIFont boldSystemFontOfSize:20.0]];
-    [titleText setText:@"本地视频"];
-    titleText.shadowColor = [UIColor colorWithRed:121.0/255 green:64.0/255 blue:0 alpha:1];
-    titleText.center = self.navigationItem.titleView.center;
-    self.navigationItem.titleView=titleText;
     
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
+    {
+        self.edgesForExtendedLayout = UIRectEdgeNone;
+    }
+    
+//    UILabel *titleText = [[UILabel alloc] initWithFrame: CGRectMake(220, 0, 80, 50)];
+//    titleText.backgroundColor = [UIColor clearColor];
+//    titleText.textColor=[UIColor whiteColor];
+//    [titleText setFont:[UIFont boldSystemFontOfSize:20.0]];
+//    [titleText setText:@"本地视频"];
+//    titleText.shadowColor = [UIColor colorWithRed:121.0/255 green:64.0/255 blue:0 alpha:1];
+//    titleText.center = self.navigationItem.titleView.center;
+//    self.navigationItem.titleView=titleText;
+
+    self.title = @"本地视频";
+
     UIImageView *backGround = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
     backGround.frame = CGRectMake(0, 0, 320, kFullWindowHeight);
     [self.view addSubview:backGround];

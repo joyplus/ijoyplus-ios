@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>3B03948E-4BE6-47A3-AA27-5686F59A07F1</string>
+	<key>IDESourceControlProjectName</key>
+	<string>yueshipin</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>19C5C896-3453-4503-B754-226C7072AD1C</key>
+		<string>https://github.com/joyplus/ijoyplus-ios.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>yueshipin_ipad/yueshipin.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>19C5C896-3453-4503-B754-226C7072AD1C</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/joyplus/ijoyplus-ios.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>19C5C896-3453-4503-B754-226C7072AD1C</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>19C5C896-3453-4503-B754-226C7072AD1C</string>
+			<key>IDESourceControlWCCName</key>
+			<string>ijoyplus-ios</string>
+		</dict>
+	</array>
+</dict>
+</plist>

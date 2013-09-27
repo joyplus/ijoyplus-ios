@@ -85,7 +85,7 @@
         sloganImageView.frame = CGRectMake(15, 36, 261, 42);
         [self.view addSubview:sloganImageView];
         
-        table = [[UITableView alloc] initWithFrame:CGRectMake(3, 92, self.view.frame.size.width - 16, self.view.frame.size.height - TOP_SOLGAN_HEIGHT) style:UITableViewStylePlain];
+        table = [[UITableView alloc] initWithFrame:CGRectMake(3, 92, self.view.frame.size.width - 16, self.view.frame.size.height - TOP_SOLGAN_HEIGHT - 20) style:UITableViewStylePlain];
         [table setSeparatorStyle:UITableViewCellSeparatorStyleNone];
 		[table setDelegate:self];
 		[table setDataSource:self];
@@ -506,7 +506,10 @@
     }
 }
 
-
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    cell.backgroundColor = [UIColor clearColor];
+}
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {

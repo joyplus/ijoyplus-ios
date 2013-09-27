@@ -71,9 +71,9 @@ extern NSComparator cmpString;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    
     if (isNotification_) {
-        [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"top_bg_common.png"] forBarMetrics:UIBarMetricsDefault];
+        [self.navigationController.navigationBar setBackgroundImage:IPHONE_TOP_NAVIGATIONBAR_BG forBarMetrics:UIBarMetricsDefault];
     }
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showSuccessModalView) name:@"wechat_share_success" object:nil];
     

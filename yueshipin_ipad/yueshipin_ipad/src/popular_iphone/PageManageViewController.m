@@ -351,7 +351,10 @@ enum
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
+    {
+        self.edgesForExtendedLayout = UIRectEdgeNone;
+    }
     [self dataBaseChanged];
     
 //    UILabel *titleText = [[UILabel alloc] initWithFrame: CGRectMake(90, 0, 40, 40)];

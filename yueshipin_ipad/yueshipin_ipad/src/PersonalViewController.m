@@ -431,7 +431,10 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return sortedwatchRecordArray.count;
 }
-
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    cell.backgroundColor = [UIColor clearColor];
+}
 
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -451,7 +454,7 @@
         UIButton *playButton = [UIButton buttonWithType:UIButtonTypeCustom];
         playButton.tag = 1002;
         [playButton addTarget:self action:@selector(playBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-        [cell addSubview:playButton];
+        [cell.contentView addSubview:playButton];
         
         UILabel *contentLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 35, 280, 15)];
         contentLabel.backgroundColor = [UIColor clearColor];

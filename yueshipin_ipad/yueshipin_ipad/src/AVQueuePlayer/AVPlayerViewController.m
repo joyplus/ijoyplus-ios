@@ -223,6 +223,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    //self.navigationController.navigationBar.translucent = NO;
     [self.navigationController setNavigationBarHidden:YES];
     self.view.backgroundColor = [UIColor blackColor];
     isAppEnterBackground = NO;

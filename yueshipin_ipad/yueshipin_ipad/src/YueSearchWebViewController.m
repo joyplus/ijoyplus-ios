@@ -60,7 +60,7 @@
     t.text = url;
     self.navigationItem.titleView = t;
     
-    [self.navigationController.navigationBar setBackgroundImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_bg_common.png"] toSize:CGSizeMake(kFullWindowHeight, 44)]
+    [self.navigationController.navigationBar setBackgroundImage:IPHONE_TOP_NAVIGATIONBAR_BG
                                                   forBarMetrics:UIBarMetricsDefault];
     
     CGRect bound = [UIScreen mainScreen].bounds;
