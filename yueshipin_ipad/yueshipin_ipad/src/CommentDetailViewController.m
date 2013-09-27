@@ -45,26 +45,31 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    NSInteger x = 0;
+    if ([[UIDevice currentDevice].systemVersion floatValue] >= 7.0)
+    {
+        x = 20;
+    }
     
-    self.bgImage = [[UIImageView alloc]initWithFrame:CGRectMake(65, 0, 470, 750)];
+    self.bgImage = [[UIImageView alloc]initWithFrame:CGRectMake(65, 0, 470, 750 + x)];
     self.bgImage.image = [UIImage imageNamed:@"comment_background@2x.jpg"];
     [self.view addSubview:self.bgImage];  
     
     closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    closeBtn.frame = CGRectMake(456, 0, 50, 50);
+    closeBtn.frame = CGRectMake(456, x, 50, 50);
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
     [closeBtn addTarget:self action:@selector(closeBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:closeBtn];
     
-    titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(75, 10, 220, 60)];
+    titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(75, 10  , 220, 60)];
     titleLabel.backgroundColor = [UIColor clearColor];
     titleLabel.font = [UIFont boldSystemFontOfSize:16];
     titleLabel.numberOfLines = 2;
     titleLabel.textColor = CMConstants.grayColor;
     [self.view addSubview:titleLabel];
     
-    contentLabel = [[UITextView alloc]initWithFrame:CGRectMake(75, 90, 410, self.view.frame.size.height - 410)];
+    contentLabel = [[UITextView alloc]initWithFrame:CGRectMake(75, 90, 410, self.view.frame.size.height - 420 + x)];
     contentLabel.backgroundColor = [UIColor clearColor];
     contentLabel.font = [UIFont systemFontOfSize:15];
     contentLabel.textColor = CMConstants.grayColor;
