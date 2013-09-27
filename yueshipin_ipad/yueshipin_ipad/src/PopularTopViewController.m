@@ -18,6 +18,7 @@
 #import "AppDelegate.h"
 #import "ScanDetailViewController.h"
 #import "ScanViewController.h"
+#import "CustomNavigationViewController.h"
 #define TOP_IMAGE_HEIGHT 170
 #define VIDEO_BUTTON_WIDTH 120
 #define VIDEO_BUTTON_HEIGHT 45
@@ -699,13 +700,13 @@ void transferDataFromOldDbWithCatch()
 -(void)saoyisaoClicked{
     ScanDetailViewController *scanDetailViewController = [[ScanDetailViewController alloc] init];
     scanDetailViewController.isBunding = NO;
-   [self presentModalViewController:[[UINavigationController alloc] initWithRootViewController:scanDetailViewController] animated:NO];
+   [self presentModalViewController:[[UINavigationController alloc] initWithRootViewController:scanDetailViewController] animated:YES];
 }
 
 -(void)TopImageTaped{
     ScanDetailViewController *scanDetailViewController = [[ScanDetailViewController alloc] init];
     scanDetailViewController.isBunding = YES;
-    [self presentModalViewController:[[UINavigationController alloc] initWithRootViewController:scanDetailViewController] animated:NO];
+    [self presentModalViewController:[[UINavigationController alloc] initWithRootViewController:scanDetailViewController] animated:YES];
 }
 #pragma mark -
 #pragma mark Table view data source

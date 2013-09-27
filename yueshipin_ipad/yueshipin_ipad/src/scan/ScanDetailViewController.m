@@ -32,6 +32,11 @@
 	// Do any additional setup after loading the view.
     self.title = @"扫一扫";
     
+    if ([[UIDevice currentDevice].systemVersion floatValue] >= 7.0)
+    {
+        [self setNeedsStatusBarAppearanceUpdate];
+    }
+    
     [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"nav_bar_bg_44"] forBarMetrics:UIBarMetricsDefault];
     
     self.view.backgroundColor = [UIColor clearColor];
@@ -55,8 +60,10 @@
     [root viewWillAppear:YES];
 }
 -  (void)initLeftView{
+
+    
     UIImageView * scanView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"saoyisao.png"]];
-    scanView.frame = CGRectMake(0, -44,516,750);
+    scanView.frame = CGRectMake(0, -44 ,516,750);
     scanView.backgroundColor = [UIColor clearColor];
 
     if (isBunding_) {
@@ -84,8 +91,17 @@
 }
 
 -(void)initRightView{
+    
+    NSInteger x = 0;
+    NSInteger y = 0;
+    if ([[UIDevice currentDevice].systemVersion floatValue] >= 7.0)
+    {
+        x = 44;
+        y = 20;
+    }
+    
     UIImageView *imageview = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"ipad_scan_intro.png"]];
-    imageview.frame = CGRectMake(1024-429, 0, 429, 705);
+    imageview.frame = CGRectMake(1024-429 -y, x, 429 + y, 705);
     [self.view addSubview:imageview];
     
 }
@@ -119,4 +135,10 @@
 -(void)dealloc{
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
+
+#ifdef __IPHONE_7_0
+-(UIStatusBarStyle)preferredStatusBarStyle{
+    return UIStatusBarStyleBlackOpaque;
+}
+#endif
 @end
