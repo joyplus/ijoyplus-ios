@@ -58,11 +58,18 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    NSInteger x = 0;
+    if ([[UIDevice currentDevice].systemVersion floatValue] >= 7.0)
+    {
+        x = 20;
+    }
+    
     self.bgImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.frame.size.height)];
     self.bgImage.image = [UIImage imageNamed:@"left_background@2x.jpg"];
     [self.view addSubview:self.bgImage];
     
-    titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(LEFT_WIDTH, 45, 377, 30)];
+    titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(LEFT_WIDTH, 45 + x, 377, 30)];
     titleLabel.font = [UIFont boldSystemFontOfSize:23];
     titleLabel.backgroundColor = [UIColor clearColor];
     titleLabel.textColor = CMConstants.textColor;
@@ -72,14 +79,14 @@
     
     
     closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    closeBtn.frame = CGRectMake(456, 0, 50, 50);;
+    closeBtn.frame = CGRectMake(456, x, 50, 50);;
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
     [closeBtn addTarget:self action:@selector(closeBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:closeBtn];
 
     
-    table = [[UITableView alloc]initWithFrame:CGRectMake(LEFT_WIDTH, 80, 420, self.view.frame.size.height - 370)];
+    table = [[UITableView alloc]initWithFrame:CGRectMake(LEFT_WIDTH, 80 + x, 420, self.view.frame.size.height - 370)];
     table.delegate = self;
     table.dataSource = self;
     table.backgroundColor = [UIColor clearColor];
