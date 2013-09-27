@@ -155,7 +155,7 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    return;
+    
     if (!appeared) {
         appeared = YES;
         if (hasVideoUrls > 0 && [[AppDelegate instance].showVideoSwitch isEqualToString:@"0"])

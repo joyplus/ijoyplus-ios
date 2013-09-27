@@ -16,6 +16,8 @@
 #import "CMConstants.h"
 #import "Reachability.h"
 
+#define x ([[UIDevice currentDevice].systemVersion floatValue] >= 7.0 ? 62 : 0)
+
 @interface RespForWXRootViewController ()
 
 - (void)getHotData;
@@ -59,16 +61,17 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     
+    
     self.title = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
     
     UIImageView *bg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
     bg.userInteractionEnabled = YES;
-    bg.frame = CGRectMake(0, 0, 320, kFullWindowHeight - 20 - 44);
+    bg.frame = CGRectMake(0, x, 320, kFullWindowHeight - 20 - 44);
     [self.view addSubview:bg];
     
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
-    backButton.frame = CGRectMake(0, 0, 55, 44);
+    backButton.frame = CGRectMake(0, x, 55, 44);
     backButton.backgroundColor = [UIColor clearColor];
     [backButton setImage:[UIImage imageNamed:@"back.png"] forState:UIControlStateNormal];
     [backButton setImage:[UIImage imageNamed:@"back_f.png"] forState:UIControlStateHighlighted];
@@ -78,10 +81,10 @@
     _arrHistory = [[CacheUtility sharedCache] loadFromCache:@"serach_history"];
     
     UIImageView *imagview = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg_sou_suo"]];
-    imagview.frame = CGRectMake(0, 0, self.view.bounds.size.width, 42);
+    imagview.frame = CGRectMake(0, x, self.view.bounds.size.width, 42);
     [self.view addSubview:imagview];
     
-    searchBar_ = [[UISearchBar alloc] initWithFrame:CGRectMake(self.view.bounds.size.width/2-147, 6, 294, 30)];
+    searchBar_ = [[UISearchBar alloc] initWithFrame:CGRectMake(self.view.bounds.size.width/2-147, 6 + x, 294, 30)];
     searchBar_.tintColor = [UIColor clearColor];
     searchBar_.placeholder = @"请输入片名/导演/主演";
     //[[searchBar_.subviews objectAtIndex:0]removeFromSuperview];
@@ -129,7 +132,7 @@
     searchBar_.delegate = self;
     [self.view addSubview:searchBar_];
     
-    _tableSearchHistory = [[UITableView alloc] initWithFrame:CGRectMake(0, 41, self.view.bounds.size.width, 150)
+    _tableSearchHistory = [[UITableView alloc] initWithFrame:CGRectMake(0, 41 + x, self.view.bounds.size.width, 150)
                                                        style:UITableViewStylePlain];
     _tableSearchHistory.backgroundColor = [UIColor clearColor];
     _tableSearchHistory.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -139,7 +142,7 @@
     
     _viewRespForWX = [[RespForWXRootView alloc] initWithFrame:\
                                     CGRectMake(0, \
-                                               41, 320,\
+                                               41 + x, 320,\
                                                bg.frame.size.height -41)];
     _viewRespForWX.delegate = self;
     [self.view addSubview:_viewRespForWX];
@@ -502,7 +505,7 @@
             for (UIView * secSubView in view.subviews)
             {
                 if ([secSubView isKindOfClass:[UIButton class]]) {
-                    secSubView.frame = CGRectMake(232, -2, 54, 30);
+                    secSubView.frame = CGRectMake(232, -2 , 54, 30);
                     [(UIButton *)secSubView setBackgroundImage:[UIImage imageNamed:@"sousuo_qu_xiao.png"] forState:UIControlStateNormal];
                     [(UIButton *)secSubView setBackgroundImage:[UIImage imageNamed:@"sousuo_qu_xiao_s.png"] forState:UIControlStateHighlighted];
                     [(UIButton *)secSubView setTitle:nil forState:UIControlStateNormal];
@@ -510,7 +513,7 @@
                 }
                 else if ([secSubView isKindOfClass:[UITextField class]])
                 {
-                    secSubView.frame = CGRectMake(8, 0, 213, 28);
+                    secSubView.frame = CGRectMake(8, 0 , 213, 28);
                 }
             }
         }
@@ -583,7 +586,7 @@
     }
     cell.textLabel.text = [_arrHistory objectAtIndex:indexPath.row];
     cell.textLabel.font = [UIFont systemFontOfSize:14];
-    line = [[UIImageView alloc] initWithFrame:CGRectMake(0, 29, self.view.bounds.size.width, 1)];
+    line = [[UIImageView alloc] initWithFrame:CGRectMake(0, 29 + x, self.view.bounds.size.width, 1)];
     line.backgroundColor = [UIColor clearColor];
     line.image = [UIImage imageNamed:@"fengexian.png"];
     [cell.contentView addSubview:line];
@@ -603,6 +606,11 @@
     {
         [_tableSearchHistory removeFromSuperview];
     }
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    cell.backgroundColor = [UIColor clearColor];
 }
 
 @end

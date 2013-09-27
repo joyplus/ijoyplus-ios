@@ -8,6 +8,8 @@
 
 #import "RespForWXDetailViewController.h"
 #import "CommonHeader.h"
+
+#define x ([[UIDevice currentDevice].systemVersion floatValue] >= 7.0 ? 62 : 0)
 @interface RespForWXDetailViewController ()
 
 - (void)reqData;
@@ -49,13 +51,13 @@
     self.title = @"悅视频";
     
     UIImageView *backGround = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
-    backGround.frame = CGRectMake(0, 0, 320, kFullWindowHeight-64);
+    backGround.frame = CGRectMake(0, x, 320, kFullWindowHeight-64);
     
     [self.view addSubview:backGround];
     
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
-    backButton.frame = CGRectMake(0, 0, 55, 44);
+    backButton.frame = CGRectMake(0, x, 55, 44);
     backButton.backgroundColor = [UIColor clearColor];
     [backButton setImage:[UIImage imageNamed:@"back.png"] forState:UIControlStateNormal];
     [backButton setImage:[UIImage imageNamed:@"back_f.png"] forState:UIControlStateHighlighted];
@@ -65,41 +67,41 @@
     
     
     UIImageView *frame = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"detailFrame.png"]];
-    frame.frame = CGRectMake(14, 14, 90, 133);
+    frame.frame = CGRectMake(14, 14 + x, 90, 133);
     [self.view addSubview:frame];
     
-    _imgViewPoster = [[UIImageView alloc] initWithFrame:CGRectMake(16, 16, 85, 126)];
+    _imgViewPoster = [[UIImageView alloc] initWithFrame:CGRectMake(16, 16 + x, 85, 126)];
     
     [self.view addSubview:_imgViewPoster];
     
     
-    _labName = [[UILabel alloc] initWithFrame:CGRectMake(116, 16, 200, 30)];
+    _labName = [[UILabel alloc] initWithFrame:CGRectMake(116, 16 + x, 200, 30)];
     _labName.font = [UIFont systemFontOfSize:18];
     _labName.textColor = [UIColor grayColor];
     _labName.backgroundColor = [UIColor clearColor];
     [self.view addSubview:_labName];
     
     
-    _labActors = [[UILabel alloc] initWithFrame:CGRectMake(116, 49, 200, 15)];
+    _labActors = [[UILabel alloc] initWithFrame:CGRectMake(116, 49 + x, 200, 15)];
     _labActors.font = [UIFont systemFontOfSize:12];
     _labActors.textColor = [UIColor grayColor];
     _labActors.backgroundColor = [UIColor clearColor];
     
     
     
-    _labArea = [[UILabel alloc] initWithFrame:CGRectMake(116, 85, 200, 15)];
+    _labArea = [[UILabel alloc] initWithFrame:CGRectMake(116, 85 + x, 200, 15)];
     _labArea.font = [UIFont systemFontOfSize:12];
     _labArea.textColor = [UIColor grayColor];
     _labArea.backgroundColor = [UIColor clearColor];
     
     
-    _labDirectors = [[UILabel alloc] initWithFrame:CGRectMake(116, 67, 200, 15)];
+    _labDirectors = [[UILabel alloc] initWithFrame:CGRectMake(116, 67 + x, 200, 15)];
     _labDirectors.font = [UIFont systemFontOfSize:12];
     _labDirectors.textColor = [UIColor grayColor];
     _labDirectors.backgroundColor = [UIColor clearColor];
     
     
-    _labReleaseDate = [[UILabel alloc] initWithFrame:CGRectMake(116, 103, 200, 15)];
+    _labReleaseDate = [[UILabel alloc] initWithFrame:CGRectMake(116, 103 + x, 200, 15)];
     _labReleaseDate.font = [UIFont systemFontOfSize:12];
     _labReleaseDate.textColor = [UIColor grayColor];
     _labReleaseDate.backgroundColor = [UIColor clearColor];
@@ -113,11 +115,11 @@
     
     
     UIImageView * shareWXBG = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"shareWX_bg.png"]];
-    shareWXBG.frame = CGRectMake(0, (backGround.frame.size.height - 54), 320, 54);
+    shareWXBG.frame = CGRectMake(0, (backGround.frame.size.height - 54) + x, 320, 54);
     [self.view addSubview:shareWXBG];
     
     UIButton * shareBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    shareBtn.frame = CGRectMake(0, 0, 132, 37);
+    shareBtn.frame = CGRectMake(0, x, 132, 37);
     shareBtn.center = shareWXBG.center;
     [shareBtn setBackgroundImage:[UIImage imageNamed:@"fenxiang_weixin.png"] forState:UIControlStateNormal];
     [shareBtn setBackgroundImage:[UIImage imageNamed:@"fenxiang_weixin_s.png"] forState:UIControlStateHighlighted];
@@ -268,7 +270,7 @@
     
     if (nil != summary_)
     {
-        UIImageView *jianjie = [[UIImageView alloc] initWithFrame:CGRectMake(14, 162, 30, 13)];
+        UIImageView *jianjie = [[UIImageView alloc] initWithFrame:CGRectMake(14, 162 + x, 30, 13)];
         jianjie.image = [UIImage imageNamed:@"tab2_detailed_common_writing3.png"];
         [self.view addSubview:jianjie];
         
@@ -280,7 +282,7 @@
 //        UIImageView * summaryBg_ = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"summryBg.png"] stretchableImageWithLeftCapWidth:50 topCapHeight:50 ]];
 //        summaryBg_.frame = CGRectMake(14, 177, 292, height);
         
-        UILabel * summaryLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(28, 177, 264,height)];
+        UILabel * summaryLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(28, 177 + x, 264,height)];
         summaryLabel_.textColor = [UIColor grayColor];
         summaryLabel_.backgroundColor = [UIColor clearColor];
         summaryLabel_.numberOfLines = 0;
