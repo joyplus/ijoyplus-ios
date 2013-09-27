@@ -64,7 +64,12 @@
                                                   forBarMetrics:UIBarMetricsDefault];
     
     CGRect bound = [UIScreen mainScreen].bounds;
-	webView = [[UIWebView alloc]initWithFrame:CGRectMake(0, 0, bound.size.height, bound.size.width - 64)];
+    NSInteger x = 0;
+    if ([[UIDevice currentDevice].systemVersion floatValue] >= 7.0)
+    {
+        x= 64;
+    }
+	webView = [[UIWebView alloc]initWithFrame:CGRectMake(0, 0, bound.size.height, bound.size.width - 64 + x)];
     [webView setBackgroundColor:[UIColor clearColor]];
     [webView setScalesPageToFit:YES];
     webView.delegate = self;
