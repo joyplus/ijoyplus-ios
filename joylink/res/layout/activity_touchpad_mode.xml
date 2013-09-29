@@ -1,0 +1,93 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tpModeLayout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/control_bg"
+    android:orientation="horizontal" >
+
+    <RelativeLayout
+        android:layout_width="50dp"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="5dp"
+        android:layout_weight="0.1" >
+
+        <ImageButton
+            android:id="@+id/imageButton2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:onClick="OnClickKeyboard"
+            android:background="@drawable/tab2_1_keyb" />
+
+        <ImageButton
+            android:id="@+id/imageButton3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/imageButton2"
+            android:layout_marginTop="50dp"
+            android:background="@drawable/tab2_1_me"
+            android:onClick="OnClick2" />
+
+        <ImageButton
+            android:id="@+id/imageButton1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/imageButton2"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="50dp"
+            android:background="@drawable/tab2_1_ho"
+            android:onClick="OnClick3" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/shotScreenView_area"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_weight="0.8"
+        android:background="@drawable/touch_bg"
+        android:gravity="center" >
+
+        <LinearLayout
+            android:id="@+id/shotScreenView"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center" >
+        </LinearLayout>
+        
+          <TextView
+              android:id="@+id/textViewJP"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_alignParentBottom="true"
+              android:layout_centerHorizontal="true"
+              android:layout_marginBottom="80dp"
+              android:text="正在截图，请稍等 ..."
+              android:textAppearance="?android:attr/textAppearanceMedium"
+              android:textColor="@color/white"
+              android:visibility="gone" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="75dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.1"
+        android:orientation="vertical" >
+
+        <ImageButton
+            android:id="@+id/imageButton1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+             android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+             android:onClick="OnClick4"
+            android:background="@drawable/tp_ba" />
+    </RelativeLayout>
+
+</LinearLayout>

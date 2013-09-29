@@ -107,10 +107,16 @@
     self.type = 2;
     umengPageName = TV_DETAIL;
     
-    self.bgScrollView.frame = CGRectMake(0, 228, self.view.frame.size.width, self.view.frame.size.height - 270);
+    NSInteger x = 0;
+    if ([[UIDevice currentDevice].systemVersion floatValue] >= 7.0)
+    {
+        x = 20;
+    }
+    
+    self.bgScrollView.frame = CGRectMake(0, 228 + x, self.view.frame.size.width, self.view.frame.size.height - 270);
     [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height)];
     
-    self.closeBtn.frame = CGRectMake(455, 0, 50, 50);
+    self.closeBtn.frame = CGRectMake(455, x, 50, 50);
     [self.closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
     [self.closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
     [self.closeBtn addTarget:self action:@selector(closeBtnClicked) forControlEvents:UIControlEventTouchUpInside];

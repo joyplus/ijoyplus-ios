@@ -55,10 +55,12 @@
 #import "DramaDetailViewController.h"
 #import "ShowDetailViewController.h"
 #import "AdViewController.h"
+#import "YueSearchViewController.h"
 
 #define  TABLE_HEADER_HEIGHT 20
 
 @interface MenuViewController () {
+    YueSearchViewController * yueViewController;
     PopularTopViewController *topViewController;
     PopularListViewController *listViewController;
     MovieViewController *movieViewController;
@@ -126,9 +128,9 @@
 - (void)initMenuIcons
 {
     if([[AppDelegate instance].recommendAppSwich isEqualToString:@"0"]){
-        menuIconArray = [NSArray arrayWithObjects:@"popular_top", @"popular_list", @"movie_icon", @"drama_icon", @"comic_icon", @"show_icon", @"search_icon", @"personal_icon", @"download_icon", @"recommend_icon", @"", @"setting_icon", nil];
+        menuIconArray = [NSArray arrayWithObjects:@"yue_search_icon",@"popular_top", @"popular_list", @"movie_icon", @"drama_icon", @"comic_icon", @"show_icon", @"search_icon", @"personal_icon", @"download_icon", @"", @"setting_icon", nil];
     } else{
-        menuIconArray = [NSArray arrayWithObjects:@"popular_top", @"popular_list", @"movie_icon", @"drama_icon", @"comic_icon", @"show_icon", @"search_icon", @"personal_icon", @"download_icon", @"", @"", @"setting_icon", nil];
+        menuIconArray = [NSArray arrayWithObjects:@"yue_search_icon",@"popular_top", @"popular_list", @"movie_icon", @"drama_icon", @"comic_icon", @"show_icon", @"search_icon", @"personal_icon", @"download_icon", @"", @"setting_icon", nil];
     } 
 }
 
@@ -141,6 +143,9 @@
 - (void)initMenuController
 {
     CGRect frame = [UIScreen mainScreen].bounds;
+    
+    yueViewController = [[YueSearchViewController alloc] init];
+    
     topViewController = [[PopularTopViewController alloc] initWithFrame:CGRectMake(0, 0, LEFT_VIEW_WIDTH, frame.size.width)];
     
     listViewController = [[PopularListViewController alloc] initWithFrame:CGRectMake(0, 0, LEFT_VIEW_WIDTH, frame.size.width)];
@@ -153,7 +158,7 @@
     
     comicViewController = [[ComicViewController alloc] initWithFrame:CGRectMake(0, 0, FULL_SCREEN_WIDTH, frame.size.width)];
     
-    searchViewController = [[SearchViewController alloc] initWithFrame:CGRectMake(0, 0, LEFT_VIEW_WIDTH, frame.size.width)];
+    searchViewController = [[SearchViewController alloc] initWithFrame:CGRectMake(0, 0, FULL_SCREEN_WIDTH, frame.size.width)];
 
     personalViewController = [[PersonalViewController alloc] initWithFrame:CGRectMake(0, 0, LEFT_VIEW_WIDTH, frame.size.width)];
     
@@ -161,11 +166,15 @@
     
     downloadViewController = [[DownloadViewController alloc] initWithFrame:CGRectMake(0, 0, LEFT_VIEW_WIDTH, frame.size.width)];
     
-    appViewController = [[UMGridViewController alloc] initWithFrame:CGRectMake(0, 0, LEFT_VIEW_WIDTH, frame.size.width)];
+    //appViewController = [[UMGridViewController alloc] initWithFrame:CGRectMake(0, 0, LEFT_VIEW_WIDTH, frame.size.width)];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
+    {
+        self.edgesForExtendedLayout = UIRectEdgeNone;
+    }
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handlePushNotification:) name:@"push_notification" object:nil];
 }
 
@@ -200,7 +209,8 @@
     [super viewWillAppear:animated];
     if(![AppDelegate instance].triggeredByPlayer){
         [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:[self getViewControllerByIndex] invokeByController:self isStackStartView:YES removePreviousView:NO];
-        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:[AppDelegate instance].adViewController invokeByController:self isStackStartView:FALSE  removePreviousView:NO];
+        
+        //[[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:[AppDelegate instance].adViewController invokeByController:self isStackStartView:FALSE  removePreviousView:NO];
     }
 }
 
@@ -254,7 +264,7 @@
         imageView.tag = 1001;
         [cell.contentView addSubview:imageView];
     }
-    if(indexPath.row == 8){
+    if(indexPath.row == 9){
         if (badgeView == nil) {
             badgeView = [[JSBadgeView alloc] initWithParentView:cell alignment:JSBadgeViewAlignmentTopCenter];
         }
@@ -262,7 +272,7 @@
     }
     UIImageView *imageView = (UIImageView *)[cell viewWithTag:1001];
     if(indexPath.row == 0){
-        imageView.image = [UIImage imageNamed:@"popular_top_selected"];
+        imageView.image = [UIImage imageNamed:@"yue_search_icon_selected"];
     } else if(indexPath.row == 10){
         imageView.image = nil;
     } else {
@@ -283,36 +293,46 @@
     }
 }
 
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    cell.backgroundColor = [UIColor clearColor];
+}
+
 #pragma mark -
 #pragma mark Table view delegate
 
 - (UIViewController *)getViewControllerByIndex
 {
     if(selectedIndex == 0){
+        return yueViewController;
+    }
+    else if(selectedIndex == 1){
         return topViewController;
-    } else if(selectedIndex == 1){
-        return listViewController;
     } else if(selectedIndex == 2){
-        return movieViewController;
+        return listViewController;
     } else if(selectedIndex == 3){
-        return dramaViewController;
-    } else if(selectedIndex == 5){
-        return showViewController;
+        return movieViewController;
     } else if(selectedIndex == 4){
-        return comicViewController;
+        return dramaViewController;
     } else if(selectedIndex == 6){
-        return searchViewController;
+        return showViewController;
+    } else if(selectedIndex == 5){
+        return comicViewController;
     } else if(selectedIndex == 7){
-        return personalViewController;
+        return searchViewController;
     } else if(selectedIndex == 8){
-        return downloadViewController;
+        return personalViewController;
     } else if(selectedIndex == 9){
-        if ([[AppDelegate instance].recommendAppSwich isEqualToString:@"0"]) {
-            return appViewController;
-        } else {
-            return nil;
-        }
-    } else if(selectedIndex == 10){
+        return downloadViewController;
+    }
+//    else if(selectedIndex == 9){
+//        if ([[AppDelegate instance].recommendAppSwich isEqualToString:@"0"]) {
+//            return appViewController;
+//        } else {
+//            return nil;
+//        }
+//    }
+    else if(selectedIndex == 10){
         return nil;
     } else {
         return settingsViewController;
@@ -325,9 +345,9 @@
     if(selectedIndex == 10){
         return;
     }
-    if (selectedIndex == 9 && ![[AppDelegate instance].recommendAppSwich isEqualToString:@"0"]) {
-        return;
-    }
+//    if (selectedIndex == 9 && ![[AppDelegate instance].recommendAppSwich isEqualToString:@"0"]) {
+//        return;
+//    }
     for (int i = 0; i < 12; i++) {
         UITableViewCell *cell = [atableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
         UIImageView *imageView = (UIImageView *)[cell viewWithTag:1001];
@@ -342,13 +362,16 @@
     }
     
     UIViewController *viewController = [self getViewControllerByIndex];
-    if (indexPath.row > 1 && indexPath.row < 6) {
+    if (indexPath.row > 2 && indexPath.row < 7) {
         VideoViewController *videoViewController = (VideoViewController *)viewController;
         videoViewController.revertSearchCriteria = YES;
     }
 	[[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:YES removePreviousView:YES];
     
-    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:[AppDelegate instance].adViewController invokeByController:self isStackStartView:FALSE  removePreviousView:NO];
+    if (selectedIndex != 0)
+    {
+        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:[AppDelegate instance].adViewController invokeByController:self isStackStartView:FALSE  removePreviousView:NO];
+    }
     
     if(selectedIndex < 10){
         BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];

@@ -341,7 +341,7 @@
         
         selectBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         selectBtn.frame = CGRectMake(215, 0, 19, 19);
-        [cell addSubview:selectBtn];
+        [cell.contentView addSubview:selectBtn];
         [selectBtn addTarget:self
                       action:@selector(selectBtnClicked:)
             forControlEvents:UIControlEventTouchUpInside];
@@ -351,7 +351,8 @@
                    forState:UIControlStateNormal];
         selectBtn.adjustsImageWhenHighlighted = NO;
     }
-     selectBtn.tag = indexPath.row;
+    cell.backgroundColor = [UIColor clearColor];
+    selectBtn.tag = indexPath.row;
     cell.clipsToBounds = YES;
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.textLabel.font = [UIFont fontWithName:@"ArialMT" size:12];

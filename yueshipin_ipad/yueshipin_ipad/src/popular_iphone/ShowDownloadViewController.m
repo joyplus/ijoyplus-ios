@@ -38,7 +38,7 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"top_bg_common.png"] forBarMetrics:UIBarMetricsDefault];
+    [self.navigationController.navigationBar setBackgroundImage:IPHONE_TOP_NAVIGATIONBAR_BG forBarMetrics:UIBarMetricsDefault];
     
     UIImageView *backGround = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
     backGround.frame = CGRectMake(0, 0, 320, kFullWindowHeight);
@@ -194,7 +194,12 @@
             NSLog(@"Get the download prodId is failed");
             return;
         }
-        NSArray *infoArr = [NSArray arrayWithObjects:prod_Id,name,imageviewUrl_,@"3",[NSString stringWithFormat:@"%d",num], [[listArr_ objectAtIndex:num] objectForKey:@"sources"], nil];
+        
+        NSArray * urlsArray = [[listArr_ objectAtIndex:num] objectForKey:@"down_urls"];
+        NSDictionary * infoDic = [urlsArray objectAtIndex:0];
+        NSString * source = [infoDic objectForKey:@"source"];
+        
+        NSArray *infoArr = [NSArray arrayWithObjects:prod_Id,name,imageviewUrl_,@"3",[NSString stringWithFormat:@"%d",num], source, nil];
         
         CheckDownloadUrls *check = [[CheckDownloadUrls alloc] init];
         check.downloadInfoArr = infoArr;
@@ -342,7 +347,7 @@
         if (0 != urlArr.count)
         {
             NSDictionary * urlDic = [urlArr objectAtIndex:0];
-            NSString * tureDownloadURL = [CommonMotheds getDownloadURLWithHTML:[urlDic objectForKey:@"url"]];
+            NSString * tureDownloadURL = [CommonMotheds getDownloadURLWithHTML:[urlDic objectForKey:@"url"] prodId:prodId_ subname:@""];
             NSMutableDictionary * newDic = [NSMutableDictionary dictionary];
             [newDic setObject:[urlDic objectForKey:@"file"] forKey:@"file"];
             [newDic setObject:[urlDic objectForKey:@"type"] forKey:@"type"];

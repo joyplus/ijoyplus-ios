@@ -53,6 +53,12 @@ enum
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
+    {
+        self.edgesForExtendedLayout = UIRectEdgeNone;
+    }
+    
     UIImageView *backGround = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
     backGround.frame = CGRectMake(0, 0, 320, kFullWindowHeight);
     [self.view addSubview:backGround];
@@ -77,7 +83,7 @@ enum
     self.navigationItem.rightBarButtonItem = rightButtonItem;
     
     titleButton_ = [UIButton buttonWithType:UIButtonTypeCustom];
-    titleButton_.frame = CGRectMake(0, 0, 100, 60);
+    titleButton_.frame = CGRectMake(0, 0, 100, 44);
     titleButton_.titleLabel.font = [UIFont boldSystemFontOfSize:20];
     [titleButton_ setTitle:@"电影" forState:UIControlStateNormal];
     [titleButton_ setTitle:@"电影" forState:UIControlStateHighlighted];
@@ -135,20 +141,9 @@ enum
                                                  name:@"bundingTVSucceeded"
                                                object:nil];
     
-    //新手引导
-    if ([CommonMotheds isFirstTimeRun]) {
-        [self showIntroductionView];
-    }
-    if ([CommonMotheds isVersionUpdate]) {
-        [self showIntroductionView];
-    }
+    
 }
 
--(void)showIntroductionView{
-    CGSize size = [UIApplication sharedApplication].delegate.window.bounds.size;
-    IntroductionView *inView = [[IntroductionView alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height)];
-    [inView show];
-}
 -(void)viewWillAppear:(BOOL)animated{
    [super viewWillAppear:animated];
    [self managerTVBunding];
@@ -449,6 +444,13 @@ enum
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return 145;
+}
+
+- (void)tableView:(UITableView *)tableView
+  willDisplayCell:(UITableViewCell *)cell
+forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    cell.backgroundColor = [UIColor clearColor];
 }
 
 #pragma mark -

@@ -1,0 +1,215 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.joyplus.joylink"
+    android:versionCode="3"
+    android:versionName="0.9.5" >
+
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="15" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_LOGS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <application
+        android:name=".App"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name=".Logo"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+                <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Setting"
+            android:screenOrientation="portrait" 
+            android:theme="@style/PreferencesTheme">
+        </activity>
+        <activity android:name=".ControlSetting" 
+            android:theme="@style/PreferencesTheme">
+        </activity>
+        <activity
+            android:name=".WiFi"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".Explorer"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".Z_About_us"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".Z_About_mianzhe"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".Z_Pingjia"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".Z_Sug"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".Z_Usage"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".Z_Screen"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".Tab1"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" >
+        
+        </activity>
+        <activity
+            android:name=".Tab1_Photo"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".Tab1_Photo_File"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".Tab1_Video"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".Tab1_Video_File"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".Tab1_Music"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".Tab1_Music_File"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".Tab2"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".ControlKey"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".Tab2_Mouse"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".Tab3"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".PhotoSlideShow"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".SelectDevice"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Dialog" >
+        </activity>
+        <activity
+            android:name=".WifiPassword"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Dialog" >
+        </activity>
+        <activity
+            android:name=".OtherApp"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".MusicPlay"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <activity
+            android:name=".weibo.net.WeiboDialog2"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".weibo.net.WeiboDialog"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".Video.MovieActivity"
+            android:label="@string/movie_view_label"
+            android:screenOrientation="landscape" >
+        </activity>
+        <activity
+            android:name=".ControlTouchpad"
+            android:screenOrientation="landscape" >
+        </activity>
+        <activity
+            android:name=".ControlMouse"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustNothing" >
+        </activity>
+        <activity
+            android:name=".Dlna.DlnaMusicPlay"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".Dlna.DlnaPhotoSlideShow"
+            android:screenOrientation="portrait" >
+        </activity>
+        
+        <service
+            android:name=".Dlna.DlnaSelectDevice"
+            android:exported="true" >
+        </service>
+
+        <activity
+            android:name=".Dlna.DlnaVideoPlay"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.umeng.fb.ui.SendFeedback"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name="com.umeng.fb.ui.FeedbackConversations" />
+        <activity
+            android:name="com.umeng.fb.ui.FeedbackConversation"
+            android:configChanges="keyboard" />
+
+        <service
+            android:name="com.umeng.common.net.DownloadingService"
+            android:exported="true"
+            android:process=":DownloadingService" >
+        </service>
+
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="511116585270151f80000025" >
+        </meta-data>
+    </application>
+
+</manifest>

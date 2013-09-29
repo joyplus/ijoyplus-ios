@@ -18,6 +18,7 @@
 #import "AppDelegate.h"
 #import "ScanDetailViewController.h"
 #import "ScanViewController.h"
+#import "CustomNavigationViewController.h"
 #define TOP_IMAGE_HEIGHT 170
 #define VIDEO_BUTTON_WIDTH 120
 #define VIDEO_BUTTON_HEIGHT 45
@@ -125,7 +126,7 @@
     {
         [self retrieveMovieTopsData];
     }
-    
+    [self setAutoScrollTimer];
     [self showBundingTap];
 }
 
@@ -156,7 +157,7 @@
         if (bunding_succeed_tip) {
             [bunding_succeed_tip removeFromSuperview];
         }
-        table.frame = CGRectMake(3, 92, self.view.frame.size.width - 16, self.view.frame.size.height - TOP_SOLGAN_HEIGHT - 20);
+        table.frame = CGRectMake(3, 92, self.view.frame.size.width - 16, 635);
     }
 }
 - (void)viewDidAppear:(BOOL)animated
@@ -169,6 +170,7 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
+    [self cancelAutoScrollTimer];
     if (umengPageName) {
         [MobClick endLogPageView:umengPageName];
     }
@@ -574,15 +576,18 @@ void transferDataFromOldDbWithCatch()
 	[scrollView setContentOffset: CGPointMake(scrollView.bounds.size.width * thePageControl.currentPage, scrollView.contentOffset.y) animated: YES] ;
 }
 
-- (void) scrollViewWillBeginDragging:(UIScrollView *)scrollView
+- (void) scrollViewWillBeginDragging:(UIScrollView *)ascrollView
 {
+    if(ascrollView.tag == 11270014){
+        [self cancelAutoScrollTimer];
+    }
+    
     [showPullToRefreshManager_ scrollViewBegin];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)aScrollView
 {
     if(aScrollView.tag == 11270014){
-        [self cancelAutoScrollTimer];
         CGFloat pageWidth = scrollView.bounds.size.width ;
         float fractionalPage = scrollView.contentOffset.x / pageWidth ;
         NSInteger nearestNumber = lround(fractionalPage) ;
@@ -695,13 +700,16 @@ void transferDataFromOldDbWithCatch()
 -(void)saoyisaoClicked{
     ScanDetailViewController *scanDetailViewController = [[ScanDetailViewController alloc] init];
     scanDetailViewController.isBunding = NO;
-   [self presentModalViewController:[[UINavigationController alloc] initWithRootViewController:scanDetailViewController] animated:NO];
+   
+   //[[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:scanDetailViewController]];
+    [self presentModalViewController:[[UINavigationController alloc] initWithRootViewController:scanDetailViewController] animated:YES];
 }
 
 -(void)TopImageTaped{
     ScanDetailViewController *scanDetailViewController = [[ScanDetailViewController alloc] init];
     scanDetailViewController.isBunding = YES;
-    [self presentModalViewController:[[UINavigationController alloc] initWithRootViewController:scanDetailViewController] animated:NO];
+    //[[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:scanDetailViewController]];
+    [self presentModalViewController:[[UINavigationController alloc] initWithRootViewController:scanDetailViewController] animated:YES];
 }
 #pragma mark -
 #pragma mark Table view data source
@@ -729,7 +737,10 @@ void transferDataFromOldDbWithCatch()
         }
     }
 }
-
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    cell.backgroundColor = [UIColor clearColor];
+}
 
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath

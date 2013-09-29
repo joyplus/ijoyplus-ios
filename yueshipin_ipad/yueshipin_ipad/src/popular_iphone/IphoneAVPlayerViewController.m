@@ -53,6 +53,7 @@ NSString * const k_CurrentItemKey	= @"currentItem";
 #define SUPER_CLEAR 300
 #define MINI_PLAY_DURATION      (3.0f)
 #define KEY_MAX_CONNECT_TIME    (5)
+#define KEY_LETV_MAX_RETERY_TIME    (3)
 
 enum
 {
@@ -71,6 +72,7 @@ enum
 @property (nonatomic, strong) NSMutableArray * downloadIndex;
 @property (nonatomic) BOOL fromBaidu;
 @property (nonatomic, strong) NSString * fileType;
+@property (nonatomic) NSInteger letvReteryTime;
 - (void)stopMyTimer;
 - (void)beginMyTimer;
 - (void)showActivityView;
@@ -130,7 +132,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 @synthesize isM3u8 = isM3u8_;
 @synthesize continuePlayInfo = continuePlayInfo_;
 @synthesize isPlayFromRecord = isPlayFromRecord_;
-@synthesize localPlaylist,downloadIndex, fromBaidu,fileType;
+@synthesize localPlaylist,downloadIndex, fromBaidu,fileType,letvReteryTime;
 #pragma mark Asset URL
 
 - (void)setURL:(NSURL*)URL
@@ -883,6 +885,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     [[UIApplication sharedApplication] setStatusBarHidden:YES];
     isPlayOnTV = NO;
     isTVReady = YES;
+    letvReteryTime = 0;
     
     self.view.backgroundColor = [UIColor blackColor];
     
@@ -993,7 +996,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
             if (isResetLetvData_) {
                 NSString *htmlUrl = nil;
                 for (NSDictionary *dd in [episodesInfo objectForKey:@"video_urls"]) {
-                    if ([[dd objectForKey:@"source"] isEqualToString:@"le_tv_fee"]) {
+                    if ([[dd objectForKey:@"source"] isEqualToString:@"letv"]) {
                         htmlUrl = [dd objectForKey:@"url"];
                         break;
                     }
@@ -1047,7 +1050,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
             
             NSMutableArray *newUrls = [NSMutableArray arrayWithCapacity:5];
             for (NSDictionary *oneDic in dURL) {
-                NSString * downloadURL = [CommonMotheds getDownloadURLWithHTML:[oneDic objectForKey:@"url"]];
+                //NSString * downloadURL = [CommonMotheds getDownloadURLWithHTML:[oneDic objectForKey:@"url"]];
+                NSString * downloadURL = [CommonMotheds getDownloadURLWithHTML:[oneDic objectForKey:@"url"] prodId:prodId_ subname:@""];
                 NSMutableDictionary * newDic = [NSMutableDictionary dictionary];
                 if (nil != downloadURL)
                 {
@@ -1315,7 +1319,14 @@ NSComparator cmpString = ^(id obj1, id obj2){
     }
     if (dic != nil) {
         if (([[dic objectForKey:@"source"] isEqualToString:@"le_tv_fee"]||[[dic objectForKey:@"source"] isEqualToString:@"letv"]) /*&& !hasOtherSource*/) {
+            
+            if (letvReteryTime > KEY_LETV_MAX_RETERY_TIME)
+            {
+                [self playEnd];
+                return;
+            }
             isResetLetvData_ = YES;
+            letvReteryTime ++;
             dispatch_async( dispatch_queue_create("newQueue", NULL), ^{
                 [self initDataSource:playNum];
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -1494,6 +1505,7 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
         if ((![content_type hasPrefix:@"text/html"] &&  contentLength.intValue > 0)
             || ([videoSource_ isEqualToString:@"sohu"] && ([fileType isEqualToString:@"m3u8"] || [fileType isEqualToString:@"m3u"])))
         {
+            letvReteryTime = 0;
             [self setURL:connection.originalRequest.URL];
             [connection cancel];
             if (isPlayOnTV)
@@ -2747,7 +2759,10 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
     return [episodesArr_ count];
 }
 
-
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    cell.backgroundColor = [UIColor clearColor];
+}
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     static NSString *CellIdentifier = @"Cell";

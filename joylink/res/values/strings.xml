@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">  
+  <string name="app_name">悦享家</string>  
+  <string name="tishi">提示</string>  
+  <string name="shifoutuichu">是否退出程序</string>  
+  <string name="queding">确定</string>  
+  <string name="quxiao">取消</string>  
+  <string name=" ok">退出</string>  
+  <string name="  cancel">取消</string>  
+  <string name=" networknotwork">哎呀，你的网络好像有问题，请重试！</string>  
+  <string name=" tv_string1">&lt; 前15集</string>  
+  <string name=" tv_string2">后15集 &gt;</string>  
+  <string name="movie_view_label">Video player</string>  
+  <!-- Movie View Resume Playing dialog title -->  
+  <string name="resume_playing_title">播放选项</string>  
+  <!-- Movie View Start Playing dialog title -->  
+  <string name="resume_playing_message">你想继续播放吗？</string>  
+  <!-- Movie View Start Playing button "Resume from bookmark" -->  
+  <string name="resume_playing_resume">继续</string>  
+  <!-- Movie View Start Playing button "Beginning" -->  
+  <string name="resume_playing_restart">重新开始</string>  
+  <plurals name="NNNtrackstoplaylist"> 
+    <item quantity="one" msgid="422388042993582235">"已将 1 首歌曲添加到播放列表。"</item>  
+    <item quantity="other" msgid="7662771987109627255">" 
+      <xliff:g id="NUMBER">%d</xliff:g> 首歌曲已添加到播放列表。"
+    </item> 
+  </plurals>  
+  <string name="info_setup_title">没有发现可用设备</string>  
+  <string name="info_setup_message">请确保你的手机和设备在同一网络内</string>  
+  <string name="info_setup_connect_server">搜索</string>  
+  <string name="info_setup_enter_ip">输入 IP</string>  
+  <string name="info_setup_add_Server">添加设备</string>  
+  <string name="info_setup_ok">确定</string>  
+  <string name="info_setup_cancel">取消</string>  
+  <string name="info_setup_exit">退出</string>  
+  <string name="mouseSpeed">触控灵敏度调整</string>  
+  <string name="sensorSpeed">重力传感器灵敏度调整</string>  
+  <string name="sensorMode">重力传感器</string>  
+  <string name="changeSensor">重力传感器方向</string>  
+  <!--
+        This string is used as the format string in a String.format call,
+    and 5 additional arguments are available for printing:
+    1 - hours
+    2 - minutes
+    3 - minutes%60
+    4 - seconds
+    5 - second%60
+    -->  
+  <skip/>  
+  <!-- Do not translate. Duration format for duration < 1 hour -->  
+  <!-- Do not translate. Duration format for duration >= 1 hour --> 
+</resources>

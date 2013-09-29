@@ -351,7 +351,10 @@ enum
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
+    {
+        self.edgesForExtendedLayout = UIRectEdgeNone;
+    }
     [self dataBaseChanged];
     
 //    UILabel *titleText = [[UILabel alloc] initWithFrame: CGRectMake(90, 0, 40, 40)];
@@ -558,10 +561,20 @@ enum
     progressHUD_.labelText = @"加载中...";
     progressHUD_.opacity = 0.5;
     
-    
+    //新手引导
+    if ([CommonMotheds isFirstTimeRun]) {
+        [self showIntroductionView];
+    }
+    if ([CommonMotheds isVersionUpdate]) {
+        [self showIntroductionView];
+    }
 }
 
-
+-(void)showIntroductionView{
+    CGSize size = [UIApplication sharedApplication].delegate.window.bounds.size;
+    IntroductionView *inView = [[IntroductionView alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height)];
+    [inView show];
+}
 -(void)viewWillAppear:(BOOL)animated{
     [CommonMotheds showNetworkDisAbledAlert:self.view];
     if (0 == self.movieListArr.count)

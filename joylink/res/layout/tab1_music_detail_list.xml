@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relativeLayout1"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+          <ImageView
+        android:id="@+id/music_preview_bg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+         android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="15dp"
+        android:background="@drawable/music_list_item_bg" />
+      
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:layout_alignLeft="@+id/music_preview_bg"
+        android:layout_alignTop="@+id/music_preview_bg"
+        android:layout_marginLeft="2.5dp"
+        android:layout_marginTop="2dp"
+        android:scaleType="centerCrop" />
+
+    <TextView
+        android:id="@+id/txt_video_caption"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+       android:layout_centerVertical="true"
+        android:layout_marginLeft="21dp"
+        android:layout_toRightOf="@+id/music_preview_bg"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="name.mp3"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="17dp"
+        android:text="共1首"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/grey"
+        android:textSize="16sp" />
+
+</RelativeLayout>

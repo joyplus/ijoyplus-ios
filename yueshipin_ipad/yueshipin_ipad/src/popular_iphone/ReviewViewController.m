@@ -7,7 +7,7 @@
 //
 
 #import "ReviewViewController.h"
-
+#import "CommonHeader.h"
 @interface ReviewViewController ()
 
 @end
@@ -33,7 +33,7 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     
-    UIImageView * topView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"top_bg_common.png"]];
+    UIImageView * topView = [[UIImageView alloc] initWithImage:IPHONE_TOP_NAVIGATIONBAR_BG];
     topView.frame = CGRectMake(0, 0, 320, 44);
     [self.view addSubview:topView];
     

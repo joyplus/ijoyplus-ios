@@ -1,0 +1,127 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/touchpad"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/control_bg" 
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/linearLayoutT"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="5dp"
+        android:gravity="center" >
+
+              <ImageButton
+            android:id="@+id/Button1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+             android:onClick="OnClickB1"
+            android:background="@drawable/tab2_1_ho" />
+
+            <ImageButton
+                android:id="@+id/Button2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:background="@drawable/tab2_1_keyb"
+                android:onClick="OnClickB2" />
+
+            <ImageButton
+                android:id="@+id/Button3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:background="@drawable/tab2_1_t"
+                android:onClick="OnClickB3" />
+
+            <ImageButton
+                android:id="@+id/Button4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:background="@drawable/tab2_1_me"
+                android:onClick="OnClickB4" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/linearLayoutB"
+        android:layout_below="@+id/linearLayoutT"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/mouse_bg" >
+
+        <RelativeLayout
+            android:id="@+id/touchpad_top_area"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
+            
+            <LinearLayout
+                android:id="@+id/scrollUpAndDown_bg"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginBottom="50dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/mouse_y" />
+            
+              <LinearLayout
+                  android:id="@+id/touchpad_bg"
+                  android:layout_width="wrap_content"
+                  android:layout_height="fill_parent"
+                  android:layout_alignParentLeft="true"
+                  android:layout_marginBottom="50dp"
+                  android:layout_marginRight="10dp"
+                  android:layout_toLeftOf="@+id/scrollUpAndDown_bg" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/touchpad_bottom_area"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
+
+            <LinearLayout
+                android:id="@+id/scroll_left_and_right_bg"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="50dp"
+                android:background="@drawable/mouse_x" />
+
+            <LinearLayout
+                android:id="@+id/no_touch_bg"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="0dp" />
+        </RelativeLayout>
+    </RelativeLayout>
+    <LinearLayout
+        android:id="@+id/linearLayoutB"
+        android:layout_width="fill_parent"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:gravity="center" >
+
+        <Button
+            android:id="@+id/button5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+             android:onClick="OnClickB5" 
+            android:background="@drawable/tab2_1_ba"  />
+        
+    </LinearLayout>
+
+</RelativeLayout>

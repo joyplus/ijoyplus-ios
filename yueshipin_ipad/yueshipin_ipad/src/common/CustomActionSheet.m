@@ -16,6 +16,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
+         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onDeviceOrientationChange) name:UIDeviceOrientationDidChangeNotification object:nil];
     }
     return self;
 }
@@ -76,10 +77,25 @@
     [actionSheetBg addSubview:button2];
     
 }
+
 -(void)actionSheetShow{
     if (self) {
         UIWindow *win = [[UIApplication sharedApplication] keyWindow];
+        if([UIDevice currentDevice].orientation == UIDeviceOrientationLandscapeLeft){
+          self.transform = CGAffineTransformMakeRotation(M_PI);
+        }
         [win addSubview:self];
+        NSLog(@"%d",[UIDevice currentDevice].orientation);
+    }
+}
+-(void)onDeviceOrientationChange{
+    self.autoresizesSubviews = YES;
+    if ([UIDevice currentDevice].orientation ==UIDeviceOrientationLandscapeLeft  ) {
+        self.transform = CGAffineTransformMakeRotation(M_PI);
+
+    }
+    else if ([UIDevice currentDevice].orientation ==UIDeviceOrientationLandscapeRight){
+        self.transform = CGAffineTransformMakeRotation(-M_PI);
     }
 }
 -(void)actionSheetHidde{
@@ -108,6 +124,7 @@
 
 -(void)removeSelf{
 [self actionSheetHidde];
+[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 /*
 // Only override drawRect: if you perform custom drawing.

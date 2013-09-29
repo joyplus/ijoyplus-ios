@@ -152,7 +152,10 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
+    {
+        self.edgesForExtendedLayout = UIRectEdgeNone;
+    }
     UIImageView *bg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
     bg.frame = CGRectMake(0, 0, 320, kCurrentWindowHeight);
     [self.view addSubview:bg];
@@ -162,14 +165,15 @@
     scrollBg.contentSize = CGSizeMake(320, 500);
     [self.view addSubview:scrollBg];
     
-    UILabel *titleText = [[UILabel alloc] initWithFrame: CGRectMake(220, 0, 80, 50)];
-    titleText.backgroundColor = [UIColor clearColor];
-    titleText.textColor=[UIColor whiteColor];
-    [titleText setFont:[UIFont boldSystemFontOfSize:20.0]];
-    [titleText setText:@"个人主页"];
-    titleText.shadowColor = [UIColor colorWithRed:121.0/255 green:64.0/255 blue:0 alpha:1];
-    titleText.center = self.navigationItem.titleView.center;
-    self.navigationItem.titleView=titleText;
+    self.title =@"个人主页";
+//    UILabel *titleText = [[UILabel alloc] initWithFrame: CGRectMake(220, 0, 80, 50)];
+//    titleText.backgroundColor = [UIColor clearColor];
+//    titleText.textColor=[UIColor whiteColor];
+//    [titleText setFont:[UIFont boldSystemFontOfSize:16.0]];
+//    [titleText setText:@"个人主页"];
+//    titleText.shadowColor = [UIColor colorWithRed:121.0/255 green:64.0/255 blue:0 alpha:1];
+//    titleText.center = self.navigationItem.titleView.center;
+//    self.navigationItem.titleView=titleText;
     
     UIButton *leftButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [leftButton addTarget:self action:@selector(search:) forControlEvents:UIControlEventTouchUpInside];
@@ -893,7 +897,10 @@
     return YES;
 }
 
-
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    cell.backgroundColor = [UIColor clearColor];
+}
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
     if (editingStyle == UITableViewCellEditingStyleDelete){

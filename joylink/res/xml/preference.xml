@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <com.joyplus.joylink.SeekBarPreference
+        android:dialogTitle="@string/mouseSpeed"
+        android:key="mouseSpeed"
+        android:persistent="true"
+        android:title="@string/mouseSpeed" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="sensorMode"
+        android:summaryOff="关"
+        android:summaryOn="开"
+        android:title="@string/sensorMode" />
+
+    <ListPreference
+        android:defaultValue="0"
+        android:dialogTitle="@string/changeSensor"
+        android:entries="@array/sensor_entry"
+        android:entryValues="@array/sensor_entry_value"
+        android:key="changeSensor"
+        android:title="@string/changeSensor" />
+
+    <com.joyplus.joylink.SeekBarPreference
+        android:dialogTitle="@string/sensorSpeed"
+        android:enabled="false"
+        android:key="sensorSpeed"
+        android:persistent="true"
+        android:title="@string/sensorSpeed" />
+
+</PreferenceScreen>

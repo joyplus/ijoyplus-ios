@@ -31,6 +31,16 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     self.title = @"扫一扫";
+    
+    NSString * bgName = @"nav_bar_bg_44";
+    if ([[UIDevice currentDevice].systemVersion floatValue] >= 7.0)
+    {
+        [self setNeedsStatusBarAppearanceUpdate];
+        bgName = @"nav_bar_bg_44";
+    }
+    
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:bgName] forBarMetrics:UIBarMetricsDefault];
+    
     self.view.backgroundColor = [UIColor clearColor];
     UIButton *leftButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [leftButton addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
@@ -41,6 +51,7 @@
     UIBarButtonItem *leftButtonItem = [[UIBarButtonItem alloc] initWithCustomView:leftButton];
     self.navigationItem.leftBarButtonItem = leftButtonItem;
     [self initLeftView];
+    [self initRightView];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(ZBarHasReader:) name:ZBarReader object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(back) name:CLOSE object:nil];
 }
@@ -51,8 +62,10 @@
     [root viewWillAppear:YES];
 }
 -  (void)initLeftView{
+
+    
     UIImageView * scanView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"saoyisao.png"]];
-    scanView.frame = CGRectMake(0, -44,516,750);
+    scanView.frame = CGRectMake(0, -44 ,516,750);
     scanView.backgroundColor = [UIColor clearColor];
 
     if (isBunding_) {
@@ -76,6 +89,22 @@
         [self.view addSubview:reader.view];
     }
     
+    
+}
+
+-(void)initRightView{
+    
+    NSInteger x = 0;
+    NSInteger y = 0;
+    if ([[UIDevice currentDevice].systemVersion floatValue] >= 7.0)
+    {
+        x = 44;
+        y = 20;
+    }
+    
+    UIImageView *imageview = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"ipad_scan_intro.png"]];
+    imageview.frame = CGRectMake(1024-429 -y, x, 429 + y, 705);
+    [self.view addSubview:imageview];
     
 }
 -(void)back{
@@ -108,4 +137,10 @@
 -(void)dealloc{
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
+
+#ifdef __IPHONE_7_0
+-(UIStatusBarStyle)preferredStatusBarStyle{
+    return UIStatusBarStyleBlackOpaque;
+}
+#endif
 @end

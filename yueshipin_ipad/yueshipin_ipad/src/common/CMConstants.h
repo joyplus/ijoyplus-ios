@@ -122,8 +122,11 @@
 #define ADV_IMAGE_NAME @"advertisement_image"
 #define ADV_PAHT @"advertisementUrl"
 #define ADV_TARGET_PATH @"advertisementTargetUrl"
+#define INTERNET_SEARCH_URL (@"InternetSearchUrl")
 
 #define DocumentsDirectory [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) lastObject]
+
+#define IPHONE_TOP_NAVIGATIONBAR_BG ([[UIDevice currentDevice] systemVersion].floatValue >= 7.0 ? [UIImage imageNamed:@"top_bg_common_64.png"] : [UIImage imageNamed:@"top_bg_common.png"])
 
 typedef enum {
     MOVIE_TYPE = 1,

@@ -18,6 +18,8 @@
 #define URL_KEY @"url_key"
 #define MAX_EPISODE_NUM 10
 #define TRACK_BUTTON_TAG 10013
+#define KEY_LETV_MAX_RETERY_TIME (3)
+
 /* Asset keys */
 static NSString * const kTracksKey         = @"tracks";
 static NSString * const kPlayableKey		= @"playable";
@@ -83,6 +85,7 @@ static NSString * const kCurrentItemKey	= @"currentItem";
 @property BOOL isChangeQuality;
 @property (nonatomic, strong) UIButton *trackSelect;
 @property (nonatomic) BOOL fromBaidu;
+@property (nonatomic) NSInteger letvReteryTime;
 @end
 
 @interface AVPlayerViewController (Player)
@@ -121,7 +124,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 @synthesize tableCellHeight, tableWidth, maxEpisodeNum, umengPageName,urlConnection,isAppEnterBackground, videoFormat;
 @synthesize m3u8Duration,isChangeQuality;
 @synthesize localPlaylists;
-@synthesize downloadLogoBtn, fromBaidu;
+@synthesize downloadLogoBtn, fromBaidu,letvReteryTime;
 #pragma mark
 #pragma mark View Controller
 
@@ -220,10 +223,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    //self.navigationController.navigationBar.translucent = NO;
     [self.navigationController setNavigationBarHidden:YES];
     self.view.backgroundColor = [UIColor blackColor];
-    //isAppEnterBackground = NO;
+    isAppEnterBackground = NO;
     isClosed = NO;
+    letvReteryTime = 0;
     if (type == 1) {
         umengPageName = MOVIE_PLAY;
     } else if(type == 2 || type == 131){
@@ -476,7 +481,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                 return;
             NSMutableArray *newUrls = [NSMutableArray arrayWithCapacity:5];
             for (NSDictionary *oneDic in dURL) {
-                NSString * downloadURL = [CommonMotheds getDownloadURLWithHTML:[oneDic objectForKey:@"url"]];
+            
+                NSString * downloadURL = [CommonMotheds getDownloadURLWithHTML:[oneDic objectForKey:@"url"] prodId:prodId subname:@""];
                 NSMutableDictionary * newDic = [NSMutableDictionary dictionary];
                 if (nil != downloadURL)
                 {
@@ -651,6 +657,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     resolution = [tempDic objectForKey:RESOLUTION_KEY];
     NSDictionary *urlDic = [tempDic objectForKey:URL_KEY];
     if ([[urlDic objectForKey:@"source"]isEqualToString:@"le_tv_fee"]||[[urlDic objectForKey:@"source"]isEqualToString:@"letv"]) {
+        
+        if (letvReteryTime > KEY_LETV_MAX_RETERY_TIME)
+        {
+            [self closeSelf];
+            return;
+        }
+        letvReteryTime ++;
         isResetLetvData_ = YES;
         dispatch_async( dispatch_queue_create("newQueue", NULL), ^{
             [self parseVideoData:[video objectForKey:@"episodes"]];
@@ -710,10 +723,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         if (status_Code >= 200 && status_Code <= 299){
             if ([source isEqualToString:@"sohu"] && ([fileType isEqualToString:@"m3u8"] || [fileType isEqualToString:@"m3u"])) {
                 NSLog(@"working = %@", connection.originalRequest.URL);
+                letvReteryTime = 0;
                 workingUrl = connection.originalRequest.URL;
                 [self performSelectorOnMainThread:@selector(setURL:) withObject:workingUrl waitUntilDone:NO];
             } else if (status_Code >= 200 && status_Code <= 299 && ![contentType hasPrefix:@"text/html"] && contentLength.intValue > 100) {
                 NSLog(@"working = %@", connection.originalRequest.URL);
+                letvReteryTime = 0;
                 workingUrl = connection.originalRequest.URL;
                 [self performSelectorOnMainThread:@selector(setURL:) withObject:workingUrl waitUntilDone:NO];
             } else {
@@ -1272,7 +1287,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         currentTime = CMTimeGetSeconds(mPlayer.currentTime);
         currentTime = fmax(0, currentTime - 30);
     }
-    [mPlayer seekToTime:CMTimeMakeWithSeconds(currentTime, NSEC_PER_SEC)];
+    if (CMTIME_IS_VALID(CMTimeMakeWithSeconds(currentTime, NSEC_PER_SEC))) {
+        [mPlayer seekToTime:CMTimeMakeWithSeconds(currentTime, NSEC_PER_SEC)];
+    }
 }
 
 - (void)preparePlayVideo
@@ -2162,7 +2179,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 			
 			double time = duration * (value - minValue) / (maxValue - minValue);
 			
-			[mPlayer seekToTime:CMTimeMakeWithSeconds(time, NSEC_PER_SEC)];
+            if (CMTIME_IS_VALID(CMTimeMakeWithSeconds(time, NSEC_PER_SEC))) {
+                [mPlayer seekToTime:CMTimeMakeWithSeconds(time, NSEC_PER_SEC)];
+            }
 		}
 	}
 }
@@ -2734,8 +2753,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                         change:(NSDictionary*)change
                        context:(void*)context
 {
-//    if (isAppEnterBackground)
-//        return;
+    if (isAppEnterBackground)
+        return;
     if (applyTvView == nil) {
         applyTvView = [[UIView alloc]initWithFrame:mPlaybackView.frame];
         applyTvView.tag = 9585403;
@@ -3017,7 +3036,7 @@ NSComparator cmpStr = ^(id obj1, id obj2){
 #pragma mark - app进入后台/重新激活
 - (void)appDidEnterBackground:(NSNotification *)niti
 {
-    //isAppEnterBackground = YES;
+    isAppEnterBackground = YES;
     if (![ActionUtility isAirPlayActive])
     {
         if (self.isPlaying)
@@ -3031,7 +3050,7 @@ NSComparator cmpStr = ^(id obj1, id obj2){
 
 - (void)appDidBecomeActive:(NSNotification *)niti
 {
-    //isAppEnterBackground = NO;
+    isAppEnterBackground = NO;
 }
 
 #pragma mark -

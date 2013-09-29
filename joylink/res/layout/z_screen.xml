@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/control_bg" >
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:fillViewport="true"
+        android:scrollbars="none" 
+        android:paddingLeft="22dp"
+        android:paddingRight="22dp">
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center_horizontal" >
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="17dp"
+                android:src="@drawable/z_screen_title_2" />
+            
+            <ImageView
+                android:id="@+id/imageViewline1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/imageView1"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/z_screen_line" />
+
+            <LinearLayout
+                android:id="@+id/listView1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/imageView1"
+                android:layout_marginTop="19dp"
+                android:divider="@drawable/z_screen_line_s"
+                android:orientation="vertical" >
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/imageView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/listView1"
+                android:layout_marginTop="30dp"
+                android:src="@drawable/z_screen_title_3" />
+            
+            <ImageView
+                android:id="@+id/imageViewline2"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/imageView4"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/z_screen_line" />
+            
+
+            <ImageView
+                android:id="@+id/imageView5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/imageView4"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/z_screen__adjust" />
+
+            <SeekBar
+                android:id="@+id/seekBar1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/imageView5"
+                android:layout_alignLeft="@+id/imageView5"
+                android:layout_alignRight="@+id/imageView5"
+                 android:layout_marginTop="15dp"
+                android:layout_centerHorizontal="true" />
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/seekBar1"
+                android:layout_marginTop="15dp"
+                android:text="如果悦享TV的显示区域与你的电视屏幕不能完整匹配（过大或过小），你可以通过滑动滑块进行适配"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/grey" />
+
+        </RelativeLayout>
+    </ScrollView>
+
+</RelativeLayout>

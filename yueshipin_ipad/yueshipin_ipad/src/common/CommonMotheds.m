@@ -212,37 +212,28 @@
    return [valueStr intValue];
 }
 
-+ (NSString *)getDownloadURLWithHTML:(NSString *)url
-{
-    NSData *htmlData = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
-    TFHpple *xpathParser = [[TFHpple alloc] initWithHTMLData:htmlData];
-    NSArray *elements  = [xpathParser searchWithXPathQuery:@"//a"]; // get the title
-    
-    NSString * downloadURL = nil;
-    for (TFHppleElement * element in elements)
-    {
-        NSDictionary * dic = [element attributes];
-        
-        //        NSLog(@"%@",[dic objectForKey:@"class"]);
-        //        NSLog(@"%@",[dic objectForKey:@"id"]);
-        
-        if (([[dic objectForKey:@"class"] isEqualToString:@"new-dbtn"]
-             && [[dic objectForKey:@"id"] isEqualToString:@"downFileButtom"]) ||
-            [[dic objectForKey:@"id"] isEqualToString:@"fileDownload"])
-        {
-            downloadURL = [element objectForKey:@"href"];
-            [downloadURL stringByReplacingOccurrencesOfString:@"amp;" withString:@""];
-            return downloadURL;
-        }
++(NSString *)getDownloadURLWithHTML:(NSString *)url prodId:(NSString *)prodId subname:(NSString *)subname{
+    NSString *encodedStr = [url  stringByReplacingOccurrencesOfString:@"&" withString:@"%26"];
+    NSString *newUrl = [NSString stringWithFormat:@"%@%@&id=%@&episode=%@",PARSEURL_TEMP_URL,encodedStr,prodId,@"1"];
+    NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:newUrl]];
+    if (data == nil) {
+        return nil;
     }
-    return downloadURL;
-} 
+    NSError *error = nil;
+    NSDictionary* jsonObject = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
+    if (error) {
+        return nil;
+    }
+    NSDictionary *download_urls = [jsonObject objectForKey:@"down_urls"];
+    NSDictionary *url_info = [[download_urls objectForKey:@"urls"] objectAtIndex:0];
+    return [url_info objectForKey:@"url"];
+}
 
 +(NSDictionary *)getLetvRealUrlWithHtml:(NSString *)url prodId:(NSString *)prodId subname:(NSString *)subname{
  
-    NSString *urlStr = [NSString stringWithFormat:@"%@%@&id=%@&episode=%@",LETV_BASEURL,url,prodId,subname];
+    NSString *urlStr = [NSString stringWithFormat:@"%@%@&id=%@&episode=%@",PARSEURL_TEMP_URL,url,prodId,subname];
 
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:LETV_APPKEY,@"appkey",nil];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:PARSEURL_TEMP_URL,@"appkey",nil];
 
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:urlStr]];
    [request setAllHTTPHeaderFields:parameters];
@@ -254,12 +245,40 @@
         NSLog(@"解析letv真实视频地址失败:%@",error);
         return nil;
     }
-    NSDictionary *jsonObject = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
+    NSMutableDictionary *jsonObject = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
     if (error) {
         NSLog(@"解析letv真实视频地址失败:%@",error);
         return nil;
     }
     return jsonObject;
+//    NSDictionary *downUrls = [jsonObject objectForKey:@"down_urls"];
+//    if (downUrls == nil) {
+//        return nil;
+//    }
+//    NSArray *urls = [downUrls objectForKey:@"urls"];
+//    NSMutableArray *realUrls = [NSMutableArray arrayWithCapacity:5];
+//    for(NSDictionary *url in urls){
+//        NSString *tempUrl = [url objectForKey:@"url"];
+//        NSMutableURLRequest *tempRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:tempUrl]];
+//        NSData *tempData = [NSURLConnection sendSynchronousRequest:tempRequest returningResponse:&response error:&error];
+//        if (tempData != nil) {
+//            NSDictionary *tempjsonObject = [NSJSONSerialization JSONObjectWithData:tempData options:NSJSONReadingAllowFragments error:&error];
+//            if (error || tempjsonObject == nil) {
+//                continue;
+//            }
+//            NSString *realUrl = [tempjsonObject objectForKey:@"location"];
+//            NSMutableDictionary *realDic = [NSMutableDictionary dictionaryWithDictionary:url];
+//            [realDic setObject:realUrl forKey:url];
+//            [realUrls addObject:realUrl];
+//        }
+//        
+//    }
+//    NSMutableDictionary *realdownUrls = [NSMutableDictionary dictionaryWithDictionary:downUrls];
+//    [realdownUrls setObject:realdownUrls forKey:@"urls"];
+//    NSMutableDictionary *result = [NSMutableDictionary dictionaryWithDictionary:jsonObject];
+//    [result setObject:realdownUrls forKey:@"down_urls"];
+//    
+//    return result;
 }
 
 + (BOOL)isIphone5

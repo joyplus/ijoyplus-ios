@@ -72,6 +72,7 @@
 @synthesize adViewController;
 @synthesize advUrl, advTargetUrl,bgTask;
 @synthesize curDownloadingTask;
+@synthesize internetSearchUrl;
 
 + (AppDelegate *) instance {
 	return (AppDelegate *) [[UIApplication sharedApplication] delegate];
@@ -131,7 +132,16 @@
 - (void)customizeAppearance
 {
     // Set the background image for *all* UINavigationBars
-    UIImage *gradientImage44 = [[UIImage imageNamed:@"nav_bar_bg_44"]resizableImageWithCapInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
+    NSString * name = nil;
+    if ([[UIDevice currentDevice].systemVersion floatValue] >= 7.0)
+    {
+        name = @"nav_bar_bg_64";
+    }
+    else
+    {
+        name = @"nav_bar_bg_44";
+    }
+    UIImage *gradientImage44 = [[UIImage imageNamed:name]resizableImageWithCapInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
     [[UINavigationBar appearance] setBackgroundImage:gradientImage44 forBarMetrics:UIBarMetricsDefault];
     
     [[UIProgressView appearance] setProgressTintColor:[UIColor colorWithRed:95/255.0 green:169/255.0 blue:250/255.0 alpha:1.0]];
@@ -231,13 +241,13 @@
     [[BundingTVManager shareInstance] connecteServer];
     
     [Parse setApplicationId:PARSE_APP_ID clientKey:PARSE_CLIENT_KEY];
-    //[application registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert|UIRemoteNotificationTypeBadge|UIRemoteNotificationTypeSound];
-//    if (application.applicationIconBadgeNumber != 0) {
-//        application.applicationIconBadgeNumber = 0;
+    [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert|UIRemoteNotificationTypeBadge|UIRemoteNotificationTypeSound];
+     if (application.applicationIconBadgeNumber != 0) {
+         application.applicationIconBadgeNumber = 0;
 //        PFInstallation *installation = [PFInstallation currentInstallation];
 //        [installation setBadge:0];
 //        [installation saveInBackground];
-//    }
+    }
     self.closed = YES;
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
  
@@ -329,6 +339,8 @@
     self.advUrl = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:ADV_PAHT]];
 //    self.advUrl = @"http://g.hiphotos.baidu.com/album/w%3D230/sign=7f271f7883025aafd33279c8cbecab8d/060828381f30e92416adc5894d086e061d95f779.jpg";
     self.advTargetUrl = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:ADV_TARGET_PATH]];
+    
+    self.internetSearchUrl = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:INTERNET_SEARCH_URL]];
     [self downloadAdvImage];
     
     if(self.showVideoSwitch == nil || [self.showVideoSwitch isEqualToString:@"(null)"]){
@@ -462,12 +474,12 @@
 //         [UIUtility showNetWorkError:rootView];
 //    };
     
-//    if (application.applicationIconBadgeNumber != 0) {
-//        application.applicationIconBadgeNumber = 0;
+    if (application.applicationIconBadgeNumber != 0) {
+        application.applicationIconBadgeNumber = 0;
 //        PFInstallation *installation = [PFInstallation currentInstallation];
 //        [installation setBadge:0];
 //        [installation saveInBackground];
-//    }
+    }
    
     [self.sinaweibo applicationDidBecomeActive];
     [self performSelector:@selector(triggerDownload) withObject:self afterDelay:5];

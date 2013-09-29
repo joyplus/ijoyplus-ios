@@ -121,7 +121,16 @@
     }else{
         self.title = [NSString stringWithFormat:@"%@", name];
     }
-    [self.navigationController.navigationBar setBackgroundImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_bg_common.png"] toSize:CGSizeMake(kFullWindowHeight, 44)]
+    NSString * nameStr = nil;
+    if ([[UIDevice currentDevice].systemVersion floatValue] >= 7.0)
+    {
+        nameStr = @"nav_bar_bg_64";
+    }
+    else
+    {
+        nameStr = @"nav_bar_bg_44";
+    }
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:nameStr]
                                                   forBarMetrics:UIBarMetricsDefault];
     if (!hasVideoUrls) {
         subnameArray = [[NSMutableArray alloc]initWithCapacity:10];
@@ -146,6 +155,7 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    
     if (!appeared) {
         appeared = YES;
         if (hasVideoUrls > 0 && [[AppDelegate instance].showVideoSwitch isEqualToString:@"0"])

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/menu_frame"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/slide_menu_bg"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/menu_bt_bg"
+            android:gravity="left|center_vertical"
+            android:onClick="OnClickHome"
+            android:text="    主页"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/menu_bt_bg"
+            android:onClick="OnClickRemoteControl"
+             android:gravity="left|center_vertical"
+            android:text="    遥控"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/menu_bt_bg"
+            android:onClick="OnClickRemoteMouse"
+             android:gravity="left|center_vertical"
+            android:text="    鼠标"
+            android:textColor="@color/white" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <Button
+                android:id="@+id/button4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="22dp"
+                android:background="@drawable/menu_bt_bg"
+                android:onClick="OnClickSetting"
+                 android:gravity="left|center_vertical"
+                android:text="    设置"
+                android:textColor="@color/white" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</FrameLayout>

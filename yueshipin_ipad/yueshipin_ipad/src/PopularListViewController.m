@@ -85,7 +85,7 @@
         sloganImageView.frame = CGRectMake(15, 36, 261, 42);
         [self.view addSubview:sloganImageView];
         
-        table = [[UITableView alloc] initWithFrame:CGRectMake(3, 92, self.view.frame.size.width - 16, self.view.frame.size.height - TOP_SOLGAN_HEIGHT) style:UITableViewStylePlain];
+        table = [[UITableView alloc] initWithFrame:CGRectMake(3, 92, self.view.frame.size.width - 16, self.view.frame.size.height - TOP_SOLGAN_HEIGHT - 20) style:UITableViewStylePlain];
         [table setSeparatorStyle:UITableViewCellSeparatorStyleNone];
 		[table setDelegate:self];
 		[table setDataSource:self];
@@ -130,6 +130,7 @@
     {
         [self retrieveTopsListData];
     }
+    [self setAutoScrollTimer];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -140,6 +141,7 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
+    [self cancelAutoScrollTimer];
     if (umengPageName) {
         [MobClick endLogPageView:umengPageName];
     }
@@ -388,6 +390,7 @@
 - (void) scrollViewWillBeginDragging:(UIScrollView *)ascrollView
 {
     if (ascrollView.tag == 11270014) {
+        [self cancelAutoScrollTimer];
         return;
     }
     [pullToRefreshManager_ scrollViewBegin];
@@ -396,7 +399,7 @@
 - (void)scrollViewDidScroll:(UIScrollView *)aScrollView
 {
     if(aScrollView.tag == 11270014){
-        [self cancelAutoScrollTimer];
+        
         CGFloat pageWidth = scrollView.bounds.size.width ;
         float fractionalPage = scrollView.contentOffset.x / pageWidth ;
         NSInteger nearestNumber = lround(fractionalPage) ;
@@ -503,7 +506,10 @@
     }
 }
 
-
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    cell.backgroundColor = [UIColor clearColor];
+}
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {

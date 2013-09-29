@@ -120,6 +120,10 @@ enum
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
+    {
+        self.edgesForExtendedLayout = UIRectEdgeNone;
+    }
     UIImageView *backGround = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
     backGround.frame = CGRectMake(0, 0, 320, kFullWindowHeight);
     [self.view addSubview:backGround];
@@ -411,5 +415,6 @@ enum
     UnbundingViewController *ubCtrl = [[UnbundingViewController alloc] init];
     [self.navigationController pushViewController:ubCtrl animated:YES];
 }
+
 
 @end

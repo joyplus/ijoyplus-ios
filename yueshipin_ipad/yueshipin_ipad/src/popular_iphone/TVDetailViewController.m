@@ -402,7 +402,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
-    for (UIView *view in cell.subviews) {
+    for (UIView *view in cell.contentView.subviews) {
         [view removeFromSuperview];
     }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -412,7 +412,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
                 UIImageView *frame = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"video_placeholder.png"]];
                 frame.frame = CGRectMake(14, 14, 90, 143);
                 frame.backgroundColor = [UIColor clearColor];
-                [cell addSubview:frame];
+                [cell.contentView addSubview:frame];
                 UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(18, 19, 83, 134)];
                 
                 NSString *imgUrl =[self.infoDic objectForKey:@"prod_pic_url"];
@@ -424,7 +424,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
                 }
                 [imageView setImageWithURL:[NSURL URLWithString:imgUrl] /*placeholderImage:[UIImage imageNamed:@"video_placeholder"]*/];
                  wechatImgStr_ = imgUrl;
-                [cell addSubview:imageView];
+                [cell.contentView addSubview:imageView];
                 
                 NSString *directors = [self.infoDic objectForKey:@"directors"];
                 if (directors == nil) {
@@ -460,7 +460,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
                 titleLabel.textColor = [UIColor grayColor];
                 titleLabel.backgroundColor = [UIColor clearColor];
                 titleLabel.text = titleStr;
-                [cell addSubview:titleLabel];
+                [cell.contentView addSubview:titleLabel];
                 
                 UILabel *scoreLabel = [[UILabel alloc] initWithFrame:CGRectMake(270, 14, 25, 18)];
                 scoreLabel.font = [UIFont systemFontOfSize:15];
@@ -468,11 +468,11 @@ NSComparator cmptr = ^(id obj1, id obj2){
                 scoreLabel.textAlignment = NSTextAlignmentRight;
                 scoreLabel.backgroundColor = [UIColor clearColor];
                 scoreLabel.text = [self.infoDic objectForKey:@"score"];
-                [cell addSubview:scoreLabel];
+                [cell.contentView addSubview:scoreLabel];
                 
                 UIImageView *logo = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"list_numeral_watercress.png"]];
                 logo.frame = CGRectMake(298, 16, 14, 14);
-                [cell addSubview:logo];
+                [cell.contentView addSubview:logo];
                 
                 UILabel *actorsLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 39, 200, 15)];
                 actorsLabel.font = [UIFont systemFontOfSize:12];
@@ -499,10 +499,10 @@ NSComparator cmptr = ^(id obj1, id obj2){
                 dateLabel.text = [NSString stringWithFormat:@"年代: %@",date];
                 
                 
-                [cell addSubview:actorsLabel];
-                [cell addSubview:areaLabel];
-                [cell addSubview:directorLabel];
-                [cell addSubview:dateLabel];;
+                [cell.contentView addSubview:actorsLabel];
+                [cell.contentView addSubview:areaLabel];
+                [cell.contentView addSubview:directorLabel];
+                [cell.contentView addSubview:dateLabel];;
                 
                 UIButton *play = [UIButton buttonWithType:UIButtonTypeCustom];
                 play.frame = CGRectMake(110, 110, 90, 45);
@@ -511,7 +511,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
                 [play setBackgroundImage:[UIImage imageNamed:@"play_video_s.png"] forState:UIControlStateHighlighted];
                 [play setBackgroundImage:[UIImage imageNamed:@"no_video_source.png"] forState:UIControlStateDisabled];
                 [play addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
-                [cell addSubview:play];
+                [cell.contentView addSubview:play];
                 
                 UIButton * expectbtn = [UIButton buttonWithType:UIButtonTypeCustom];
                 expectbtn.tag = 100010;
@@ -562,7 +562,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
                 [addFav setTitleColor:[UIColor orangeColor] forState:UIControlStateHighlighted];
                 [addFav addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
                 addFav.titleLabel.font = [UIFont systemFontOfSize:10];
-                [cell addSubview:addFav];
+                [cell.contentView addSubview:addFav];
                 
                 UIButton *support = [UIButton buttonWithType:UIButtonTypeCustom];
                 support.frame = CGRectMake(80, 165, 80, 35);
@@ -586,7 +586,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
                 support.titleEdgeInsets = UIEdgeInsetsMake(0, -20, 0, 0);
                 [support addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
                 support.titleLabel.font = [UIFont systemFontOfSize:10];
-                [cell addSubview:support];
+                [cell.contentView addSubview:support];
                 
                 UIButton *downLoad = [UIButton buttonWithType:UIButtonTypeCustom];
                 downLoad.frame = CGRectMake(205, 110, 90, 45);
@@ -625,9 +625,9 @@ NSComparator cmptr = ^(id obj1, id obj2){
                 downLoad.titleLabel.font = [UIFont systemFontOfSize:14];
                 if (isloaded_) {
                     if ([CommonMotheds getOnlineConfigValue] == 0) {
-                        [cell addSubview:downLoad];
+                        [cell.contentView addSubview:downLoad];
                     }
-                     [cell addSubview:expectbtn];
+                     [cell.contentView addSubview:expectbtn];
                 }
                 UIButton *report = [UIButton buttonWithType:UIButtonTypeCustom];
                 report.frame = CGRectMake(0, 165, 80, 35);
@@ -636,7 +636,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
                 [report setImage:[UIImage imageNamed:@"icon_fankui_s.png"] forState:UIControlStateHighlighted];
                 [report addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
                 report.titleLabel.font = [UIFont systemFontOfSize:14];
-                [cell addSubview:report];
+                [cell.contentView addSubview:report];
                 if (isEnableReportBtn) {
                     report.enabled = YES;
                 }
@@ -652,13 +652,13 @@ NSComparator cmptr = ^(id obj1, id obj2){
                 [share setImage:[UIImage imageNamed:@"icon_fenxiang_s.png"] forState:UIControlStateHighlighted];
                 [share addTarget:self action:@selector(share:event:) forControlEvents:UIControlEventTouchUpInside];
                 share.titleLabel.font = [UIFont systemFontOfSize:14];
-                [cell addSubview:share];
+                [cell.contentView addSubview:share];
                 break;
             }
             case 1:{
                 UIView *view = [self showEpisodes];
                 if (isloaded_) {
-                     [cell addSubview:view];
+                     [cell.contentView addSubview:view];
                 }
             
                 break;
@@ -674,9 +674,9 @@ NSComparator cmptr = ^(id obj1, id obj2){
                     summaryLabel_.text = [NSString stringWithFormat:@"    %@",summary_];
                 }
                 if (isloaded_) {
-                    [cell addSubview:jianjie];
-                    [cell addSubview:summaryBg_];
-                    [cell addSubview:summaryLabel_];
+                    [cell.contentView addSubview:jianjie];
+                    [cell.contentView addSubview:summaryBg_];
+                    [cell.contentView addSubview:summaryLabel_];
                 }
             
                 break;
@@ -693,7 +693,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
             commentV.image = [UIImage imageNamed:@"tab2_detailed_common_writing1.png"];
             UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 5, 320,30)];
             [view addSubview:commentV];
-            [cell addSubview:view];
+            [cell.contentView addSubview:view];
         }
         else{
             UIButton *bgBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -716,7 +716,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
             }
             [bgBtn setBackgroundImage:[UIImage imageNamed:@"more_bg_2.png"] forState:UIControlStateHighlighted];
             [bgBtn addTarget:self action:@selector(didSelect:) forControlEvents:UIControlEventTouchUpInside];
-            [cell addSubview:bgBtn];
+            [cell.contentView addSubview:bgBtn];
             
             NSDictionary *dic = [relevantList_ objectAtIndex:indexPath.row-1];
             bgBtn.titleLabel.font = [UIFont systemFontOfSize:13];
@@ -726,12 +726,12 @@ NSComparator cmptr = ^(id obj1, id obj2){
             
             UIImageView *push = [[UIImageView alloc] initWithFrame:CGRectMake(288, 8, 6, 10)];
             push.image = [UIImage imageNamed:@"tab2_detailed_common_jian_tou.png"];
-            [cell addSubview:push];
+            [cell.contentView addSubview:push];
     
             if (num != indexPath.row) {
                 UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tab2_detailed_common_writing4_fenge.png"]];
                 line.frame = CGRectMake(25,25, 270, 1);
-                [cell addSubview:line];
+                [cell.contentView addSubview:line];
             }
             
         }
@@ -743,7 +743,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
             commentV.image = [UIImage imageNamed:@"tab2_detailed_common_writing4.png"];
             UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320,20)];
             [view addSubview:commentV];
-            [cell addSubview:view];
+            [cell.contentView addSubview:view];
         }
         else{
             
@@ -763,8 +763,8 @@ NSComparator cmptr = ^(id obj1, id obj2){
             date.font = [UIFont systemFontOfSize:14];
             date.textColor = [UIColor grayColor];
             date.backgroundColor = [UIColor clearColor];
-            [cell addSubview:user];
-            [cell addSubview:date];
+            [cell.contentView addSubview:user];
+            [cell.contentView addSubview:date];
             NSString *content = [item objectForKey:@"content"];
             int height = [self heightForString:content fontSize:13 andWidth:271];
             UILabel *comment =[[UILabel alloc]initWithFrame:CGRectMake(25, 20, 270, height)];
@@ -774,11 +774,11 @@ NSComparator cmptr = ^(id obj1, id obj2){
             comment.numberOfLines = 0;
             comment.lineBreakMode = UILineBreakModeWordWrap;
             comment.font = [UIFont systemFontOfSize:13];
-            [cell addSubview:comment];
+            [cell.contentView addSubview:comment];
             
             UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tab2_detailed_common_writing4_fenge.png"]];
             line.frame = CGRectMake(25,height+22, 270, 1);
-            [cell addSubview:line];
+            [cell.contentView addSubview:line];
         }
 
     }
@@ -786,7 +786,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
     {
         UIImageView *yingping = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"yingping.png"]];
         yingping.frame = CGRectMake(14, 22, 32, 14);
-        [cell addSubview:yingping];
+        [cell.contentView addSubview:yingping];
         
         for (int i = 0; i < arrReviewData_.count; i ++)
         {
@@ -804,7 +804,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
                                                                                 content:[data objectForKey:@"comments"]];
             reviewCell.tag = REVIEW_VIEW_TAG + i;
             [reviewCell setDelegate:self];
-            [cell addSubview:reviewCell];
+            [cell.contentView addSubview:reviewCell];
             if (i == arrReviewData_.count - 1 && 3 == arrReviewData_.count)
             {
                 UIButton * moreBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -819,7 +819,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
                 [moreBtn addTarget:self
                             action:@selector(moreBtnClicked:)
                   forControlEvents:UIControlEventTouchUpInside];
-                [cell addSubview:moreBtn];
+                [cell.contentView addSubview:moreBtn];
             }
         }
         
