@@ -1,0 +1,11 @@
+PODS:
+  - CocoaAsyncSocket (0.0.1)
+  - FTUtils (1.1.1)
+  - JSONKit (1.4)
+  - MBProgressHUD (0.5)
+
+DEPENDENCIES:
+  - CocoaAsyncSocket (= 0.0.1)
+  - FTUtils (= 1.1.1)
+  - JSONKit (= 1.4)
+  - MBProgressHUD (= 0.5)

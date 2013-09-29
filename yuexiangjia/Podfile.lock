@@ -1,0 +1,13 @@
+PODS:
+  - CocoaAsyncSocket (0.0.1)
+  - JSONKit (1.4)
+  - MBProgressHUD (0.5)
+  - Reachability (3.0.0)
+  - SDWebImage (2.6)
+
+DEPENDENCIES:
+  - CocoaAsyncSocket (= 0.0.1)
+  - JSONKit (= 1.4)
+  - MBProgressHUD (= 0.5)
+  - Reachability (= 3.0.0)
+  - SDWebImage (= 2.6)

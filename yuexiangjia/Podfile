@@ -1,0 +1,7 @@
+platform :ios
+
+pod 'SDWebImage',   '2.6'
+pod 'MBProgressHUD', '0.5'
+pod 'Reachability', '3.0.0'
+pod 'CocoaAsyncSocket', '0.0.1'
+pod 'JSONKit', '1.4'

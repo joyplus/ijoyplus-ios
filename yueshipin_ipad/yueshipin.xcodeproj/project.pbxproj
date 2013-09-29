@@ -328,7 +328,11 @@
 		2A7B5BF01779618F00C9E38A /* pingfen@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2A7B5BEE1779618F00C9E38A /* pingfen@2x.png */; };
 		2A937584178D530800848029 /* ScanViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A937583178D530800848029 /* ScanViewController.m */; };
 		2A93758B178D7CBF00848029 /* ScanDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A93758A178D7CBF00848029 /* ScanDetailViewController.m */; };
+<<<<<<< HEAD
 		2A9854DD17D08F7300026605 /* ipad_scan_intro@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2A9854DC17D08F7300026605 /* ipad_scan_intro@2x.png */; };
+=======
+		2AA5A93D179D663F00FA81B4 /* BPushConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2AA5A93C179D663F00FA81B4 /* BPushConfig.plist */; };
+>>>>>>> master
 		2AABBF1B178E8B01000E6915 /* IpadBunDingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2AABBF1A178E8B00000E6915 /* IpadBunDingViewController.m */; };
 		2AABBF20178E8F6B000E6915 /* ipad_confirm_bunding_Bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 2AABBF1C178E8F6B000E6915 /* ipad_confirm_bunding_Bg.png */; };
 		2AABBF21178E8F6B000E6915 /* ipad_confirm_bunding_Bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2AABBF1D178E8F6B000E6915 /* ipad_confirm_bunding_Bg@2x.png */; };
@@ -1526,7 +1530,11 @@
 		2A937583178D530800848029 /* ScanViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScanViewController.m; sourceTree = "<group>"; };
 		2A937589178D7CBF00848029 /* ScanDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScanDetailViewController.h; sourceTree = "<group>"; };
 		2A93758A178D7CBF00848029 /* ScanDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScanDetailViewController.m; sourceTree = "<group>"; };
+<<<<<<< HEAD
 		2A9854DC17D08F7300026605 /* ipad_scan_intro@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ipad_scan_intro@2x.png"; sourceTree = "<group>"; };
+=======
+		2AA5A93C179D663F00FA81B4 /* BPushConfig.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = BPushConfig.plist; sourceTree = "<group>"; };
+>>>>>>> master
 		2AABBF19178E8B00000E6915 /* IpadBunDingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IpadBunDingViewController.h; sourceTree = "<group>"; };
 		2AABBF1A178E8B00000E6915 /* IpadBunDingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IpadBunDingViewController.m; sourceTree = "<group>"; };
 		2AABBF1C178E8F6B000E6915 /* ipad_confirm_bunding_Bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ipad_confirm_bunding_Bg.png; sourceTree = "<group>"; };
@@ -2808,7 +2816,11 @@
 		2A7736CC1777EA090009FE68 /* BPush */ = {
 			isa = PBXGroup;
 			children = (
+<<<<<<< HEAD
 				22084E0B17D9C845005D04A2 /* BPushConfig.plist */,
+=======
+				2AA5A93C179D663F00FA81B4 /* BPushConfig.plist */,
+>>>>>>> master
 				2AC6C9D31778165F004B8908 /* libBPush-simulator.a */,
 				2A7736CD1777EA090009FE68 /* BPush.h */,
 				2A7736CF1777EA090009FE68 /* libBPush.a */,
@@ -5127,6 +5139,7 @@
 				2ABC099D179A58E50057A1F9 /* sortByScore_iphone@2x.png in Resources */,
 				2ABC09A0179A59F60057A1F9 /* saoyisao.png in Resources */,
 				2ABC09A1179A59F60057A1F9 /* saoyisao@2x.png in Resources */,
+<<<<<<< HEAD
 				2A9854DD17D08F7300026605 /* ipad_scan_intro@2x.png in Resources */,
 				22420D5917D7102500DED768 /* yue_search_icon_selected.png in Resources */,
 				22420D5A17D7102500DED768 /* yue_search_icon.png in Resources */,
@@ -5150,6 +5163,9 @@
 				226D118C17DDB3FC00CA1EC2 /* yuesou_4@2x.png in Resources */,
 				224CB4A117DEE323009397C4 /* iPhone_intro_960@2x.png in Resources */,
 				224CB4A217DEE323009397C4 /* iPhone_intro_1136@2x.png in Resources */,
+=======
+				2AA5A93D179D663F00FA81B4 /* BPushConfig.plist in Resources */,
+>>>>>>> master
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
