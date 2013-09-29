@@ -11,7 +11,7 @@
  //0: 测试环境     1. 正式环境 
 #define ENVIRONMENT 1
 
-#define VERSION @"1.0.6"
+#define VERSION @"1.0.7"
 
 //0: 关闭loglog      1. 打开log      Log功能只有再测试环境才生效
 #define LOG_ENABLED 0
@@ -32,11 +32,11 @@
 //#define CHANNEL_ID @"b006001"
 
 //友盟在线参数
-#define SHOW_VIDEO_SWITCH @"showVideoSwitch9"
-#define CLOSE_VIDEO_MODE @"closeVideoMode9"
-#define RECOMMEND_APP_SWITCH @"recommendAppSwitch9"
+#define SHOW_VIDEO_SWITCH @"showVideoSwitch10"
+#define CLOSE_VIDEO_MODE @"closeVideoMode10"
+#define RECOMMEND_APP_SWITCH @"recommendAppSwitch10"
 #define AMERICANVIDEOS @"1"  //1-隐藏美剧 0-显示美剧
-#define HIDDEN_AMERICAN_VIDEOS @"HiddenAmericanVideos9"
+#define HIDDEN_AMERICAN_VIDEOS @"HiddenAmericanVideos10"
 //正式环境
 #if ENVIRONMENT   
     #define kDefaultAppKey @"ijoyplus_ios_001"

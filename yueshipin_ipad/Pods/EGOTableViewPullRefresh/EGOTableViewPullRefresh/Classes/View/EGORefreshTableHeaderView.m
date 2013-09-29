@@ -27,7 +27,7 @@
 #import "EGORefreshTableHeaderView.h"
 
 
-#define TEXT_COLOR	 [UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1.0]
+#define TEXT_COLOR	 [UIColor colorWithRed:87.0/255.0 green:108.0/255.0 blue:137.0/255.0 alpha:1.0]
 #define FLIP_ANIMATION_DURATION 0.18f
 
 
@@ -107,8 +107,9 @@
 #pragma mark Setters
 
 - (void)refreshLastUpdatedDate {
-	if ([_delegate respondsToSelector:@selector(egoRefreshTableHeaderDataSourceLastUpdated:)])
-    {
+	
+	if ([_delegate respondsToSelector:@selector(egoRefreshTableHeaderDataSourceLastUpdated:)]) {
+		
 		NSDate *date = [_delegate egoRefreshTableHeaderDataSourceLastUpdated:self];
 		
 		[NSDateFormatter setDefaultFormatterBehavior:NSDateFormatterBehaviorDefault];
@@ -116,20 +117,16 @@
 		[dateFormatter setDateStyle:NSDateFormatterShortStyle];
 		[dateFormatter setTimeStyle:NSDateFormatterShortStyle];
 
-		_lastUpdatedLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Last Updated: ", nil), [dateFormatter stringFromDate:date]];
+		_lastUpdatedLabel.text = [NSString stringWithFormat:@"Last Updated: %@", [dateFormatter stringFromDate:date]];
+		[[NSUserDefaults standardUserDefaults] setObject:_lastUpdatedLabel.text forKey:@"EGORefreshTableView_LastRefresh"];
+		[[NSUserDefaults standardUserDefaults] synchronize];
 		
-        [self performSelectorInBackground:@selector(setLastRefreshData:) withObject:_lastUpdatedLabel.text];
-	}
-    else
-    {
+	} else {
+		
 		_lastUpdatedLabel.text = nil;
+		
 	}
-}
 
-- (void)setLastRefreshData:(NSString *)data
-{
-    [[NSUserDefaults standardUserDefaults] setObject:data forKey:@"EGORefreshTableView_LastRefresh"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (void)setState:(EGOPullRefreshState)aState{

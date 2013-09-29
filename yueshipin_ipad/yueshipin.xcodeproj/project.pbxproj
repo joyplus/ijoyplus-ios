@@ -4284,6 +4284,11 @@
 			attributes = {
 				LastUpgradeCheck = 0450;
 				ORGANIZATIONNAME = joyplus;
+				TargetAttributes = {
+					EB6DEA67165A2F1A00AF8003 = {
+						DevelopmentTeam = QRA5AKHKHE;
+					};
+				};
 			};
 			buildConfigurationList = EB6DEA62165A2F1A00AF8003 /* Build configuration list for PBXProject "yueshipin" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -5468,8 +5473,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 459B84FA869C445E8C832D00 /* Pods.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: yongqing li (95XW9X94ZC)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: yongqing li (95XW9X94ZC)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -5482,13 +5487,11 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/yueshipin_ipad/External/umeng\"",
 					"\"$(SRCROOT)/yueshipin_ipad/External/umeng/UMUFP\"",
-					"\"$(SRCROOT)/yueshipin_ipad/External/WeChat\"",
-					"\"$(SRCROOT)/yueshipin_ipad/External/EBarSDK\"",
 					"\"$(SRCROOT)/yueshipin_ipad/External/BPush\"",
-					"\"$(SRCROOT)/yueshipin_ipad/External/SDKExport\"",
 					"\"$(SRCROOT)/yueshipin_ipad/External/WeiChat_SDK\"",
 				);
 				PRODUCT_NAME = yueshipin;
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
@@ -5498,8 +5501,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 459B84FA869C445E8C832D00 /* Pods.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Shanghai Joyplus Network Tech nology Co., Ltd.";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -5512,10 +5515,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/yueshipin_ipad/External/umeng\"",
 					"\"$(SRCROOT)/yueshipin_ipad/External/umeng/UMUFP\"",
-					"\"$(SRCROOT)/yueshipin_ipad/External/WeChat\"",
-					"\"$(SRCROOT)/yueshipin_ipad/External/EBarSDK\"",
 					"\"$(SRCROOT)/yueshipin_ipad/External/BPush\"",
-					"\"$(SRCROOT)/yueshipin_ipad/External/SDKExport\"",
 					"\"$(SRCROOT)/yueshipin_ipad/External/WeiChat_SDK\"",
 				);
 				PRODUCT_NAME = yueshipin;
