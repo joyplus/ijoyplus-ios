@@ -700,15 +700,12 @@ void transferDataFromOldDbWithCatch()
 -(void)saoyisaoClicked{
     ScanDetailViewController *scanDetailViewController = [[ScanDetailViewController alloc] init];
     scanDetailViewController.isBunding = NO;
-   
-   //[[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:scanDetailViewController]];
-    [self presentModalViewController:[[UINavigationController alloc] initWithRootViewController:scanDetailViewController] animated:YES];
+   [self presentModalViewController:[[UINavigationController alloc] initWithRootViewController:scanDetailViewController] animated:YES];
 }
 
 -(void)TopImageTaped{
     ScanDetailViewController *scanDetailViewController = [[ScanDetailViewController alloc] init];
     scanDetailViewController.isBunding = YES;
-    //[[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:scanDetailViewController]];
     [self presentModalViewController:[[UINavigationController alloc] initWithRootViewController:scanDetailViewController] animated:YES];
 }
 #pragma mark -

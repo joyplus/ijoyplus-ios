@@ -32,14 +32,12 @@
 	// Do any additional setup after loading the view.
     self.title = @"扫一扫";
     
-    NSString * bgName = @"nav_bar_bg_44";
     if ([[UIDevice currentDevice].systemVersion floatValue] >= 7.0)
     {
         [self setNeedsStatusBarAppearanceUpdate];
-        bgName = @"nav_bar_bg_44";
     }
     
-    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:bgName] forBarMetrics:UIBarMetricsDefault];
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"nav_bar_bg_44"] forBarMetrics:UIBarMetricsDefault];
     
     self.view.backgroundColor = [UIColor clearColor];
     UIButton *leftButton = [UIButton buttonWithType:UIButtonTypeCustom];
