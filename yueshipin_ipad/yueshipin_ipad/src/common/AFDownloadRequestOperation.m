@@ -257,7 +257,7 @@ typedef void (^AFURLConnectionProgressiveOperationProgressBlock)(NSInteger bytes
 #pragma mark - NSURLConnectionDelegate
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
-    [super connection:connection didReceiveResponse:response];
+    //[super connection:connection didReceiveResponse:response];
 
     // check if we have the correct response
     NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
@@ -286,7 +286,7 @@ typedef void (^AFURLConnectionProgressiveOperationProgressBlock)(NSInteger bytes
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data  {
-    [super connection:connection didReceiveData:data];
+    //[super connection:connection didReceiveData:data];
 
     // track custom bytes read because totalBytesRead persists between pause/resume.
     self.totalBytesReadPerDownload += [data length];
