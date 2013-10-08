@@ -1,0 +1,5 @@
+#include "Pods-EGOTableViewPullRefresh.xcconfig"
+GCC_PREPROCESSOR_DEFINITIONS = COCOAPODS=1
+HEADER_SEARCH_PATHS = "${PODS_ROOT}/BuildHeaders" "${PODS_ROOT}/BuildHeaders/EGOTableViewPullRefresh" "${PODS_ROOT}/Headers" "${PODS_ROOT}/Headers/AFNetworking" "${PODS_ROOT}/Headers/CocoaAsyncSocket" "${PODS_ROOT}/Headers/CocoaHTTPServer" "${PODS_ROOT}/Headers/CocoaLumberjack" "${PODS_ROOT}/Headers/EGOTableViewPullRefresh" "${PODS_ROOT}/Headers/FMDB" "${PODS_ROOT}/Headers/MBProgressHUD" "${PODS_ROOT}/Headers/Reachability" "${PODS_ROOT}/Headers/SDWebImage" "${PODS_ROOT}/Headers/SFHFKeychainUtils" "${PODS_ROOT}/Headers/ZBarSDK" "${PODS_ROOT}/Headers/ZBarSDK/decoder" "${PODS_ROOT}/Headers/ZBarSDK/processor" "${PODS_ROOT}/Headers/ZBarSDK/qrcode" "${PODS_ROOT}/Headers/ZBarSDK/window" "${PODS_ROOT}/Headers/iRate" "${PODS_ROOT}/Headers/include" "${PODS_ROOT}/Headers/iphone" "${PODS_ROOT}/Headers/iphone/include" "${PODS_ROOT}/Headers/iphone/include/ZBarSDK"
+OTHER_LDFLAGS = -ObjC ${PODS_EGOTABLEVIEWPULLREFRESH_OTHER_LDFLAGS}
+PODS_ROOT = ${SRCROOT}

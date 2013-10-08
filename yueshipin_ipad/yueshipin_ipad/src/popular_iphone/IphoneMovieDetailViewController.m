@@ -1286,6 +1286,11 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 
 - (void)filmReviewTaped:(NSString *)title content:(NSString *)content
 {
+    NSInteger x = 0;
+    if ([[UIDevice currentDevice].systemVersion floatValue] >= 7.0)
+    {
+        x =  20;
+    }
     FilmReviewDetailView * filmView = [[FilmReviewDetailView alloc] initWithFrame:CGRectMake(0, 2*kFullWindowHeight, 320, kFullWindowHeight)
                                                                             title:title
                                                                           content:content];
@@ -1300,7 +1305,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
     
     [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
     
-    filmView.frame = CGRectMake(0, 0, 320, kFullWindowHeight);
+    filmView.frame = CGRectMake(0, x, 320, kFullWindowHeight);
     
     [UIView commitAnimations];
     
