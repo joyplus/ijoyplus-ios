@@ -151,4 +151,6 @@
 - (void)setURL:(NSURL*)URL;
 - (NSURL*)URL;
 - (void)clearPlayerData;
+- (void)userClicked:(UITapGestureRecognizer *)sender;
+
 @end

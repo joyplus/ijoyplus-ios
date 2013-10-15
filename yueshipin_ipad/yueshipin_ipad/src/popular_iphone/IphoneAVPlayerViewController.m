@@ -1576,6 +1576,13 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
         [topToolBar_ addSubview:sourceText];
         
         sourceLogo_ = [[UIImageView alloc] initWithFrame:CGRectMake(102, 8, 30, 18)];
+        //Add method to start source site
+        sourceLogo_.userInteractionEnabled = YES;
+        
+        UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(userClicked:)];
+        
+        [sourceLogo_ addGestureRecognizer:singleTap];
+        
         sourceLogo_.backgroundColor = [UIColor clearColor];
         [topToolBar_ addSubview:sourceLogo_];
     }
@@ -3381,4 +3388,17 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
     mpc.volume = volume;
 }
 
+- (void)userClicked:(UITapGestureRecognizer *)sender
+{
+    NSLog(@"user clicked");
+    [self destoryPlayer];
+    [[UIApplication sharedApplication] setStatusBarHidden:NO];
+    [self.navigationController popViewControllerAnimated:NO];
+    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:fromBaidu], @"fromBaidu", nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"addWebView"
+                                                        object:self
+                                                      userInfo:userInfo];
+     [self clearSelectView];
+    
+}
 @end
