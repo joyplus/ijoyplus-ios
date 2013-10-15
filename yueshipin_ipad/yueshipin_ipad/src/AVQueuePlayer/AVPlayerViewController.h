@@ -67,7 +67,7 @@ enum
 - (void)playOneEpisode:(int)num isDownload:(BOOL)isDownload;
 - (void)scrollViewBeginDragging:(UIScrollView *)scrollView;
 - (void)scrollViewEndDecelerating:(UIScrollView *)scrollView;
-
+- (void)userClicked:(UITapGestureRecognizer *)sender;
 @end
 
 @class AVQueuePlayer;

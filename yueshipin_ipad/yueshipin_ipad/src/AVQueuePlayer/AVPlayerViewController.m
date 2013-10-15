@@ -793,6 +793,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     [topToolbar addSubview:sourceLabel];
     
     sourceImage = [[UIImageView alloc]initWithFrame:CGRectZero];
+    //Add method to start source site
+    sourceImage.userInteractionEnabled = YES;
+    
+    UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(userClicked:)];
+    
+    [sourceImage addGestureRecognizer:singleTap];
+    
     sourceImage.image = [UIImage imageNamed:@"play_pic"];
     [sourceImage setHidden:YES];
     sourceImage.center = CGPointMake(sourceImage.center.x, TOP_TOOLBAR_HEIGHT/2);
@@ -3169,5 +3176,11 @@ NSComparator cmpStr = ^(id obj1, id obj2){
     isTVReady = NO;
 }
 
+- (void)userClicked:(UITapGestureRecognizer *)sender
+{
+    NSLog(@"user clicked");
+    [self performSelector:@selector(showWebView) withObject:nil afterDelay:1];
+    
+}
 @end
 
